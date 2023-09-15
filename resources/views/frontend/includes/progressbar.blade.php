@@ -1,0 +1,8 @@
+<ul id="progressbar">
+<li class='{{"frontend.cards.step1"==request()->route()->getName()? "active" :"" }} {{in_array(request()->route()->getName(),["frontend.cards.step2","frontend.cards.step3","frontend.cards.step3a","frontend.cards.step4","frontend.cards.step5"])? "filled" :"" }}' id="compaign_type_action"><strong>Step 1</strong></li>
+<li class='{{"frontend.cards.step2"==request()->route()->getName()? "active" :"" }} {{in_array(request()->route()->getName(),["frontend.cards.step3","frontend.cards.step3a","frontend.cards.step4","frontend.cards.step5"])? "filled" :"" }} {{in_array(request()->route()->getName(),["frontend.cards.step2","frontend.cards.step3","frontend.cards.step3a","frontend.cards.step4","frontend.cards.step5"])? "filled" :"" }}' id="account"><strong>Step 2</strong></li>
+<li class='{{"frontend.cards.step3"==request()->route()->getName()? "active" :"" }} {{in_array(request()->route()->getName(),["frontend.cards.step3a","frontend.cards.step4","frontend.cards.step5"])? "filled" :"" }}' id="personal"><strong>Step 3</strong></li>
+<li class='{{"frontend.cards.step3a"==request()->route()->getName()? "active" :"" }} {{in_array(request()->route()->getName(),["frontend.cards.step3a","frontend.cards.step4","frontend.cards.step5"])? "filled" :"" }}' id="mapping"><strong>Step 4</strong></li>
+<li class='{{"frontend.cards.step4"==request()->route()->getName()? "active" :"" }} {{in_array(request()->route()->getName(),["frontend.cards.step4","frontend.cards.step5"])? "filled" :"" }}' id="confirm"><strong>Step 5</strong></li>
+<!-- <li class='{{"frontend.cards.step5"==request()->route()->getName()? "active" :"" }} {{in_array(request()->route()->getName(),["frontend.cards.step5"])? "filled" :"" }}' id="confirm"><strong>Step 6</strong></li> -->
+</ul>

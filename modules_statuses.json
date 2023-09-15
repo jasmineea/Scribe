@@ -1,0 +1,9 @@
+{
+    "Article": true,
+    "Tag": true,
+    "Comment": true,
+    "Transaction": true,
+    "Order": true,
+    "Listing": true,
+    "Customer": true
+}

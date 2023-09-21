@@ -72,6 +72,7 @@ class CardController extends Controller
         return view('frontend.step1', compact('listings','final_array'));
     }
 
+    
     /**
      * Show the application dashboard.
      *
@@ -81,11 +82,23 @@ class CardController extends Controller
     {
 
         $final_array=$request->session()->get('final_array');
-        if(empty($final_array['campaign_name'])){
-            Session::flash('error', 'please complete the step 2 first.');
-            return redirect()->route('frontend.cards.step2');
-        }
+        // if(empty($final_array['campaign_name'])){
+        //     Session::flash('error', 'please complete the step 2 first.');
+        //     return redirect()->route('frontend.cards.step2');
+        // }
         return view('frontend.step2', compact('final_array'));
+    }
+
+    /**
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function step2a(Request $request)
+    {
+        
+        $final_array=$request->session()->get('final_array');
+        return view('frontend.step2a', compact('final_array'));
     }
 
     /**
@@ -167,28 +180,63 @@ class CardController extends Controller
         $body_class = '';
         if ($request->isMethod('post')) {
             $data=$request->all();
-            if($data['existing_campaign_id']){
-               // $new_order_id=duplicateOrder($data['existing_campaign_id']);
-                $order_detail=Order::find($data['existing_campaign_id'])->toArray();
-                $decode_data=json_decode($order_detail['order_json'], true);
-                $decode_data['step_0_action_2']=$data['step_0_action_2'];
-                $decode_data['step_0_action']='old';
-                $decode_data['existing_campaign_id']=$data['existing_campaign_id'];
-                $request->session()->put('final_array', $decode_data);
-                $request->session()->put('old_order_id',$data['existing_campaign_id']);
+            $request->session()->put('final_array',$data);
+            if($data['campaign_type']=='single'){
+                return redirect()->route('frontend.cards.step2a');
             }else{
-                $final_array=$request->session()->get('final_array');
-                if(@$final_array['step_0_action']=='old'&&$data['step_0_action']=='new'){
-                    $request->session()->forget('final_array');
-                    $request->session()->forget('old_order_id');
-                    $final_array=array_merge(['tags'=>['FIRST_NAME'=>'FIRST NAME','LAST_NAME'=>'LAST NAME'],'listing_id'=>0,'list_id'=>0],$data);
-                    $request->session()->put('final_array',$final_array);
-                }
+                return redirect()->route('frontend.cards.step2');
             }
-            return redirect()->route('frontend.cards.step2');
         }
         return view('frontend.step1', compact('body_class'));
     }
+
+    
+       /**
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function step2aUpdate(Request $request)
+    {
+        $body_class = '';
+        if ($request->isMethod('post')) {
+            $data=$request->all();
+            $final_array=$request->session()->get('final_array');
+            $request->session()->put('final_array',array_merge($final_array,$data));
+
+            $list = new Listing;
+            $list->user_id = auth()->user()->id;
+            $list->name = 'Single List';
+            $list->status = 'active';
+            $list->save();
+            $final_array['list_id']=$list->id;
+            
+            $contact = new Contact;
+            $contact->listing_id = $list->id;
+            $contact->first_name = $data['first_name'];
+            $contact->last_name = $data['last_name'];
+            $contact->address = $data['address'];
+            $contact->city = $data['city'];
+            $contact->state = $data['state'];
+            $contact->zip = $data['pincode'];
+            $contact->save();
+                
+            $file_data = create_copy_excel_from_listing_id($final_array['list_id']);
+                $excel_data=read_excel_data($file_data['file_name'], 1);
+                unset($final_array['tags']);
+                if($file_data['rows']=='0'){
+                    $final_array['tags']=['FIRST_NAME'=>'FIRST NAME','LAST_NAME'=>'LAST NAME'];
+                }else{
+                    $final_array['tags']=[];
+                }
+                
+                $request->session()->put('final_array',array_merge($final_array,['upload_recipients'=>$file_data['file_name'],'rows'=>$file_data['rows'],'excel_data'=>$excel_data,'listing_id'=>$request->get('listing_id'),'list_id'=>$request->get('listing_id'),'threshold'=>$request->get('threshold')]));
+
+            return redirect()->route('frontend.cards.step3');
+        }
+        return view('frontend.step2a', compact('body_class'));
+    }
+
         /**
      * Show the application dashboard.
      *

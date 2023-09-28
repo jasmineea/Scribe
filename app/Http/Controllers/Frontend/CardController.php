@@ -180,7 +180,9 @@ class CardController extends Controller
         $body_class = '';
         if ($request->isMethod('post')) {
             $data=$request->all();
-            $request->session()->put('final_array',$data);
+            $final_array=$request->session()->get('final_array');
+            $request->session()->put('final_array',array_merge($final_array,$data));
+            $final_array=$request->session()->get('final_array');
             if($data['campaign_type']=='single'){
                 return redirect()->route('frontend.cards.step2a');
             }else{
@@ -203,7 +205,7 @@ class CardController extends Controller
             $data=$request->all();
             $final_array=$request->session()->get('final_array');
             $request->session()->put('final_array',array_merge($final_array,$data));
-
+            $final_array=$request->session()->get('final_array');
             $list = new Listing;
             $list->user_id = auth()->user()->id;
             $list->name = 'Single List';
@@ -229,7 +231,6 @@ class CardController extends Controller
                 }else{
                     $final_array['tags']=[];
                 }
-                
                 $request->session()->put('final_array',array_merge($final_array,['upload_recipients'=>$file_data['file_name'],'rows'=>$file_data['rows'],'excel_data'=>$excel_data,'listing_id'=>$request->get('listing_id'),'list_id'=>$request->get('listing_id'),'threshold'=>$request->get('threshold')]));
 
             return redirect()->route('frontend.cards.step3');
@@ -263,6 +264,7 @@ class CardController extends Controller
                 $final_array['listing_id']=0;
                 $final_array['list_id']=0;
                 $final_array['tags']=[];
+                
                 $request->session()->put('final_array',array_merge($final_array,['upload_recipients'=>$image_path,'rows'=>$request->get('file_rows'),'excel_data'=>$excel_data,'listing_id'=>0,'threshold'=>$request->get('threshold')]));
             }
             if (null!==@$request->get('listing_id')&&@$final_array['listing_id']!=$request->get('listing_id')&&!empty($request->get('listing_id'))) {
@@ -282,7 +284,6 @@ class CardController extends Controller
             $final_array['threshold']=$request->get('threshold');
             $final_array['repeat_number']=$request->get('repeat_number');
             $final_array['campaign_name']=$request->get('campaign_name');
-            $final_array['campaign_type']=$request->get('campaign_type');
 
             foreach ($final_array['excel_data']['header'] as $key => $value) {
                 if(!empty($value)){
@@ -322,7 +323,6 @@ class CardController extends Controller
             }else{
                 Session::flash('error', 'please enter campaign list name first.');
             }
-            $final_array['campaign_type']=$request->campaign_type;
             $final_array['campaign_name']=$request->campaign_name;
             $request->session()->put('final_array', $final_array);
         }

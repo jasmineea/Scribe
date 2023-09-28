@@ -13,11 +13,15 @@
 					   <!-- progressbar -->
 					   @include('frontend.includes.progressbar')
 					   <fieldset class="field-active">
-						<form action="{{ route("frontend.cards.step2Update")}}" method="POST" id="xsl_upload" enctype="multipart/form-data">
+						<form action="{{ route('frontend.cards.step2Update')}}" method="POST" enctype="multipart/form-data" id="xsl_upload" >
 							{{ csrf_field() }}
 							<div class="step-2-options">
 							<div class="step-2-option">
-								
+							@if($final_array['campaign_type']=='on-going')
+									<div class="">
+										<a href="javascript:void(0)" class="add_campaign_list theme-btn">Create New Live List</a>
+									</div>
+									@else
 									<div class="upload-files-container">
 										<div class="drag-file-area">
 											<span class="material-icons-outlined upload-icon"></span>
@@ -30,24 +34,27 @@
 											<span class="material-icons remove-file-icon">delete</span>
 											<div class="progress-bar"> </div>
 										</div>
-										<button type="button" class="upload-button theme-btn"> Upload </button>
-									</div>
-								
-								@if (isset($final_array['upload_recipients'])&&(empty($final_array['listing_id'])&&empty($final_array['list_id'])))
+										<input type="submit" class="upload-button theme-btn" value="Upload">
+										@if (isset($final_array['upload_recipients'])&&(empty($final_array['listing_id'])&&empty($final_array['list_id'])))
 										<p><a target="_blank" class="action_btn" href="files/{{@$final_array['upload_recipients']}}">Download uploaded Recipient File <i class="fa fa-file-download" aria-hidden="true"></i></a></p>
+										@else
+										<p><a target="_blank" class="action_btn"  href="javascript:void(0);">Download the Bulk Recipients Data Template <i class="fa fa-file-download" aria-hidden="true"></i></a></p>
+										
 										@endif
+									</div>
+									@endif
+									
+								
+								
 							</div>
 							<div class="step-2-option">
-								<div class="cstm-dropdown">
-								<select name="listing_id" id="listing_select" class="custom-select sources" placeholder="Source Type">
+								   <div class="cstm-dropdown">
+										<select name="listing_id" id="listing_select" class="" placeholder="Source Type">
 											<option value="0">Select Campaign List</option>
 											@foreach ($listings as $item)
 											<option value="{{$item->id}}" {{@$final_array['listing_id']==$item->id||@$final_array['list_id']==$item->id?"selected":""}}>{{$item->name}}</option>
 											@endforeach
 										</select>
-									</div>
-									<div class="cstm-add-btn">
-										<a href="javascript:void(0)" class="add_campaign_list">+</a>
 									</div>
 							</div>
 						</div>
@@ -58,7 +65,7 @@
 										
 						  
 						  <input type="submit" name="next" class="next action-button save_message action-button2" value="GO TO STEP 3">
-						  <a href="{{ route("frontend.cards.step1")}}" class="previous action-button action-button-previous" value="PREVIOUS STEP">PREVIOUS</a>
+						  <a href="{{ route('frontend.cards.step1')}}" class="previous action-button action-button-previous" value="PREVIOUS STEP">PREVIOUS</a>
 						</form>
 					   </fieldset>
 
@@ -95,9 +102,9 @@
 }
 
 function sub(obj) {
-  var file = obj.value;
-  var fileName = file.split("\\");
-  document.getElementById("yourBtn").innerHTML = fileName[fileName.length - 1];
+//   var file = obj.value;
+//   var fileName = file.split("\\");
+//   document.getElementById("yourBtn").innerHTML = fileName[fileName.length - 1];
   $('#listing_select').val(0);
 }
 </script>

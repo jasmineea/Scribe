@@ -40,7 +40,7 @@ if(@isset($final_array['listing_id'])&&!empty($final_array['listing_id'])){
 									  <div class="custom_message" >
 										<div class="row">
 										<div class="col-6">
-										 <h4><b>Please enter your custom message</b></h4>
+										 <h4 style="font-size: 19px;"><b>Please enter your custom message</b></h4>
 										 <div class="mb-2"><textarea required name="hwl_custom_msg" id="hwl_custom_msg_1" class="hwl_custom_msg custm-edtr" style="min-height: 5in;max-height: 5in;width: 4.1in;max-width: 4.1in;padding: 0px;" placeholder="Type your Note here.">{{@$final_array['hwl_custom_msg']}}</textarea></div>
 										 <h6 class="wrd-cuntng">120 words remaining</h6>
 									  </div>
@@ -73,7 +73,11 @@ if(@isset($final_array['listing_id'])&&!empty($final_array['listing_id'])){
 							 </div>
 						  </div>
 						  <input type="submit" name="next" class="next action-button upload_file_next action-button2 ApplyLineBreaks" value="GO TO STEP 4">
-						  <a href="{{ route("frontend.cards.step2")}}" class="previous action-button action-button-previous" value="PREVIOUS STEP">PREVIOUS</a>
+						  @if($final_array['campaign_type']=='single')
+						  <a href="{{ route('frontend.cards.step2a')}}" class="previous action-button action-button-previous" value="PREVIOUS STEP">PREVIOUS</a>
+						  @else
+						  <a href="{{ route('frontend.cards.step2')}}" class="previous action-button action-button-previous" value="PREVIOUS STEP">PREVIOUS</a>
+						  @endif
 						</form>
 					   </fieldset>
 					   <a>

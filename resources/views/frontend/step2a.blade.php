@@ -60,8 +60,9 @@
 							
 							</div>
 							<div class="row-field">
+							<a href="{{ route('frontend.cards.step1')}}" class="previous action-button action-button-previous" value="PREVIOUS STEP">PREVIOUS</a>
 							<input type="submit" name="next" class="next action-button upload_file_next action-button2 ApplyLineBreaks" value="GO TO STEP 3">
-						  <a href="{{ route('frontend.cards.step3')}}" class="previous action-button action-button-previous" value="PREVIOUS STEP">PREVIOUS</a></div>
+						  </div>
 						</form>
 						</div>
 					   </fieldset>

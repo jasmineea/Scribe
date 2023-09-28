@@ -11,13 +11,17 @@
 		<label>Overview</label>
 		<ul class="sidebar-parent-menu">
 			<li><span class="theme-icon ico-rocket"></span><a href="javascript:void(0)" data-id="1">Build Your Campaign <i class="fa fa-angle-up pull-right"></i></a>
-				<ul class="sidebar-child-menu {{in_array(request()->route()->getName(),['frontend.cards.step1','frontend.cards.step2','frontend.cards.step3','frontend.cards.step4','frontend.cards.step5','frontend.index','frontend.cards.step3a'])? "show" :"" }}" data-content-id="1">
+				<ul class="sidebar-child-menu {{in_array(request()->route()->getName(),['frontend.cards.step1','frontend.cards.step2','frontend.cards.step3','frontend.cards.step4','frontend.cards.step5','frontend.index','frontend.cards.step3a','frontend.cards.step2a'])? "show" :"" }}" data-content-id="1">
 					{{-- @if(request()->session()->has('step-1')) --}}
 					<li id="step-1" class="{{'frontend.cards.step1'==request()->route()->getName()? "active" :"" }}"><a href="{{ route("frontend.cards.step1")}}">Step 01 <span>Create a Campaign or Choose Existing.</span></a></li>
 					{{-- @endif --}}
-					{{-- @if(request()->session()->has('step-2')) --}}
+					
+					@if(request()->session()->has('final_array')&&request()->session()->get('final_array')['campaign_type']=='single')
+					<li id="step-2" class="{{'frontend.cards.step2a'==request()->route()->getName()? "active" :"" }}"><a href="{{ route("frontend.cards.step2a")}}">Step 02 <span>Assign Contacts to your Campaign</span></a></li>
+					@else
 					<li id="step-2" class="{{'frontend.cards.step2'==request()->route()->getName()? "active" :"" }}"><a href="{{ route("frontend.cards.step2")}}">Step 02 <span>Assign Contacts to your Campaign</span></a></li>
-					{{-- @endif --}}
+					@endif
+
 					{{-- @if(request()->session()->has('step-3')) --}}
 					<li id="step-3" class="{{'frontend.cards.step3'==request()->route()->getName()? "active" :"" }}"><a href="{{ route("frontend.cards.step3")}}">Step 03 <span>Compose your Message</span></a></li>
 					{{-- @endif --}}

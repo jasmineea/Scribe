@@ -15,6 +15,7 @@
 					   <fieldset class="field-active">
 						<form action="{{ route("frontend.cards.step2Update")}}" method="POST" id="xsl_upload" enctype="multipart/form-data">
 							{{ csrf_field() }}
+<<<<<<< Updated upstream
 						  <div class="written_letter_form">
 							 <div class="Repeater_container">
 								<div class="main">
@@ -39,11 +40,39 @@
 									</div>
 									<div class="single_row2 max-width-650 custom_box" id="step_2_tooltip"  data-value="{{setting('step_2_tooltip_message')}}"  data-pos="right"    data-title="{{setting('step_2_tooltip_title')}}"  data-video_link="{{setting('step_2_video_link')}}">
 									  	<select name="listing_id" id="listing_select">
+=======
+							<div class="step-2-options">
+							<div class="step-2-option">
+								
+									<div class="upload-files-container">
+										<div class="drag-file-area">
+											<span class="material-icons-outlined upload-icon"></span>
+											<h3 class="dynamic-message"> Drag & drop any file here </h3>
+											<label class="label"> or <span class="browse-files"> <input type="file" onchange="sub(this)" name="upload_recipients" id="upload_recipients" class="default-file-input"/> <span class="browse-files-text">browse file</span> <span>from device</span> </span> </label>
+										</div>
+										<span class="cannot-upload-message"> <span class="material-icons-outlined">error</span> Please select a file first <span class="material-icons-outlined cancel-alert-button">cancel</span> </span>
+										<div class="file-block">
+											<div class="file-info"> <span class="material-icons-outlined file-icon">description</span> <span class="file-name"> </span> | <span class="file-size">  </span> </div>
+											<span class="material-icons remove-file-icon">delete</span>
+											<div class="progress-bar"> </div>
+										</div>
+										<button type="button" class="upload-button theme-btn"> Upload </button>
+									</div>
+								
+								@if (isset($final_array['upload_recipients'])&&(empty($final_array['listing_id'])&&empty($final_array['list_id'])))
+										<p><a target="_blank" class="action_btn" href="files/{{@$final_array['upload_recipients']}}">Download uploaded Recipient File <i class="fa fa-file-download" aria-hidden="true"></i></a></p>
+										@endif
+							</div>
+							<div class="step-2-option">
+								<div class="cstm-dropdown">
+								<select name="listing_id" id="listing_select" class="custom-select sources" placeholder="Source Type">
+>>>>>>> Stashed changes
 											<option value="0">Select Campaign List</option>
 											@foreach ($listings as $item)
 											<option value="{{$item->id}}" {{@$final_array['listing_id']==$item->id||@$final_array['list_id']==$item->id?"selected":""}}>{{$item->name}}</option>
 											@endforeach
 										</select>
+<<<<<<< Updated upstream
 
 										<input type="hidden" name="threshold" value="0">
 										<input type="hidden" name="repeat_number" value="0">
@@ -79,6 +108,20 @@
 								</div>
 							 </div>
 						  </div>
+=======
+									</div>
+									<div class="cstm-add-btn">
+										<a href="javascript:void(0)" class="add_campaign_list">+</a>
+									</div>
+							</div>
+						</div>
+						<input type="hidden" name="threshold" value="0">
+						<input type="hidden" name="repeat_number" value="0">
+						<input type="hidden" name="file_rows" class="file_rows" value="">
+						<input type="hidden" name="repeat_number" value="1000">
+										
+						  
+>>>>>>> Stashed changes
 						  <input type="submit" name="next" class="next action-button save_message action-button2" value="GO TO STEP 3">
 						  <a href="{{ route("frontend.cards.step1")}}" class="previous action-button action-button-previous" value="PREVIOUS STEP">PREVIOUS</a>
 						</form>

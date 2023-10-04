@@ -87,6 +87,12 @@ Route::group(['namespace' => 'App\Http\Controllers\Frontend', 'as' => 'frontend.
         Route::get('step-4', ['as' => "$module_name.step4", 'uses' => "$controller_name@step4"]);
         Route::post('step-4', ['as' => "$module_name.step4Update", 'uses' => "$controller_name@step4Update"]);
 
+        Route::get('step-4a', ['as' => "$module_name.step4a", 'uses' => "$controller_name@step4a"]);
+        Route::post('step-4a', ['as' => "$module_name.step4aUpdate", 'uses' => "$controller_name@step4aUpdate"]);
+
+        Route::get('step-4b', ['as' => "$module_name.step4b", 'uses' => "$controller_name@step4b"]);
+        Route::post('step-4b', ['as' => "$module_name.step4bUpdate", 'uses' => "$controller_name@step4bUpdate"]);
+
         Route::get('step-5', ['as' => "$module_name.step5", 'uses' => "$controller_name@step4"]);
         Route::post('step-5', ['as' => "$module_name.step5Update", 'uses' => "$controller_name@step5Update"]);
 

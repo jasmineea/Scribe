@@ -116,6 +116,47 @@ class CardController extends Controller
         return view('frontend.step3', compact('final_array'));
     }
 
+    public function step4a(Request $request)
+    {
+        if ($request->get('payment_intent')) {
+            $status=save_payment($request);
+            if ($status) {
+                Session::flash('success', 'Payment has been successfully processed.');
+                return redirect()->route('frontend.cards.step4');
+            } else {
+                Session::flash('error', 'Payment failed.');
+            }
+        }
+        $final_array=$request->session()->get('final_array');
+        $preview_message=final_message(@$final_array['excel_data']['data'][2], $final_array['hwl_custom_msg'], $final_array['system_property_1']);
+        $final_array['preview_image'] = generate_Preview_Image($preview_message);
+        $final_array['front_preview_image'] = public_path('img/front_design.jpg');
+        $final_array['back_preview_image'] = public_path('img/back_design.jpg');
+
+        compress(public_path('img/preview/'.$final_array['preview_image']),public_path('img/preview/'.$final_array['preview_image']), 10);
+        // compress(public_path('img/preview/'.$final_array['front_preview_image']),public_path('img/preview/'.$final_array['front_preview_image']), 10);
+        // compress(public_path('img/preview/'.$final_array['back_preview_image']),public_path('img/preview/'.$final_array['back_preview_image']), 10);
+
+        if(empty($final_array['system_property_1'])){
+            Session::flash('error', 'please complete the step 4 first.');
+            return redirect()->route('frontend.cards.step3a');
+        }
+        $request->session()->put('final_array', $final_array);
+
+        
+        return view('frontend.step4a', compact('final_array'));
+    }
+
+    public function step4b(Request $request)
+    {
+        $final_array=$request->session()->get('final_array');
+        if(empty($final_array['hwl_custom_msg'])){
+            Session::flash('error', 'please complete the step 3 first.');
+            return redirect()->route('frontend.cards.step3');
+        }
+        return view('frontend.step4b', compact('final_array'));
+    }
+
 
     /**
      * Show the application dashboard.
@@ -136,7 +177,12 @@ class CardController extends Controller
         $final_array=$request->session()->get('final_array');
         $preview_message=final_message(@$final_array['excel_data']['data'][2], $final_array['hwl_custom_msg'], $final_array['system_property_1']);
         $final_array['preview_image'] = generate_Preview_Image($preview_message);
+        $final_array['front_preview_image'] = public_path('img/front_design.jpg');
+        $final_array['back_preview_image'] = public_path('img/back_design.jpg');
+
         compress(public_path('img/preview/'.$final_array['preview_image']),public_path('img/preview/'.$final_array['preview_image']), 10);
+        // compress(public_path('img/preview/'.$final_array['front_preview_image']),public_path('img/preview/'.$final_array['front_preview_image']), 10);
+        // compress(public_path('img/preview/'.$final_array['back_preview_image']),public_path('img/preview/'.$final_array['back_preview_image']), 10);
 
         if(empty($final_array['system_property_1'])){
             Session::flash('error', 'please complete the step 4 first.');
@@ -399,6 +445,42 @@ class CardController extends Controller
         }
         // return view('dashboard', compact('body_class'));
         return view('frontend.step3', compact('body_class'));
+    }
+
+    /**
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function step4aUpdate(Request $request)
+    {
+        $body_class = '';
+        if ($request->isMethod('post')) {
+            $data=$request->all();
+            $final_array=$request->session()->get('final_array');
+            $request->session()->put('final_array',array_merge($final_array,$data));
+            return redirect()->route('frontend.cards.step4b');
+        }
+        // return view('dashboard', compact('body_class'));
+        return view('frontend.step4a', compact('body_class'));
+    }
+
+    /**
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function step4bUpdate(Request $request)
+    {
+        $body_class = '';
+        if ($request->isMethod('post')) {
+            $data=$request->all();
+            $final_array=$request->session()->get('final_array');
+            $request->session()->put('final_array',array_merge($final_array,$data));
+            return redirect()->route('frontend.cards.step3a');
+        }
+        // return view('dashboard', compact('body_class'));
+        return view('frontend.step4b', compact('body_class'));
     }
 
     /**

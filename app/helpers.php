@@ -1425,7 +1425,26 @@ if (! function_exists('contact_count')) {
     }
 }
 
+if (! function_exists('generate_design_Image')) {
 
+    function generate_design_Image($type="front"){
+        array_map('unlink', glob(public_path('img/preview/'.$type.'_'.auth()->user()->id."_*")));
+       
+
+        $front_design = imagecreatefrompng(public_path('img/'.$type.'_design.png'));
+        $front = imagecreatefrompng(public_path('img/'.$type.'.png'));
+
+        list($width, $height) = getimagesize(public_path('img/'.$type.'.png'));
+        list($newwidth, $newheight) = getimagesize(public_path('img/'.$type.'_design.jpg'));
+        $out = imagecreatetruecolor($newwidth, $newheight);
+        imagecopyresampled($out, $front, 0, 0, 0, 0, $newwidth, $newheight, $width, $height);
+        imagecopyresampled($out, $front_design, 0, 0, 0, 0, $newwidth, $newheight, $width, $height);
+        $image_name=$type."_".auth()->user()->id."_".time().rand().".png";
+        imagejpeg($out,public_path('img/preview/'.$image_name), 100);
+        imagedestroy($out);
+        return $image_name;
+    }
+}
 if (! function_exists('generate_Preview_Image')) {
 
     function generate_Preview_Image($text){

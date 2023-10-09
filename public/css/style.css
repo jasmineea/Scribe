@@ -1770,6 +1770,7 @@ ul.recharge_block {
     text-align: left;
     vertical-align: top;
 }
+
 .final_preview {
     /* background-color: #dfdfdf69; */
     cursor: zoom-in;
@@ -1777,8 +1778,8 @@ ul.recharge_block {
     color: blue;
     font-size: 22px;
     border-radius: 10px;
-    min-height: 470px;
-    max-height: 470px;
+    /* min-height: 470px;
+    max-height: 470px; */
     background-image: url(../img/env-trs.png);
     background-size: cover;
     overflow: hidden;
@@ -2003,7 +2004,12 @@ i.fa.fa-angle-down.pull-right {
     color: gray;
     text-align: left
 }
-
+.hidden{
+    display: none;
+}
+.large_modal{
+    max-width: 70%;
+}
 #progressbar {
     margin-bottom: 30px;
     overflow: hidden;

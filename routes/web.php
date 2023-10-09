@@ -87,12 +87,20 @@ Route::group(['namespace' => 'App\Http\Controllers\Frontend', 'as' => 'frontend.
         Route::get('step-4', ['as' => "$module_name.step4", 'uses' => "$controller_name@step4"]);
         Route::post('step-4', ['as' => "$module_name.step4Update", 'uses' => "$controller_name@step4Update"]);
 
+        Route::get('step-4a', ['as' => "$module_name.step4a", 'uses' => "$controller_name@step4a"]);
+        Route::post('step-4a', ['as' => "$module_name.step4aUpdate", 'uses' => "$controller_name@step4aUpdate"]);
+
+        Route::get('step-4b', ['as' => "$module_name.step4b", 'uses' => "$controller_name@step4b"]);
+        Route::post('step-4b', ['as' => "$module_name.step4bUpdate", 'uses' => "$controller_name@step4bUpdate"]);
+
         Route::get('step-5', ['as' => "$module_name.step5", 'uses' => "$controller_name@step4"]);
         Route::post('step-5', ['as' => "$module_name.step5Update", 'uses' => "$controller_name@step5Update"]);
 
         Route::get('thank-you', ['as' => "$module_name.thankYou", 'uses' => "$controller_name@thankYou"]);
         Route::get('wallet', ['as' => "$module_name.wallet", 'uses' => "$controller_name@wallet"]);
         Route::post('wallet', ['as' => "$module_name.wallet", 'uses' => "$controller_name@wallet"]);
+
+        Route::post('card-design-upload', ['as' => "$module_name.cardDesignUpload", 'uses' => "$controller_name@cardDesignUpload"]);
 
         Route::get('orders', ['as' => "$module_name.orders", 'uses' => "$controller_name@orders"]);
         Route::get('listing', ['as' => "$module_name.listing", 'uses' => "$controller_name@listing"]);

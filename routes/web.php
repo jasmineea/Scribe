@@ -100,6 +100,8 @@ Route::group(['namespace' => 'App\Http\Controllers\Frontend', 'as' => 'frontend.
         Route::get('wallet', ['as' => "$module_name.wallet", 'uses' => "$controller_name@wallet"]);
         Route::post('wallet', ['as' => "$module_name.wallet", 'uses' => "$controller_name@wallet"]);
 
+        Route::post('card-design-upload', ['as' => "$module_name.cardDesignUpload", 'uses' => "$controller_name@cardDesignUpload"]);
+
         Route::get('orders', ['as' => "$module_name.orders", 'uses' => "$controller_name@orders"]);
         Route::get('listing', ['as' => "$module_name.listing", 'uses' => "$controller_name@listing"]);
         Route::get('listing/{id}', ['as' => "$module_name.contacts", 'uses' => "$controller_name@contacts"]);

@@ -9,6 +9,7 @@ if(@isset($final_array['campaign_type'])&&!empty($final_array['campaign_type'])&
 }else{
 	$class_tooltip="step_5a";
 }
+
 @endphp
 <section id="hero-section">
 	<div class="container-fluid" style="padding-left: 368px;">
@@ -22,22 +23,39 @@ if(@isset($final_array['campaign_type'])&&!empty($final_array['campaign_type'])&
 						<h3>Your Campaing is complete. Save or send your campaign below! </h3>
 						</div>
 						<div class="step-2-options step-5-content">
+							
+							<form action="{{ route("frontend.cards.step5Update")}}" method="POST" id="final_form">
+								{{ csrf_field() }}
+								<input type="hidden" name="publish_type" value="pending">
+								<input type="hidden" name="auto_charge" value="0">
+								<input type="hidden" name="send_or_save" value="0">
+							</form>
+							@php
+								$order_total=sprintf("%.2f",credit_exchange_rate(count($final_array['excel_data']['data'])));
+							@endphp
+							@if (auth()->user()->wallet_balance>=$order_total||@$final_array['show_save_draft']==1)
+								<div class="step-5-buttons">
+									<a href="#" class="send-campaign"><span>Send Campaign</span></a>
+									<a href="#" class="save-campaign"><span>Save Campaign & Send Later</span></a>
+								</div>
+							@else
 							<div class="step-5-buttons">
-								<a href="#" class="send-campaign"><span>Send Campaign</span></a>
 								<a href="#" class="save-campaign"><span>Save Campaign & Send Later</span></a>
 							</div>
-
 							<div class="purchase-credit">
-								<a href="#" class="theme-btn">Purchase More credits</a>
+								<a href="#" class="theme-btn" href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#exampleModal" >Purchase More credits</a>
 							</div>
+							@endif
+							
+							
 							
 							<h2 class="mt-50">Campaign Details</h2>
 							<div class="campaign-details">
-								<h3>Total Credits Required: <span>20</span></h3>
+								<h3>Total Credits Required: <span>{{$order_total}}</span></h3>
 								<ul class="campaign-details-list">
-									<li>View Recipients<a class="close"></a></li>
-									<li>View Message<a class="close"></a></li>
-									<li>View Card Design<a class="close"></a></li>
+									<li class="bootbox_click" data-action="view_recpients">View Recipients<a class="close"></a></li>
+									<li class="bootbox_click" data-action="message">View Message<a class="close"></a></li>
+									<li class="bootbox_click" data-action="card_design">View Card Design<a class="close"></a></li>
 								</ul>
 							</div>
 						</div>
@@ -233,6 +251,28 @@ if(@isset($final_array['campaign_type'])&&!empty($final_array['campaign_type'])&
 	</div>
 
 </section>
+<input id="front_design" type="hidden" value="{{asset('storage/'.$final_array['front_design'])}}">
+<input id="preview_image" type="hidden" value="{{asset('img/preview/')}}/{{$final_array['preview_image']}}">
+<div  id="view_res" style="display:none">
+<table  class="table">
+	<thead>
+		<tr>
+			@foreach($final_array['excel_data']['header'] as $k=>$v)
+			<th>{{$v}}</th>
+			@endforeach
+		</tr>
+	</thead>
+	<tbody>
+	<tr>
+			@foreach($final_array['excel_data']['data'] as $k=>$v)
+			@foreach($v as $k1=>$v1)
+			<td>{{$v1}}</td>
+			@endforeach
+			@endforeach
+		</tr>
+	</tbody>
+</table>
+</div>
 @include('frontend.includes.squareModel')
 @php
 $credit_exchange_rate=credit_exchange_rate();
@@ -273,6 +313,31 @@ $required_balance= number_format((float)$required_balance, 2, '.', '');
 				$("#payment_method_id").attr('required',true);
 			}
 		})
+		$(".send-campaign").click(function(){
+			$("input[name='publish_type']").val('pending');
+			$("#final_form").submit();
+		})
+		$(".save-campaign").click(function(){
+			$("input[name='publish_type']").val('draft');
+			$("#final_form").submit();
+		})
+		
+		$(".bootbox_click").click(function(){
+			var action = $(this).data('action');
+			if(action=='view_recpients'){
+				var d = bootbox.alert($("#view_res").html());
+				d.find('.modal-dialog').addClass('large_modal');
+			}
+			if(action=='message'){
+				var d = bootbox.alert('<img src="'+$("#preview_image").val()+'">');
+			}
+			if(action=='card_design'){
+				var d = bootbox.alert('<img src="'+$("#front_design").val()+'">');
+			}
+			
+			d.find('.modal-dialog').addClass('modal-dialog-centered');
+		})
+		
 	})
 </script>
 @endsection

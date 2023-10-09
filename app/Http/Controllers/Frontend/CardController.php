@@ -13,6 +13,7 @@ use App\Models\User;
 use App\Models\UserPaymentMethod;
 use App\Models\Order;
 use App\Models\Transaction;
+use App\Models\CardDesign;
 use Stripe;
 use Session;
 use Response;
@@ -118,15 +119,7 @@ class CardController extends Controller
 
     public function step4a(Request $request)
     {
-        if ($request->get('payment_intent')) {
-            $status=save_payment($request);
-            if ($status) {
-                Session::flash('success', 'Payment has been successfully processed.');
-                return redirect()->route('frontend.cards.step4');
-            } else {
-                Session::flash('error', 'Payment failed.');
-            }
-        }
+        $carddesigns = CardDesign::whereIn('user_id',[0,auth()->user()->id])->latest()->take(7)->get();
         $final_array=$request->session()->get('final_array');
         $preview_message=final_message(@$final_array['excel_data']['data'][2], $final_array['hwl_custom_msg'], $final_array['system_property_1']);
         $final_array['preview_image'] = generate_Preview_Image($preview_message);
@@ -144,7 +137,7 @@ class CardController extends Controller
         $request->session()->put('final_array', $final_array);
 
         
-        return view('frontend.step4a', compact('final_array'));
+        return view('frontend.step4a', compact('final_array','carddesigns'));
     }
 
     public function step4b(Request $request)
@@ -495,7 +488,7 @@ class CardController extends Controller
             $data=$request->all();
             $final_array=$request->session()->get('final_array');
             $request->session()->put('final_array',array_merge($final_array,$data));
-            return redirect()->route('frontend.cards.step4');
+            return redirect()->route('frontend.cards.step4a');
         }
         // return view('dashboard', compact('body_class'));
         return view('frontend.step3', compact('body_class'));
@@ -524,6 +517,38 @@ class CardController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function cardDesignUpload(Request $request)
+    {
+        if ($request->isMethod('post')) {
+            $data=$request->all();
+            $final_array=$request->session()->get('final_array');
+            $extension = $request->file('design_file')->getClientOriginalExtension();
+            $image_path = $request->file('design_file')->storeAs('card_design', 'card_design_'.time().'.'.$extension, 'public');
+            if($image_path){
+                $carddesign = new CardDesign;
+                $carddesign->user_id = auth()->user()->id;
+                $carddesign->type = $request->get('type');
+                $carddesign->image_path = $image_path;
+                $carddesign->save();
+            }else{
+                Session::flash('error', 'something went wrong.');
+                return redirect()->route('frontend.cards.step4a');  
+            }
+
+
+            return redirect()->route('frontend.cards.step4a');
+        }
+        // return view('dashboard', compact('body_class'));
+        return view('frontend.step4a', compact('body_class'));
+    }
+
+    
+
+    /**
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function step5Update(Request $request)
     {
         ini_set('max_execution_time', 1000);
@@ -535,7 +560,7 @@ class CardController extends Controller
 
             $order_data=$request->session()->get('final_array');
 
-            if ($order_data['campaign_type']=='pending') {
+            if ($order_data['campaign_type']=='pending'||$order_data['campaign_type']=='single') {
                 $transaction = new Transaction;
                 $transaction->user_id = auth()->user()->id;
                 $transaction->amount = count($order_data['excel_data']['data'])*credit_exchange_rate();
@@ -574,14 +599,14 @@ class CardController extends Controller
                 if(@$order_data['step_0_action_2']=='duplicate_existing'){
                     $order->campaign_name= $order_data['campaign_name']." Copy";
                 }else{
-                    $order->campaign_name= $order_data['campaign_name'];
+                    $order->campaign_name= @$order_data['campaign_name'];
                 }
                 $order->campaign_type= $order_data['campaign_type']=='on-going'?'on-going':'one-time';
                 $order->campaign_message= 'order_'.$order_data['preview_image'];
                 $order->schedule_status= $order_data['publish_type']=='schedule'?1:0;
                 $order->auto_charge= $order_data['auto_charge']?1:0;
                 $order->threshold= $order_data['threshold']?$order_data['threshold']:0;
-                $order->repeat_number= $order_data['repeat_number']?$order_data['repeat_number']:0;
+                $order->repeat_number= isset($order_data['repeat_number'])?$order_data['repeat_number']:0;
                 $order->payment_method_id= isset($order_data['payment_method_id'])?$order_data['payment_method_id']:0;
                 $order->uploaded_recipient_file= $order_data['upload_recipients'];
                 $order->final_printing_file= $order_data['upload_recipients'];

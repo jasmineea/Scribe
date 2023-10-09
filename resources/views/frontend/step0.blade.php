@@ -17,46 +17,21 @@
 		<div class="row justify-content-center">
 			<div class="col-12">
 				<div class="card px-0 pt-4 pb-0 mt-3 mb-3">
-					<div id="msform">
+					<div id="msform" class="steps-content">
 					   <!-- progressbar -->
 					   @include('frontend.includes.progressbar')
+					   <div class="section-heading inner-section-heading text-center mt-10">
+							<h3>Let's get started. What would you like to do?</h3>
+						</div>
 					   <fieldset class="field-active">
 						<form action="{{ route("frontend.cards.step1Update")}}" method="POST">
 							{{ csrf_field() }}
-						  <div class="written_letter_form">
-							 <div class="Repeater_container">
-								<div class="main">
-								<div class="row">
-								<div class="col-1">
-								<ul class="btn btn-outline-primary theme_button" style="position: absolute;padding: var(--bs-btn-padding-y) 10px;"><li style="list-style: none;float: left;padding-right: 8px;"><i class="fa fa-info-circle step-info" data-element="step_1_tooltip"></i></li><li  style="list-style: none;
-											float: left;"><i class="fa fa-video-camera show_video" data-element="step_1_tooltip" aria-hidden="true"></i></li></ul>
-								</div>
-								<div class="col-11">
-									<div class="single_row2 max-width-650 custom_box"  id="step_1_tooltip" data-value="{{setting('step_1_tooltip_message')}}"  data-pos="right"  data-title="{{setting('step_1_tooltip_title')}}" data-element="step_1_tooltip" data-video_link="{{setting('step_1_video_link')}}">
-										<input type="radio" name="step_0_action" {{!isset($final_array['step_0_action'])?'checked':'';}} {{@$final_array['step_0_action']=='new'?"checked":''}} value="new" class="btn-check" id="btn-check-outlined" autocomplete="off">
-										<label class="btn btn-outline-primary theme_button step_0_action"  data-val="new" style="width:50%" for="btn-check-outlined">Create New Campaign</label>
-										<input type="radio" name="step_0_action" {{@$final_array['step_0_action']=='old'?"checked":''}} value="old" class="btn-check" id="btn-check-outlined1" autocomplete="off">
-										<label class="btn btn-outline-primary theme_button step_0_action"  data-val="old" style="width:49%" for="btn-check-outlined1">Use Existing Campaign</label>
-									</div>
-
-									<div class="single_row2 max-width-650 existing_campaign_id">
-										<select name="existing_campaign_id" id="listing_select" style="width:100%;">
-											<option value="">Select Campaign</option>
-											@foreach ($campaigns as $item)
-											<option value="{{$item->id}}" {{@$final_array['existing_campaign_id']==$item->id?"selected":""}}>{{$item->campaign_name}}</option>
-											@endforeach
-										</select>
-									</div>
-									<div class="single_row2 max-width-650 custom_box" id="step_0_action_2">
-										<input type="radio" name="step_0_action_2" {{!isset($final_array['step_0_action_2'])?'checked':'';}} {{@$final_array['step_0_action_2']=='edit_existing'?"checked":''}} value="edit_existing" class="btn-check" id="btn-check-outlined3" autocomplete="off">
-										<label class="btn btn-outline-primary theme_button step_0_action_2"  data-val="edit_existing" style="width:50%" for="btn-check-outlined3">Edit Existing Campaign</label>
-										<input type="radio" name="step_0_action_2" {{@$final_array['step_0_action_2']=='duplicate_existing'?"checked":''}} value="duplicate_existing" class="btn-check" id="btn-check-outlined4" autocomplete="off">
-										<label class="btn btn-outline-primary theme_button step_0_action_2"  data-val="duplicate_existing" style="width:49%" for="btn-check-outlined4">Duplicate This Campaign</label>
-									</div>
-									</div>
-									</div>
-							 </div>
-						  </div>
+							<div class="step-1-options">
+								<div class="step-1-option" for="campaign_type1" href="#"><div><img src="img/campaign-1.png"><h4>One-time Campaign</h4></div><input type="radio" name="campaign_type" {{!isset($final_array['campaign_type'])?'checked':'';}} {{@$final_array['campaign_type']=='pending'?"checked":''}} value="pending" class="" id="campaign_type1" autocomplete="off"></div>
+								<div class="step-1-option" href="#"><div><img src="img/campaign-on.png"><h4>Ongoing Campaign</h4></div><input type="radio" name="campaign_type" {{@$final_array['campaign_type']=='on-going'?"checked":''}} value="on-going" class="" id="btn-check-outlined1" autocomplete="off"></div>
+								<div class="step-1-option" href="#"><div><img src="img/campaign-letter.png"><h4>Send One Letter</h4></div><input type="radio" name="campaign_type" {{@$final_array['campaign_type']=='single'?"checked":''}} value="single" class="" id="btn-check-outlined1" autocomplete="off"></div>
+							</div>
+						  
 						  <input type="submit" name="next" class="next action-button save_message action-button2" value="GO TO STEP 2">
 						</form>
 					   </fieldset>

@@ -559,7 +559,6 @@ $(document).ready(function(){
 		var d = bootbox.confirm("<form id='infos' action='"+url+"' method='post'>\
 		<input type='hidden' name='_token' value='"+token+"'>\
 		<input type='hidden' name='campaign_name' value='"+$("#exampleInputEmail1").val()+"'>\
-		<input type='hidden' name='campaign_type' value='"+$("input[name='campaign_type']:checked").val()+"'>\
 		Enter Campaign List Name <input type='text' name='campaign_list_name' /><br/>\
 		</form>", function(result) {
 			if(result){

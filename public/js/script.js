@@ -43,8 +43,7 @@ $(document).ready(function() {
 
 
 });
-<<<<<<< Updated upstream
-=======
+
 
 $(document).ready(function() {
   $(".sidebar-parent-menu a").click(function(){
@@ -91,16 +90,16 @@ fileInput.addEventListener("click", () => {
 });
 
 fileInput.addEventListener("change", e => {
-	console.log(" > " + fileInput.value)
-	uploadIcon.classList.add("file-uploaded");
-	dragDropText.innerHTML = 'File Dropped Successfully!';
-	document.querySelector(".label").innerHTML = `drag & drop or <span class="browse-files"> <input type="file" class="default-file-input" style=""/> <span class="browse-files-text" style="top: 0;"> browse file</span></span>`;
-	uploadButton.innerHTML = `Upload`;
-	fileName.innerHTML = fileInput.files[0].name;
-	fileSize.innerHTML = (fileInput.files[0].size/1024).toFixed(1) + " KB";
-	uploadedFile.style.cssText = "display: flex;";
-	progressBar.style.width = 0;
-	fileFlag = 0;
+	// console.log(" > " + fileInput.value)
+	// uploadIcon.classList.add("file-uploaded");
+	// dragDropText.innerHTML = 'File Dropped Successfully!';
+	// document.querySelector(".label").innerHTML = `drag & drop or <span class="browse-files"> <input type="file" class="default-file-input" style=""/> <span class="browse-files-text" style="top: 0;"> browse file</span></span>`;
+	// uploadButton.innerHTML = `Upload`;
+	// fileName.innerHTML = fileInput.files[0].name;
+	// fileSize.innerHTML = (fileInput.files[0].size/1024).toFixed(1) + " KB";
+	// uploadedFile.style.cssText = "display: flex;";
+	// progressBar.style.width = 0;
+	// fileFlag = 0;
 });
 
 uploadButton.addEventListener("click", () => {
@@ -220,4 +219,4 @@ $(".custom-option").on("click", function() {
 
 
 });
->>>>>>> Stashed changes
+

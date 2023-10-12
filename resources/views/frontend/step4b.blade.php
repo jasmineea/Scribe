@@ -332,7 +332,7 @@ $required_balance= number_format((float)$required_balance, 2, '.', '');
 				var d = bootbox.alert('<img src="'+$("#preview_image").val()+'">');
 			}
 			if(action=='card_design'){
-				var d = bootbox.alert('<img src="'+$("#front_design").val()+'">');
+				var d = bootbox.alert('Front View: <br><br><img src={{asset("img/Front.png")}} style="width: 100%;height: inherit;background:url('+$("#front_design").val()+')"><br>Back View: <br><img src={{asset("img/Back.png")}} style="width: 100%;height: inherit;background:url('+$("#front_design").val()+')">');
 			}
 			
 			d.find('.modal-dialog').addClass('modal-dialog-centered');

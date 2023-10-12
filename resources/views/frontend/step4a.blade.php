@@ -40,11 +40,11 @@ if(@isset($final_array['campaign_type'])&&!empty($final_array['campaign_type'])&
 													<div class="tab-content" id="myTabContent">
 														<div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
 														<div class="design-area design-area__front">
-															
+														<img src="{{asset('img/Front.png')}}" style="width: 100%;height: inherit;">
 															</div>
 														</div>
 														<div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab"><div class="design-area design-area__back">
-															
+														<img src="{{asset('img/Back.png')}}"  style="width: 100%;height: inherit;">
 														</div>
 													</div>
 												</div>
@@ -97,8 +97,8 @@ if(@isset($final_array['campaign_type'])&&!empty($final_array['campaign_type'])&
 									</div>
 								</div>
 							
-								<input type="hidden" name="front_design" value="">
-								<input type="hidden" name="back_design" value="">
+								<input type="hidden" name="front_design" value="{{@$final_array['front_design']}}">
+								<input type="hidden" name="back_design" value="{{@$final_array['back_design']}}">
 								<input type="submit" name="next" class="next action-button upload_last_file_and_message action-button2" value="STEP5">
 						<a href="{{ route("frontend.cards.step3a")}}" class="previous action-button action-button-previous" value="PREVIOUS STEP">PREVIOUS</a>
 						</form>

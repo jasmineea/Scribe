@@ -997,10 +997,10 @@ header#header {
 }
 .design-view-section .design-area {
     width: 100%;
-    height: 300px;
+    height: auto;
     border-radius: 10px;
     background-color: #f8f8f6;
-    background: url(../img/paper-front.png) #f8f8f8;
+    background: #f8f8f8;
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
@@ -1022,10 +1022,10 @@ header#header {
 }
 .design-view-section .design-area {
     width: 100%;
-    height: 300px;
+    height: auto;
     border-radius: 10px;
     background-color: #f8f8f6;
-    background: url(../img/paper-front.png) #f8f8f8;
+    background: #f8f8f8;
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;

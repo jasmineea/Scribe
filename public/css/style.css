@@ -1,4 +1,4 @@
-body, * {
+saasrootbody, * {
     font-family: 'Poppins', sans-serif;
 }
 
@@ -504,7 +504,7 @@ span.nmbr {
     color: #f7fff7;
     background-color: #E58A40;
     transition: all 1s;
-    width: 390px;
+    width: 92%;
     position: relative;
     display: none;
     flex-direction: row;

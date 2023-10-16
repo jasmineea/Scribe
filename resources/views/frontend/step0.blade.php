@@ -27,9 +27,9 @@
 						<form action="{{ route("frontend.cards.step1Update")}}" method="POST">
 							{{ csrf_field() }}
 							<div class="step-1-options">
-								<div class="step-1-option" for="campaign_type1" href="#"><div><img src="img/campaign-1.png"><h4>One-time Campaign</h4></div><input type="radio" name="campaign_type" {{!isset($final_array['campaign_type'])?'checked':'';}} {{@$final_array['campaign_type']=='pending'?"checked":''}} value="pending" class="" id="campaign_type1" autocomplete="off"></div>
-								<div class="step-1-option" href="#"><div><img src="img/campaign-on.png"><h4>Ongoing Campaign</h4></div><input type="radio" name="campaign_type" {{@$final_array['campaign_type']=='on-going'?"checked":''}} value="on-going" class="" id="btn-check-outlined1" autocomplete="off"></div>
-								<div class="step-1-option" href="#"><div><img src="img/campaign-letter.png"><h4>Send One Letter</h4></div><input type="radio" name="campaign_type" {{@$final_array['campaign_type']=='single'?"checked":''}} value="single" class="" id="btn-check-outlined1" autocomplete="off"></div>
+								<div class="step-1-option" style="cursor: pointer;" for="campaign_type1" href="#"><div><img src="img/campaign-1.png"><h4>One-time Campaign</h4></div><input type="radio" name="campaign_type" {{!isset($final_array['campaign_type'])?'checked':'';}} {{@$final_array['campaign_type']=='pending'?"checked":''}} value="pending" class="input_radio" id="campaign_type1" autocomplete="off"></div>
+								<div class="step-1-option" style="cursor: pointer;" href="#"><div><img src="img/campaign-on.png"><h4>Ongoing Campaign</h4></div><input type="radio" name="campaign_type" {{@$final_array['campaign_type']=='on-going'?"checked":''}} value="on-going" class="input_radio" id="btn-check-outlined1" autocomplete="off"></div>
+								<div class="step-1-option" style="cursor: pointer;" href="#"><div><img src="img/campaign-letter.png"><h4>Send One Letter</h4></div><input type="radio" name="campaign_type" {{@$final_array['campaign_type']=='single'?"checked":''}} value="single" class="input_radio" id="btn-check-outlined1" autocomplete="off"></div>
 							</div>
 						  
 						  <input type="submit" name="next" class="next action-button save_message action-button2" value="GO TO STEP 2">
@@ -66,6 +66,10 @@
 			$("#step_0_action_2").hide();
 			$("#listing_select").removeAttr("required");
 		}
+	})
+	$(".step-1-option").click(function(){
+		$('.input_radio').prop('checked', false);
+		$(this).find('.input_radio').prop('checked', true);
 	})
 </script>
 @endsection

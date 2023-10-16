@@ -89,16 +89,17 @@ fileInput.addEventListener("click", () => {
 });
 
 fileInput.addEventListener("change", e => {
-	// console.log(" > " + fileInput.value)
-	// uploadIcon.classList.add("file-uploaded");
+	$(".file-block").css('display','block');
+	console.log(" > " + fileInput.value)
+	uploadIcon.classList.add("file-uploaded");
 	// dragDropText.innerHTML = 'File Dropped Successfully!';
 	// document.querySelector(".label").innerHTML = `drag & drop or <span class="browse-files"> <input type="file" class="default-file-input" style=""/> <span class="browse-files-text" style="top: 0;"> browse file</span></span>`;
 	// uploadButton.innerHTML = `Upload`;
-	// fileName.innerHTML = fileInput.files[0].name;
-	// fileSize.innerHTML = (fileInput.files[0].size/1024).toFixed(1) + " KB";
-	// uploadedFile.style.cssText = "display: flex;";
-	// progressBar.style.width = 0;
-	// fileFlag = 0;
+	fileName.innerHTML = fileInput.files[0].name;
+	fileSize.innerHTML = (fileInput.files[0].size/1024).toFixed(1) + " KB";
+	//uploadedFile.style.cssText = "display: flex;";
+	progressBar.style.width = 0;
+	fileFlag = 0;
 });
 
 uploadButton.addEventListener("click", () => {
@@ -167,10 +168,10 @@ removeFileButton.addEventListener("click", () => {
 	uploadedFile.style.cssText = "display: none;";
 	fileInput.value = '';
 	uploadIcon.classList.remove("file-uploaded");
-	//uploadIcon.innerHTML = 'file_upload';
-	dragDropText.innerHTML = 'Drag & drop any file here';
-	document.querySelector(".label").innerHTML = `or <span class="browse-files"> <input type="file" class="default-file-input"/> <span class="browse-files-text">browse file</span> <span>from device</span> </span>`;
-	uploadButton.innerHTML = `Upload`;
+	// //uploadIcon.innerHTML = 'file_upload';
+	// dragDropText.innerHTML = 'Drag & drop any file here';
+	// document.querySelector(".label").innerHTML = `or <span class="browse-files"> <input type="file" class="default-file-input"/> <span class="browse-files-text">browse file</span> <span>from device</span> </span>`;
+	// uploadButton.innerHTML = `Upload`;
 });
 
 // Custom File Upload Ends

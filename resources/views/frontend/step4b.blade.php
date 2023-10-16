@@ -40,6 +40,7 @@ if(@isset($final_array['campaign_type'])&&!empty($final_array['campaign_type'])&
 								</div>
 							@else
 							<div class="step-5-buttons">
+							<a href="#" class="send-campaign disabled"><span>Send Campaign</span></a>
 								<a href="#" class="save-campaign"><span>Save Campaign & Send Later</span></a>
 							</div>
 							<div class="purchase-credit">

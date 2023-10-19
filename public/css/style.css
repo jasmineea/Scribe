@@ -1,4 +1,4 @@
-body, * {
+saasrootbody, * {
     font-family: 'Poppins', sans-serif;
 }
 
@@ -504,7 +504,7 @@ span.nmbr {
     color: #f7fff7;
     background-color: #E58A40;
     transition: all 1s;
-    width: 390px;
+    width: 92%;
     position: relative;
     display: none;
     flex-direction: row;
@@ -961,7 +961,6 @@ header#header {
 }
 .design-template-thumb img {
     height: 100%;
-    width: 100%;
     object-fit: cover;
 }
 .template-word-section.step-4-right-buttons {
@@ -975,12 +974,14 @@ header#header {
     padding-top: 25px;
 }
 .design-template-thumb {
-    height: 100px;
+    height: 200px;
     overflow: hidden;
     object-fit: fill;
     object-position: center;
     border-radius: 10px;
     margin-top: 10px;
+    border: 1px solid;
+    text-align: center;
 }
 .design-upload-btn {
     display: flex;
@@ -992,7 +993,7 @@ header#header {
     padding: 10px;
     text-align: center;
     color: white;
-    height: 100px;
+    height: 200px;
     position: relative;
 }
 .design-view-section .design-area {

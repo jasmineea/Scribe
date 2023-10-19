@@ -10,6 +10,130 @@ if(@isset($final_array['campaign_type'])&&!empty($final_array['campaign_type'])&
 	$class_tooltip="step_5a";
 }
 @endphp
+<style>
+  /* Absolute Center Spinner */
+.loading {
+  position: fixed;
+  z-index: 999;
+  height: 2em;
+  width: 2em;
+  overflow: show;
+  margin: auto;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+
+/* Transparent Overlay */
+.loading:before {
+  content: '';
+  display: block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+    background: radial-gradient(rgba(20, 20, 20,.9), rgba(0, 0, 0, .9));
+
+  background: -webkit-radial-gradient(rgba(20, 20, 20,.9), rgba(0, 0, 0,.9));
+}
+
+/* :not(:required) hides these rules from IE9 and below */
+.loading:not(:required) {
+  /* hide "loading..." text */
+  font: 0/0 a;
+  color: transparent;
+  text-shadow: none;
+  background-color: transparent;
+  border: 0;
+}
+
+.loading:not(:required):after {
+  content: '';
+  display: block;
+  font-size: 10px;
+  width: 1em;
+  height: 1em;
+  margin-top: -0.5em;
+  -webkit-animation: spinner 150ms infinite linear;
+  -moz-animation: spinner 150ms infinite linear;
+  -ms-animation: spinner 150ms infinite linear;
+  -o-animation: spinner 150ms infinite linear;
+  animation: spinner 150ms infinite linear;
+  border-radius: 0.5em;
+  -webkit-box-shadow: rgba(255,255,255, 0.75) 1.5em 0 0 0, rgba(255,255,255, 0.75) 1.1em 1.1em 0 0, rgba(255,255,255, 0.75) 0 1.5em 0 0, rgba(255,255,255, 0.75) -1.1em 1.1em 0 0, rgba(255,255,255, 0.75) -1.5em 0 0 0, rgba(255,255,255, 0.75) -1.1em -1.1em 0 0, rgba(255,255,255, 0.75) 0 -1.5em 0 0, rgba(255,255,255, 0.75) 1.1em -1.1em 0 0;
+box-shadow: rgba(255,255,255, 0.75) 1.5em 0 0 0, rgba(255,255,255, 0.75) 1.1em 1.1em 0 0, rgba(255,255,255, 0.75) 0 1.5em 0 0, rgba(255,255,255, 0.75) -1.1em 1.1em 0 0, rgba(255,255,255, 0.75) -1.5em 0 0 0, rgba(255,255,255, 0.75) -1.1em -1.1em 0 0, rgba(255,255,255, 0.75) 0 -1.5em 0 0, rgba(255,255,255, 0.75) 1.1em -1.1em 0 0;
+}
+
+/* Animation */
+
+@-webkit-keyframes spinner {
+  0% {
+    -webkit-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -ms-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -ms-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+@-moz-keyframes spinner {
+  0% {
+    -webkit-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -ms-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -ms-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+@-o-keyframes spinner {
+  0% {
+    -webkit-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -ms-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -ms-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+@keyframes spinner {
+  0% {
+    -webkit-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -ms-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -ms-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+</style>
+<div class="loading">Loading&#8230;</div>
 <section id="hero-section">
 	<div class="container-fluid" style="padding-left: 368px;">
 		<div class="row">
@@ -40,11 +164,13 @@ if(@isset($final_array['campaign_type'])&&!empty($final_array['campaign_type'])&
 													<div class="tab-content" id="myTabContent">
 														<div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
 														<div class="design-area design-area__front">
-														<img src="{{asset('img/Front.png')}}" style="width: 100%;height: inherit;">
+														<!-- <img src="{{asset('img/Back.png')}}" style="width: 100%;height: inherit;-webkit-transform: scaleX(-1);  transform: scaleX(-1);"> -->
+														<img src="{{asset('img/front1.png')}}">
 															</div>
 														</div>
 														<div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab"><div class="design-area design-area__back">
-														<img src="{{asset('img/Back.png')}}"  style="width: 100%;height: inherit;">
+														<!-- <img src="{{asset('img/Back.png')}}"  style="width: 100%;height: inherit;"> -->
+														<img src="{{asset('img/back1.png')}}">
 														</div>
 													</div>
 												</div>
@@ -82,15 +208,15 @@ if(@isset($final_array['campaign_type'])&&!empty($final_array['campaign_type'])&
 
 										
 									</div>
-									<div class="col-12 col-sm-3">
+									<div class="col-12 col-sm-3" style="height: 600px;overflow: scroll;">
 										<div class="template-word-section step-4-right-buttons">
-											<div class="design-upload-btn">
+											<div class="design-upload-btn" style="cursor: pointer;">
 												<span class="upload-icon upload-icon-white"></span>
 												<span>Upload</span>
 											</div>
 											@foreach($carddesigns as $k=>$v)
-											<div class="design-template-thumb">
-												<img src="{{asset('storage/'.$v['image_path'])}}" data-path="{{$v['image_path']}}">
+											<div class="design-template-thumb"  style="cursor: pointer;">
+												<img src="{{asset('storage/'.$v['image_path'])}}" data-path="{{$v['image_path']}}" data-front-src="{{asset('storage/'.$v['front_image_path'])}}" data-back-src="{{asset('storage/'.$v['back_image_path'])}}" data-front="{{$v['front_image_path']}}" data-back="{{$v['back_image_path']}}">
 											</div>
 											@endforeach
 										</div>
@@ -99,6 +225,7 @@ if(@isset($final_array['campaign_type'])&&!empty($final_array['campaign_type'])&
 							
 								<input type="hidden" name="front_design" value="{{@$final_array['front_design']}}">
 								<input type="hidden" name="back_design" value="{{@$final_array['back_design']}}">
+								<input type="hidden" name="main_design" value="{{@$final_array['main_design']}}">
 								<input type="submit" name="next" class="next action-button upload_last_file_and_message action-button2" value="STEP5">
 						<a href="{{ route("frontend.cards.step3a")}}" class="previous action-button action-button-previous" value="PREVIOUS STEP">PREVIOUS</a>
 						</form>
@@ -120,6 +247,7 @@ if(@isset($final_array['campaign_type'])&&!empty($final_array['campaign_type'])&
 <input id="back_design" type="hidden" value="{{asset('storage/'.$final_array['back_design'])}}">
 @endif
 <script>
+$(".loading").hide();
 	var front_design=$("#front_design").val();
 	var back_design=$("#back_design").val();
 	if(front_design){
@@ -133,15 +261,21 @@ if(@isset($final_array['campaign_type'])&&!empty($final_array['campaign_type'])&
 		$("#uploadDesign").trigger('click');
 	})
 	$("#uploadDesign").on( 'change', function () {
+	    $(".loading").show();
                 $('#design_form').submit();
             });
 	$(".design-template-thumb img").click(function(){
 		var src=$(this).attr('src');
+		var src_f=$(this).data('front-src');
+		var src_b=$(this).data('back-src');
 		var path=$(this).data('path');
-		$(".design-area__front").css('background','url('+src+') #f8f8f8');
-		$(".design-area__back").css('background','url('+src+') #f8f8f8');
-		$("input[name='front_design']").val(path);
-		$("input[name='back_design']").val(path);
+		var path_f=$(this).data('front');
+		var path_b=$(this).data('back');
+		$(".design-area__front img").attr('src',src_b);
+		$(".design-area__back img").attr('src',src_f);
+		$("input[name='front_design']").val(path_b);
+		$("input[name='back_design']").val(path_f);
+		$("input[name='main_design']").val(path);
 	})
 	</script>
 @endsection

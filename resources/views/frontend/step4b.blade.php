@@ -11,6 +11,18 @@ if(@isset($final_array['campaign_type'])&&!empty($final_array['campaign_type'])&
 }
 
 @endphp
+<style>
+.modal-dialog.large_modal.modal-dialog-centered .bootbox-body {
+    overflow: scroll;
+    height: 500px;
+}
+.large_modal table td, .large_modal table th {
+    padding: 1em 0.21575em;
+    text-align: center;
+    vertical-align: top;
+    border-right: 1px solid rgba(0,0,0,0.1) !important;
+}
+</style>
 <section id="hero-section">
 	<div class="container-fluid" style="padding-left: 368px;">
 		<div class="row justify-content-center">
@@ -253,6 +265,7 @@ if(@isset($final_array['campaign_type'])&&!empty($final_array['campaign_type'])&
 
 </section>
 <input id="front_design" type="hidden" value="{{asset('storage/'.$final_array['front_design'])}}">
+<input id="back_design" type="hidden" value="{{asset('storage/'.$final_array['back_design'])}}">
 <input id="preview_image" type="hidden" value="{{asset('img/preview/')}}/{{$final_array['preview_image']}}">
 <div  id="view_res" style="display:none">
 <table  class="table">
@@ -264,13 +277,13 @@ if(@isset($final_array['campaign_type'])&&!empty($final_array['campaign_type'])&
 		</tr>
 	</thead>
 	<tbody>
-	<tr>
 			@foreach($final_array['excel_data']['data'] as $k=>$v)
+			<tr>
 			@foreach($v as $k1=>$v1)
 			<td>{{$v1}}</td>
 			@endforeach
+			</tr>
 			@endforeach
-		</tr>
 	</tbody>
 </table>
 </div>
@@ -294,6 +307,7 @@ $required_balance= number_format((float)$required_balance, 2, '.', '');
 @endif
 <script>
 	$(document).ready(function(){
+		$(".loading").hide();
 		var recharge_amount = parseFloat("{{$order_total}}").toFixed(2);
 		console.log(recharge_amount);
 		if(recharge_amount=='0.00'){
@@ -333,7 +347,7 @@ $required_balance= number_format((float)$required_balance, 2, '.', '');
 				var d = bootbox.alert('<img src="'+$("#preview_image").val()+'">');
 			}
 			if(action=='card_design'){
-				var d = bootbox.alert('Front View: <br><br><img src={{asset("img/Front.png")}} style="width: 100%;height: inherit;background:url('+$("#front_design").val()+')"><br>Back View: <br><img src={{asset("img/Back.png")}} style="width: 100%;height: inherit;background:url('+$("#front_design").val()+')">');
+				var d = bootbox.alert('Front View: <br><br><img src='+$("#front_design").val()+' style="width: 100%;height: inherit;"><br>Back View: <br><img src='+$("#back_design").val()+' style="width: 100%;height: inherit;)">');
 			}
 			
 			d.find('.modal-dialog').addClass('modal-dialog-centered');

@@ -53,7 +53,8 @@ class CardController extends Controller
      */
     public function step0(Request $request)
     {
-        if (!$request->session()->has('final_array')) {
+        // mergeTwoImages();
+       if (!$request->session()->has('final_array')) {
             $request->session()->put('final_array',['tags'=>['FIRST_NAME'=>'FIRST NAME','LAST_NAME'=>'LAST NAME'],'listing_id'=>0,'list_id'=>0]);
         }
         $campaigns = Order::where('user_id', auth()->user()->id)->whereIn('status',['payment-pending','pending','processing','draft'])->get();
@@ -68,6 +69,7 @@ class CardController extends Controller
      */
     public function step1(Request $request)
     {
+        
         $final_array=$request->session()->get('final_array');
         $listings = Listing::where('user_id', auth()->user()->id)->get();
         return view('frontend.step1', compact('listings','final_array'));
@@ -523,12 +525,21 @@ class CardController extends Controller
             $data=$request->all();
             $final_array=$request->session()->get('final_array');
             $extension = $request->file('design_file')->getClientOriginalExtension();
-            $image_path = $request->file('design_file')->storeAs('card_design', 'card_design_'.time().'.'.$extension, 'public');
+            $image_name='card_design_'.time();
+            $image_path = $request->file('design_file')->storeAs('card_design', $image_name.'.'.$extension, 'public');
             if($image_path){
+                // $dpi = getDPIImageMagick($image_path);
+                // if($dpi<300){
+                //     Session::flash('error', 'Image should have 300 dpi.');
+                //     return redirect()->route('frontend.cards.step4a');   
+                // }
+                divideImage($image_name,$extension);
                 $carddesign = new CardDesign;
                 $carddesign->user_id = auth()->user()->id;
                 $carddesign->type = $request->get('type');
                 $carddesign->image_path = $image_path;
+                $carddesign->front_image_path = 'card_design/cropped/'.$image_name.'_0.'.$extension;
+                $carddesign->back_image_path = 'card_design/cropped/'.$image_name.'_1.'.$extension;
                 $carddesign->save();
             }else{
                 Session::flash('error', 'something went wrong.');

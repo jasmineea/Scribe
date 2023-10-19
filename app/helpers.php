@@ -35,7 +35,149 @@ if (! function_exists('app_name')) {
         return config('app.name');
     }
 }
+function getDPIImageMagick($filename){
+    $im = imagecreatefromstring(file_get_contents(public_path("storage/".$filename)));
+    $image_dpi=imageresolution($im);
+    imagedestroy($im);
+    return $image_dpi[0];
+}
+function divideImage($filename='a.jpg',$extension){
+    $file_path=public_path("storage/card_design/".$filename.'.'.$extension);
+    exec('convert -crop 100%x50% '.$file_path.' '.public_path("storage/card_design/cropped/".$filename."_%d".".".$extension));
+    return 1;
+}
+function get_dpi($filename){
+    $a = fopen(public_path('storage/'.$filename),'r');
+    $string = fread($a,20);
+    fclose($a);
 
+    $data = bin2hex(substr($string,14,4));
+    $x = substr($data,0,4);
+    $y = substr($data,0,4);
+
+    return array(hexdec($x),hexdec($y));
+} 
+function image_resize($filename, $percent) {
+   
+
+    // Content type
+    header('Content-Type: image/png');
+
+    // Get new sizes
+    list($width, $height) = getimagesize($filename);
+    $newwidth = $width * $percent;
+    $newheight = $height * $percent;
+
+    // Load
+    $thumb = imagecreatetruecolor($newwidth, $newheight);
+    $source = imagecreatefrompng($filename);
+
+    // Resize
+    imagecopyresized($thumb, $source, 0, 0, 0, 0, $newwidth, $newheight, $width, $height);
+
+    // Output
+    imagepng($thumb,$filename);
+ }
+function imagecopymerge_alpha($dst_im, $src_im, $dst_x, $dst_y, $src_x, $src_y, $src_w, $src_h, $pct){ 
+    // creating a cut resource 
+    $cut = imagecreatetruecolor($src_w, $src_h); 
+
+    // copying relevant section from background to the cut resource 
+    imagecopy($cut, $dst_im, 0, 0, $dst_x, $dst_y, $src_w, $src_h); 
+
+    // copying relevant section from watermark to the cut resource 
+    imagecopy($cut, $src_im, 0, 0, $src_x, $src_y, $src_w, $src_h); 
+
+    // insert cut resource to destination image 
+    imagecopymerge($dst_im, $cut, $dst_x, $dst_y, 0, 0, $src_w, $src_h, $pct); 
+} 
+function mergeTwoImages(){
+
+   // image_resize(public_path("storage/card_design/a.png"),0.80);
+
+    $base = imagecreatefrompng(public_path("storage/card_design/a.png"));
+    $size = getimagesize(public_path("storage/card_design/Back.png"));
+    $logo1 = public_path("storage/card_design/Back.png");
+    $logo = imagecreatefrompng($logo1);
+    imagecopymerge_alpha($base, $logo, 0, 0, 0, 0,$size[0], $size[1], 100);
+    header('Content-Type: image/png');
+    imagepng($base,public_path("storage/card_design/stamp.png"));
+
+
+
+     # If you don't know the type of image you are using as your originals.
+    // $image = imagecreatefromstring(file_get_contents(public_path("storage/card_design/a.png")));
+    // $frame = imagecreatefromstring(file_get_contents(public_path("storage/card_design/aa.png")));
+
+    // # If you know your originals are of type PNG.
+    // $image = imagecreatefrompng(public_path("storage/card_design/a.png"));
+    // $frame = imagecreatefrompng(public_path("storage/card_design/aa.png"));
+
+    // imagecopymerge($image, $frame, 0, 0, 0, 0, 700, 700, 100);
+
+    // # Save the image to a file
+    // header('Content-Type: image/png');
+    // imagepng($image,public_path("storage/card_design/stamp.png"));
+
+    // # Output straight to the browser.
+    // imagepng($image);
+
+    // $dest = @imagecreatefrompng(public_path("storage/card_design/a.png"));
+    // $src = @imagecreatefrompng(public_path("storage/card_design/Back.png"));
+
+    // // Copy and merge
+    // imagecopymerge($dest, $src, 0, 0, 0, 0, 500, 500, 100);
+
+    // // Output and free from memory
+    // header('Content-Type: image/png');
+    // imagepng($dest, public_path("storage/card_design/stamp.png"));
+
+
+    // $src = imagecreatefromjpeg(public_path("storage/card_design/b1.jpg"));
+    // $dest = imagecreatefrompng(public_path("storage/card_design/Back.png"));
+
+    // imagealphablending($dest, false);
+    // imagesavealpha($dest, true);
+    // imagealphablending($src, false);
+    // imagesavealpha($src, true);
+
+    // $insert_x = imagesx($src); 
+    // $insert_y = imagesy($src);
+
+    // $white = imagecolorallocatealpha($dest, 255, 255, 255, 127); 
+    // imagecolortransparent($dest, $white);
+    // imagecopymerge($src, $dest, 0, 0, 0, 0, $insert_x, $insert_y, 100); 
+
+    // header('Content-Type: image/jpeg');
+    // imagejpeg($src, public_path("storage/card_design/stamp.jpeg"));
+
+    // imagedestroy($dest);
+    // imagedestroy($src);
+
+    // $im = imagecreatefrompng(public_path("storage/card_design/a.png"));
+    // $top_img = imagecreatefrompng(public_path("storage/card_design/Back.png"));
+
+    // // First we create our stamp image manually from GD
+    // // $stamp = imagecreatetruecolor(100, 70);
+    // // imagefilledrectangle($stamp, 0, 0, 99, 69, 0x0000FF);
+    // // imagefilledrectangle($stamp, 9, 9, 90, 60, 0xFFFFFF);
+    // // imagestring($stamp, 5, 20, 20, 'libGD', 0x0000FF);
+    // // imagestring($stamp, 3, 20, 40, '(c) 2007-9', 0x0000FF);
+
+    // // Set the margins for the stamp and get the height/width of the stamp image
+    // $marge_right = 10;
+    // $marge_bottom = 10;
+    // $sx = imagesx($top_img);
+    // $sy = imagesy($top_img);
+
+    // // Merge the stamp onto our photo with an opacity of 50%
+    // imagecopymerge($im, $top_img, imagesx($im) - $sx - $marge_right, imagesy($im) - $sy - $marge_bottom, 0, 0, imagesx($top_img), imagesy($top_img), 100);
+
+    // // Save the image to file and free memory
+    // imagepng($im, public_path("storage/card_design/stamp.png"));
+    // imagedestroy($im);
+
+}
 if (! function_exists('create_square_customer_id')) {
     function create_square_customer_id($first_name, $last_name, $email)
     {

@@ -265,6 +265,7 @@ if(@isset($final_array['campaign_type'])&&!empty($final_array['campaign_type'])&
 
 </section>
 <input id="front_design" type="hidden" value="{{asset('storage/'.$final_array['front_design'])}}">
+<input id="back_design" type="hidden" value="{{asset('storage/'.$final_array['back_design'])}}">
 <input id="preview_image" type="hidden" value="{{asset('img/preview/')}}/{{$final_array['preview_image']}}">
 <div  id="view_res" style="display:none">
 <table  class="table">
@@ -346,7 +347,7 @@ $required_balance= number_format((float)$required_balance, 2, '.', '');
 				var d = bootbox.alert('<img src="'+$("#preview_image").val()+'">');
 			}
 			if(action=='card_design'){
-				var d = bootbox.alert('Front View: <br><br><img src={{asset("img/Front.png")}} style="width: 100%;height: inherit;background:url('+$("#front_design").val()+')"><br>Back View: <br><img src={{asset("img/Back.png")}} style="width: 100%;height: inherit;background:url('+$("#front_design").val()+')">');
+				var d = bootbox.alert('Front View: <br><br><img src='+$("#front_design").val()+' style="width: 100%;height: inherit;"><br>Back View: <br><img src='+$("#back_design").val()+' style="width: 100%;height: inherit;)">');
 			}
 			
 			d.find('.modal-dialog').addClass('modal-dialog-centered');

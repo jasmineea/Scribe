@@ -164,11 +164,13 @@ box-shadow: rgba(255,255,255, 0.75) 1.5em 0 0 0, rgba(255,255,255, 0.75) 1.1em 1
 													<div class="tab-content" id="myTabContent">
 														<div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
 														<div class="design-area design-area__front">
-														<img src="{{asset('img/Front.png')}}" style="width: 100%;height: inherit;">
+														<!-- <img src="{{asset('img/Back.png')}}" style="width: 100%;height: inherit;-webkit-transform: scaleX(-1);  transform: scaleX(-1);"> -->
+														<img src="{{asset('img/front1.png')}}">
 															</div>
 														</div>
 														<div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab"><div class="design-area design-area__back">
-														<img src="{{asset('img/Back.png')}}"  style="width: 100%;height: inherit;">
+														<!-- <img src="{{asset('img/Back.png')}}"  style="width: 100%;height: inherit;"> -->
+														<img src="{{asset('img/back1.png')}}">
 														</div>
 													</div>
 												</div>
@@ -206,7 +208,7 @@ box-shadow: rgba(255,255,255, 0.75) 1.5em 0 0 0, rgba(255,255,255, 0.75) 1.1em 1
 
 										
 									</div>
-									<div class="col-12 col-sm-3">
+									<div class="col-12 col-sm-3" style="height: 600px;overflow: scroll;">
 										<div class="template-word-section step-4-right-buttons">
 											<div class="design-upload-btn" style="cursor: pointer;">
 												<span class="upload-icon upload-icon-white"></span>
@@ -214,7 +216,7 @@ box-shadow: rgba(255,255,255, 0.75) 1.5em 0 0 0, rgba(255,255,255, 0.75) 1.1em 1
 											</div>
 											@foreach($carddesigns as $k=>$v)
 											<div class="design-template-thumb"  style="cursor: pointer;">
-												<img src="{{asset('storage/'.$v['image_path'])}}" data-path="{{$v['image_path']}}">
+												<img src="{{asset('storage/'.$v['image_path'])}}" data-path="{{$v['image_path']}}" data-front-src="{{asset('storage/'.$v['front_image_path'])}}" data-back-src="{{asset('storage/'.$v['back_image_path'])}}" data-front="{{$v['front_image_path']}}" data-back="{{$v['back_image_path']}}">
 											</div>
 											@endforeach
 										</div>
@@ -223,6 +225,7 @@ box-shadow: rgba(255,255,255, 0.75) 1.5em 0 0 0, rgba(255,255,255, 0.75) 1.1em 1
 							
 								<input type="hidden" name="front_design" value="{{@$final_array['front_design']}}">
 								<input type="hidden" name="back_design" value="{{@$final_array['back_design']}}">
+								<input type="hidden" name="main_design" value="{{@$final_array['main_design']}}">
 								<input type="submit" name="next" class="next action-button upload_last_file_and_message action-button2" value="STEP5">
 						<a href="{{ route("frontend.cards.step3a")}}" class="previous action-button action-button-previous" value="PREVIOUS STEP">PREVIOUS</a>
 						</form>
@@ -263,11 +266,16 @@ $(".loading").hide();
             });
 	$(".design-template-thumb img").click(function(){
 		var src=$(this).attr('src');
+		var src_f=$(this).data('front-src');
+		var src_b=$(this).data('back-src');
 		var path=$(this).data('path');
-		$(".design-area__front").css('background','url('+src+') #f8f8f8');
-		$(".design-area__back").css('background','url('+src+') #f8f8f8');
-		$("input[name='front_design']").val(path);
-		$("input[name='back_design']").val(path);
+		var path_f=$(this).data('front');
+		var path_b=$(this).data('back');
+		$(".design-area__front img").attr('src',src_b);
+		$(".design-area__back img").attr('src',src_f);
+		$("input[name='front_design']").val(path_b);
+		$("input[name='back_design']").val(path_f);
+		$("input[name='main_design']").val(path);
 	})
 	</script>
 @endsection

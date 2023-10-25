@@ -30,7 +30,7 @@
 										</div>
 										<span class="cannot-upload-message"> <span class="material-icons-outlined">error</span> Please select a file first <span class="material-icons-outlined cancel-alert-button">cancel</span> </span>
 										<div class="file-block">
-											<div class="file-info"> <span class="material-icons-outlined file-icon">description</span> <span class="file-name"> </span> | <span class="file-size">  </span> </div>
+											<div class="file-info"><span class="file-name"> </span> | <span class="file-size">  </span> </div>
 											<span class="material-icons remove-file-icon">delete</span>
 											<div class="progress-bar"> </div>
 										</div>
@@ -49,7 +49,7 @@
 							</div>
 							<div class="step-2-option">
 								   <div class="cstm-dropdown">
-										<select name="listing_id" id="listing_select" class="" placeholder="Source Type">
+										<select name="listing_id" id="listing_select" class="custom-select sources" placeholder="Source Type">
 											<option value="0">Select Campaign List</option>
 											@foreach ($listings as $item)
 											<option value="{{$item->id}}" {{@$final_array['listing_id']==$item->id||@$final_array['list_id']==$item->id?"selected":""}}>{{$item->name}}</option>

@@ -16,11 +16,6 @@ exit;
 						<img src="{{asset('img/logo.svg')}}">
 					</a>
 				</div>
-				@auth
-				<button type="button" id="sidebarCollapse" style="margin-left: 29%;border: 1px solid rgba(0,0,0,0.1);padding: 5px 10px;">
-                    <i class="fa fa-bars"></i>
-				</button>
-				@endif
 			</div>
 
 			<div class="col-6 d-f a-i-c j-c-e">

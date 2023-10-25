@@ -58,10 +58,16 @@ $(document).ready(function() {
 
  $('.wizard li').click(function() {
  $(this).prevAll().addClass("completed");
-  $(this).nextAll().removeClass("completed")
+  $(this).nextAll().removeClass("completed");
 
 });
 
+$(".step-1-option").click(function(){
+  var forRadio = $(this).attr("for");
+  $('#'+forRadio).prop("checked", true);
+  $(".step-1-option").removeClass("selected");
+  $(this).addClass("selected");
+});
 
 // Custom File Upload 
  var isAdvancedUpload = function() {
@@ -219,4 +225,6 @@ $(".custom-option").on("click", function() {
 
 
 });
+
+
 

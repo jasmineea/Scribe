@@ -1,3 +1,9 @@
+
+@auth
+	<button type="button" id="sidebarCollapse" style="margin-left: 29%;border: 1px solid rgba(0,0,0,0.1);padding: 5px 10px;">
+                    <i class="fa fa-bars"></i>
+				</button>
+@endif
 <div id="sidebar">
 	<!-- <div class="sidebar-toggle">
 		<a href="javascript:void(0)"><img src="img/menu.png"></a>
@@ -7,6 +13,7 @@
 			<img src="{{ asset('img/logo.svg')}}">
 		</a>
 	</div> -->
+	
 	<div class="sidebar-menu">
 		<label>Overview</label>
 		<ul class="sidebar-parent-menu">

@@ -1648,12 +1648,12 @@ if (! function_exists('generate_Preview_Image')) {
 
     function generate_Preview_Image($text){
         array_map('unlink', glob(public_path('img/preview/'.auth()->user()->id."_*")));
-        $img = imagecreatefromjpeg(public_path('img/env-trs.jpg'));//replace with your image 
+        $img = imagecreatefrompng(public_path('img/Inside-1500-with-line.png'));//replace with your image 
         $lines = substr_count($text, "\n");
         $txt = str_replace('&zwnj;','',str_replace('&ensp;', '  ', strip_tags($text)));//your text
         $fontFile = realpath(public_path('fonts/Lexi-Regular.ttf'));//replace with your font
-        $fontSize = 50;
-        $centerX = 250;
+        $fontSize = 43;
+        $centerX = 90;
         foreach(range(11,14) as $k=>$v){
 
             $fontSize -= 1;
@@ -1689,10 +1689,11 @@ if (! function_exists('generate_Preview_Image')) {
         $fontColor = imagecolorallocate($img, 255, 255, 255);
         $black = imagecolorallocate($img, 0, 0, 255);
         $angle = 0;
-        $centerY = 900;
+        $centerY = 1200;
         imagettftext($img, $fontSize, $angle, $centerX, $centerY, $black, $fontFile, $txt);
-        $image_name=auth()->user()->id."_".time().rand().".jpg";
-        imagejpeg($img,public_path('img/preview/'.$image_name));//save image
+        $image_name=auth()->user()->id."_".time().rand().".png";
+        imagesavealpha($img, true);
+        imagepng($img,public_path('img/preview/'.$image_name));//save image
         imagedestroy($img);
         return $image_name;
     }

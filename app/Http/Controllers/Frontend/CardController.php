@@ -122,14 +122,15 @@ class CardController extends Controller
 
     public function step4a(Request $request)
     {
-        $carddesigns = CardDesign::whereIn('user_id',[0,auth()->user()->id])->latest()->take(7)->get();
+        $carddesigns = CardDesign::whereIn('user_id',[0,auth()->user()->id])->where('type','outer')->latest()->take(10)->get();
+        $innercarddesigns = CardDesign::whereIn('user_id',[0,auth()->user()->id])->where('type','inner')->latest()->take(10)->get();
         $final_array=$request->session()->get('final_array');
         $preview_message=final_message(@$final_array['excel_data']['data'][2], $final_array['hwl_custom_msg'], $final_array['system_property_1']);
         $final_array['preview_image'] = generate_Preview_Image($preview_message);
         $final_array['front_preview_image'] = public_path('img/front_design.jpg');
         $final_array['back_preview_image'] = public_path('img/back_design.jpg');
 
-        compress(public_path('img/preview/'.$final_array['preview_image']),public_path('img/preview/'.$final_array['preview_image']), 10);
+       // compress(public_path('img/preview/'.$final_array['preview_image']),public_path('img/preview/'.$final_array['preview_image']), 10);
         // compress(public_path('img/preview/'.$final_array['front_preview_image']),public_path('img/preview/'.$final_array['front_preview_image']), 10);
         // compress(public_path('img/preview/'.$final_array['back_preview_image']),public_path('img/preview/'.$final_array['back_preview_image']), 10);
 
@@ -140,7 +141,7 @@ class CardController extends Controller
         $request->session()->put('final_array', $final_array);
 
         
-        return view('frontend.step4a', compact('final_array','carddesigns'));
+        return view('frontend.step4a', compact('final_array','carddesigns','innercarddesigns'));
     }
 
     public function step4b(Request $request)
@@ -526,6 +527,10 @@ class CardController extends Controller
             $data=$request->all();
             $final_array=$request->session()->get('final_array');
             $extension = $request->file('design_file')->getClientOriginalExtension();
+            if("png"!=$extension){
+                Session::flash('error', 'Only png file accepted.');
+                return redirect()->route('frontend.cards.step4a');   
+            }
             $image_name='card_design_'.time();
             $image_path = $request->file('design_file')->storeAs('card_design', $image_name.'.'.$extension, 'public');
             if($image_path){

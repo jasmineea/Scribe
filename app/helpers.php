@@ -98,7 +98,7 @@ function getDPIImageMagick($filename){
     imagedestroy($im);
     return $image_dpi[0];
 }
-function divideImage($filename='a.jpg',$extension){
+function divideImage($filename='a.jpg',$extension=''){
     $file_path=public_path("storage/card_design/".$filename.'.'.$extension);
     exec('convert -crop 100%x50% '.$file_path.' '.public_path("storage/card_design/cropped/".$filename."_%d".".".$extension));
     return 1;

@@ -157,7 +157,7 @@ box-shadow: rgba(255,255,255, 0.75) 1.5em 0 0 0, rgba(255,255,255, 0.75) 1.1em 1
 								{{ csrf_field() }}
 								<input name="card_font" type="hidden" value="Lexi-Regular">
 								<div class="row-field row">
-									<div class="col-12 col-sm-9">
+									<div class="col-12 design-cont-wrapper">
 										<div class="design-container">
 											<span>Outside View</span>
 												<div class="design-view-section"><!-- Design View Section -->
@@ -188,7 +188,7 @@ box-shadow: rgba(255,255,255, 0.75) 1.5em 0 0 0, rgba(255,255,255, 0.75) 1.1em 1
 
 
 
-										<div class="design-container mt-50">
+										<div class="design-container">
 											<span>Inside View</span>
 											<div class="design-view-section"><!-- Design View Section -->
 												<div class="design-area design-area-double">
@@ -208,7 +208,7 @@ box-shadow: rgba(255,255,255, 0.75) 1.5em 0 0 0, rgba(255,255,255, 0.75) 1.1em 1
 
 										
 									</div>
-									<div class="col-12 col-sm-3" style="height: 600px;overflow: scroll;">
+									<div class="col-12" style="overflow: scroll;">
 										<div class="template-word-section step-4-right-buttons">
 											<div class="design-upload-btn" style="cursor: pointer;">
 												<span class="upload-icon upload-icon-white"></span>
@@ -261,6 +261,7 @@ $(".loading").hide();
 		$(".design-area__back img").css('background-position','center');
 		$(".design-area__back img").css('background-size','90%');
 		$(".design-area__back img").css('background-repeat','no-repeat');
+		$(".design-area__back img").css('transform','rotate(180deg)');
 	}
 
 	$(".design-upload-btn").click(function(){
@@ -286,6 +287,8 @@ $(".loading").hide();
 		$(".design-area__back img").css('background-position','center');
 		$(".design-area__back img").css('background-size','90%');
 		$(".design-area__back img").css('background-repeat','no-repeat');
+		$(".design-area__back img").css('transform','rotate(180deg)');
+
 		//$(".design-area__back img").attr('src',src_f);
 		$("input[name='front_design']").val(path_b);
 		$("input[name='back_design']").val(path_f);

@@ -26,10 +26,20 @@
 					   <fieldset class="field-active">
 						<form action="{{ route("frontend.cards.step1Update")}}" method="POST">
 							{{ csrf_field() }}
-							<div class="step-1-options">
-								<div class="step-1-option" style="cursor: pointer;" for="campaign_type1" href="#"><div><img src="img/campaign-1.png"><h4>One-time Campaign</h4></div><input type="radio" name="campaign_type" {{!isset($final_array['campaign_type'])?'checked':'';}} {{@$final_array['campaign_type']=='pending'?"checked":''}} value="pending" class="input_radio" id="campaign_type1" autocomplete="off"></div>
-								<div class="step-1-option" style="cursor: pointer;" href="#"><div><img src="img/campaign-on.png"><h4>Ongoing Campaign</h4></div><input type="radio" name="campaign_type" {{@$final_array['campaign_type']=='on-going'?"checked":''}} value="on-going" class="input_radio" id="btn-check-outlined1" autocomplete="off"></div>
-								<div class="step-1-option" style="cursor: pointer;" href="#"><div><img src="img/campaign-letter.png"><h4>Send One Letter</h4></div><input type="radio" name="campaign_type" {{@$final_array['campaign_type']=='single'?"checked":''}} value="single" class="input_radio" id="btn-check-outlined1" autocomplete="off"></div>
+							<div class="step-1-options step-0">
+								<div class="step-0-radios">
+									<input type="radio" name="campaign_type" {{!isset($final_array['campaign_type'])?'checked':'';}} {{@$final_array['campaign_type']=='pending'?"checked":''}} value="pending" class="input_radio" id="campaign_type1" autocomplete="off"  visibility="hidden">
+									<div class="step-1-option selected" style="cursor: pointer;" for="campaign_type1" href="javascript:void(0)"><div><img src="img/campaign-1.png"><h4>One-time Campaign</h4></div>
+									</div>
+								</div>
+								<div class="step-0-radios">
+									<input type="radio" name="campaign_type" {{@$final_array['campaign_type']=='on-going'?"checked":''}} value="on-going" class="input_radio" id="campaign_type2" autocomplete="off" visibility="hidden">
+									<div class="step-1-option" style="cursor: pointer;" for="campaign_type2" href="javascript:void(0)"><div><img src="img/campaign-on.png"><h4>Ongoing Campaign</h4></div></div>
+								</div>
+								<div class="step-0-radios">
+									<input type="radio" name="campaign_type" {{@$final_array['campaign_type']=='single'?"checked":''}} value="single" class="input_radio" id="campaign_type3" autocomplete="off" visibility="hidden">
+									<div class="step-1-option" style="cursor: pointer;" for="campaign_type3" href="javascript:void(0)"><div><img src="img/campaign-letter.png"><h4>Send One Letter</h4></div></div>
+								</div>
 							</div>
 						  
 						  <input type="submit" name="next" class="next action-button save_message action-button2" value="GO TO STEP 2">

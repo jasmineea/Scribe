@@ -266,6 +266,7 @@ if(@isset($final_array['campaign_type'])&&!empty($final_array['campaign_type'])&
 </section>
 <input id="front_design" type="hidden" value="{{asset('storage/'.$final_array['front_design'])}}">
 <input id="back_design" type="hidden" value="{{asset('storage/'.$final_array['back_design'])}}">
+<input id="inner_design" type="hidden" value="{{asset('storage/'.$final_array['inner_design'])}}">
 <input id="preview_image" type="hidden" value="{{asset('img/preview/')}}/{{$final_array['preview_image']}}">
 <div  id="view_res" style="display:none">
 <table  class="table">
@@ -344,7 +345,7 @@ $required_balance= number_format((float)$required_balance, 2, '.', '');
 				d.find('.modal-dialog').addClass('large_modal');
 			}
 			if(action=='message'){
-				var d = bootbox.alert('<img src="'+$("#preview_image").val()+'">');
+				var d = bootbox.alert('<img src="'+$("#preview_image").val()+'" style="background:url('+$("#inner_design").val()+') #f8f8f8;background-size:contain">');
 			}
 			if(action=='card_design'){
 				var d = bootbox.alert('Front View: <br><br><img src='+$("#front_design").val()+' style="width: 100%;height: inherit;"><br>Back View: <br><img src='+$("#back_design").val()+' style="width: 100%;height: inherit;transform:rotate(180deg)">');

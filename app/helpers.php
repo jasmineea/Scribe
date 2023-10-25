@@ -35,6 +35,63 @@ if (! function_exists('app_name')) {
         return config('app.name');
     }
 }
+function rotateImage($filename){
+    ob_start();
+    $degrees        = 90;
+
+    // open the image file
+    $im = imagecreatefrompng(public_path("storage/".$filename));
+
+    // create a transparent "color" for the areas which will be new after rotation
+    // r=0,b=0,g=0 ( black ), 127 = 100% transparency - we choose "invisible black"
+    $transparency = imagecolorallocatealpha( $im,0,0,0,127 );
+
+    // rotate, last parameter preserves alpha when true
+    $rotated = imagerotate( $im, $degrees, $transparency, 1);
+
+    // disable blendmode, we want real transparency
+    imagealphablending( $rotated, false );
+    // set the flag to save full alpha channel information
+    imagesavealpha( $rotated, true );
+
+    // now we want to start our output
+    ob_end_clean();
+    // we send image/png
+    header( 'Content-Type: image/png' );
+    imagepng( $rotated,public_path("storage/".$filename));
+    // clean up the garbage
+    imagedestroy( $im );
+    imagedestroy( $rotated );
+}
+function createFinalPrintImage($image1,$image2,$image3,$image4){
+    // rotateImage($image1);die;
+    $dest = imagecreatefrompng(public_path('img/solid-color-image.png'));
+    $src1 = imagecreatefrompng(public_path("storage/".$image1));
+    // $imgResized = imagescale($src1 , 1250, 864);
+    // imagepng($imgResized,public_path("storage/".$image1));
+    // $src1 = imagecreatefrompng(public_path("storage/".$image1));
+    $src2 = imagecreatefrompng(public_path("storage/".$image2));
+    $src3 = imagecreatefrompng(public_path("storage/".$image3));
+    $src4 = imagecreatefrompng(public_path("storage/".$image4));
+    
+    imagealphablending($dest, false);
+    imagesavealpha($dest, true);
+    
+    imagecopymerge($dest, $src1, 20, 20, 0, 0, 1250, 864, 100); //have to play with these numbers for it to work for you, etc.
+    imagecopymerge($dest, $src2, 1300, 20, 0, 0, 1250, 864, 100); //have to play with these numbers for it to work for you, etc.
+    imagecopymerge($dest, $src3, 20, 900, 0, 0, 1250, 864, 100); //have to play with these numbers for it to work for you, etc.
+    imagecopymerge($dest, $src4, 1300, 900, 0, 0, 1250, 864, 100); //have to play with these numbers for it to work for you, etc.
+    
+    header('Content-Type: image/png');
+    imagepng($dest,public_path("storage/card_design/final.png"));
+    
+    imagedestroy($dest);
+    imagedestroy($src1);
+    imagedestroy($src2);
+    imagedestroy($src3);
+    imagedestroy($src4);
+
+}
 function getDPIImageMagick($filename){
     $im = imagecreatefromstring(file_get_contents(public_path("storage/".$filename)));
     $image_dpi=imageresolution($im);
@@ -1591,12 +1648,12 @@ if (! function_exists('generate_Preview_Image')) {
 
     function generate_Preview_Image($text){
         array_map('unlink', glob(public_path('img/preview/'.auth()->user()->id."_*")));
-        $img = imagecreatefromjpeg(public_path('img/env-trs.jpg'));//replace with your image 
+        $img = imagecreatefrompng(public_path('img/Inside-1500-with-line.png'));//replace with your image 
         $lines = substr_count($text, "\n");
         $txt = str_replace('&zwnj;','',str_replace('&ensp;', '  ', strip_tags($text)));//your text
         $fontFile = realpath(public_path('fonts/Lexi-Regular.ttf'));//replace with your font
-        $fontSize = 50;
-        $centerX = 250;
+        $fontSize = 43;
+        $centerX = 90;
         foreach(range(11,14) as $k=>$v){
 
             $fontSize -= 1;
@@ -1632,10 +1689,11 @@ if (! function_exists('generate_Preview_Image')) {
         $fontColor = imagecolorallocate($img, 255, 255, 255);
         $black = imagecolorallocate($img, 0, 0, 255);
         $angle = 0;
-        $centerY = 900;
+        $centerY = 1200;
         imagettftext($img, $fontSize, $angle, $centerX, $centerY, $black, $fontFile, $txt);
-        $image_name=auth()->user()->id."_".time().rand().".jpg";
-        imagejpeg($img,public_path('img/preview/'.$image_name));//save image
+        $image_name=auth()->user()->id."_".time().rand().".png";
+        imagesavealpha($img, true);
+        imagepng($img,public_path('img/preview/'.$image_name));//save image
         imagedestroy($img);
         return $image_name;
     }

@@ -81,5 +81,7 @@
 		$('.input_radio').prop('checked', false);
 		$(this).find('.input_radio').prop('checked', true);
 	})
+	$('.step-1-option').removeClass('selected');
+	$('.input_radio:checked').closest('.step-0-radios').find('.step-1-option').addClass('selected');
 </script>
 @endsection

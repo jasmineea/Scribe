@@ -208,15 +208,30 @@ box-shadow: rgba(255,255,255, 0.75) 1.5em 0 0 0, rgba(255,255,255, 0.75) 1.1em 1
 
 										
 									</div>
-									<div class="col-12" style="overflow: scroll;">
+									<div class="col-12">
+									<label><b>Outer Design</b></label>
 										<div class="template-word-section step-4-right-buttons">
-											<div class="design-upload-btn" style="cursor: pointer;">
+											<div class="design-upload-btn dub1" style="cursor: pointer;">
 												<span class="upload-icon upload-icon-white"></span>
 												<span>Upload</span>
 											</div>
 											@foreach($carddesigns as $k=>$v)
 											<div class="design-template-thumb"  style="cursor: pointer;">
-												<img src="{{asset('storage/'.$v['image_path'])}}" data-path="{{$v['image_path']}}" data-front-src="{{asset('storage/'.$v['front_image_path'])}}" data-back-src="{{asset('storage/'.$v['back_image_path'])}}" data-front="{{$v['front_image_path']}}" data-back="{{$v['back_image_path']}}">
+												<img class="image_t" src="{{asset('storage/'.$v['image_path'])}}" data-path="{{$v['image_path']}}" data-front-src="{{asset('storage/'.$v['front_image_path'])}}" data-back-src="{{asset('storage/'.$v['back_image_path'])}}" data-front="{{$v['front_image_path']}}" data-back="{{$v['back_image_path']}}">
+											</div>
+											@endforeach
+										</div>
+									</div>
+									<div class="col-12">
+									<label><b>Inner Design</b></label>
+										<div class="template-word-section step-4-right-buttons">
+											<div class="design-upload-btn dub2" style="cursor: pointer;">
+												<span class="upload-icon upload-icon-white"></span>
+												<span>Upload</span>
+											</div>
+											@foreach($innercarddesigns as $k=>$v)
+											<div class="design-template-thumb"  style="cursor: pointer;">
+												<img class="image_t2" src="{{asset('storage/'.$v['image_path'])}}" data-path="{{$v['image_path']}}" data-front-src="{{asset('storage/'.$v['front_image_path'])}}" data-back-src="{{asset('storage/'.$v['back_image_path'])}}" data-front="{{$v['front_image_path']}}" data-back="{{$v['back_image_path']}}">
 											</div>
 											@endforeach
 										</div>
@@ -226,13 +241,19 @@ box-shadow: rgba(255,255,255, 0.75) 1.5em 0 0 0, rgba(255,255,255, 0.75) 1.1em 1
 								<input type="hidden" name="front_design" value="{{@$final_array['front_design']}}">
 								<input type="hidden" name="back_design" value="{{@$final_array['back_design']}}">
 								<input type="hidden" name="main_design" value="{{@$final_array['main_design']}}">
+								<input type="hidden" name="inner_design" value="{{@$final_array['inner_design']}}">
 								<input type="submit" name="next" class="next action-button upload_last_file_and_message action-button2" value="STEP5">
 						<a href="{{ route("frontend.cards.step3a")}}" class="previous action-button action-button-previous" value="PREVIOUS STEP">PREVIOUS</a>
 						</form>
-						<form id="design_form" action="{{ route("frontend.cards.cardDesignUpload")}}" method="POST" id="xsl_upload" enctype="multipart/form-data">
+						<form class="design_form1" action="{{ route("frontend.cards.cardDesignUpload")}}" method="POST" id="xsl_upload" enctype="multipart/form-data">
 							{{ csrf_field() }}
-							<input type="file" style="opacity:0;" name="design_file" id="uploadDesign" class="">
-							<input type="hidden" name="type" id="card_design_type" value="front">
+							<input type="file"  accept="image/*" style="opacity:0;" name="design_file" class="uploadDesign1">
+							<input type="hidden" name="type" id="card_design_type" value="outer">
+						</form>
+						<form class="design_form2" action="{{ route("frontend.cards.cardDesignUpload")}}" method="POST" id="xsl_upload" enctype="multipart/form-data">
+							{{ csrf_field() }}
+							<input type="file"  accept="image/*" style="opacity:0;" name="design_file" class="uploadDesign2">
+							<input type="hidden" name="type" id="card_design_type" value="inner">
 						</form>
 							</div>
 						</div>
@@ -246,10 +267,14 @@ box-shadow: rgba(255,255,255, 0.75) 1.5em 0 0 0, rgba(255,255,255, 0.75) 1.1em 1
 <input id="front_design" type="hidden" value="{{asset('storage/'.$final_array['front_design'])}}">
 <input id="back_design" type="hidden" value="{{asset('storage/'.$final_array['back_design'])}}">
 @endif
+@if(@$final_array['inner_design'])
+<input id="inner_design" type="hidden" value="{{asset('storage/'.$final_array['inner_design'])}}">
+@endif
 <script>
 $(".loading").hide();
 	var front_design=$("#front_design").val();
 	var back_design=$("#back_design").val();
+	var inner_design=$("#inner_design").val();
 	if(front_design){
 		$(".design-area__front img").css('background','url('+front_design+') #f8f8f8');
 		$(".design-area__front img").css('background-position','center');
@@ -264,14 +289,36 @@ $(".loading").hide();
 		$(".design-area__back img").css('transform','rotate(180deg)');
 	}
 
-	$(".design-upload-btn").click(function(){
-		$("#uploadDesign").trigger('click');
+	if(inner_design){
+		$(".design-area-double img").css('background','url('+inner_design+') #f8f8f8');
+		$(".design-area-double img").css('background-size','contain');
+
+		// $(".design-area__back img").css('background','url('+inner_design+') #f8f8f8');
+		// $(".design-area__back img").css('background-position','center');
+		// $(".design-area__back img").css('background-size','90%');
+		// $(".design-area__back img").css('background-repeat','no-repeat');
+		// $(".design-area__back img").css('transform','rotate(180deg)');
+	}
+
+	$(".dub1").click(function(){
+		$(".uploadDesign1").trigger('click');
 	})
-	$("#uploadDesign").on( 'change', function () {
+
+	$(".dub2").click(function(){
+		$(".uploadDesign2").trigger('click');
+	})
+
+	$(".uploadDesign1").on( 'change', function () {
 	    $(".loading").show();
-                $('#design_form').submit();
-            });
-	$(".design-template-thumb img").click(function(){
+        $('.design_form1').submit();
+    });
+
+	$(".uploadDesign2").on( 'change', function () {
+	    $(".loading").show();
+        $('.design_form2').submit();
+    });
+
+	$(".design-template-thumb .image_t").click(function(){
 		var src=$(this).attr('src');
 		var src_f=$(this).data('front-src');
 		var src_b=$(this).data('back-src');
@@ -293,6 +340,14 @@ $(".loading").hide();
 		$("input[name='front_design']").val(path_b);
 		$("input[name='back_design']").val(path_f);
 		$("input[name='main_design']").val(path);
+	})
+	$(".design-template-thumb .image_t2").click(function(){
+		var src=$(this).attr('src');
+		var path=$(this).data('path');
+		
+		$(".design-area-double img").css('background','url('+src+') #f8f8f8');
+		$(".design-area-double img").css('background-size','contain');
+		 $("input[name='inner_design']").val(path);
 	})
 	</script>
 @endsection

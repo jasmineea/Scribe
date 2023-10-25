@@ -1832,7 +1832,7 @@ ul.recharge_block {
 }
 
 .final_preview {
-    /* background-color: #dfdfdf69; */
+    background-color: #fff;
     cursor: zoom-in;
     /* padding: 383px 145px 531px 145px; */
     color: blue;
@@ -1840,7 +1840,7 @@ ul.recharge_block {
     border-radius: 10px;
     /* min-height: 470px;
     max-height: 470px; */
-    background-image: url(../img/env-trs.png);
+    /* background-image: url(../img/env-trs.png); */
     background-size: cover;
     overflow: hidden;
     margin: auto;
@@ -2235,7 +2235,7 @@ div#step_3a_tooltip, .written_letter_form .Repeater_container .main .single_row2
     margin-bottom: 50px;
 }
 textarea#hwl_custom_msg_1 {
-    padding: 10px 20px !important;
+    /* padding: 10px 20px !important; */
     border-radius: 10px;
     border: none !important;
     background: #f5f5f5;

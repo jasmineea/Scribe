@@ -345,7 +345,8 @@ $required_balance= number_format((float)$required_balance, 2, '.', '');
 				d.find('.modal-dialog').addClass('large_modal');
 			}
 			if(action=='message'){
-				var d = bootbox.alert('<img src="'+$("#preview_image").val()+'" style="background:url('+$("#inner_design").val()+') #f8f8f8;background-size:contain">');
+				var d = bootbox.alert('<img src="'+$("#preview_image").val()+'" style="background:url('+$("#inner_design").val()+') #f8f8f8;background-size:92%;background-position:center;background-repeat:no-repeat;">');
+				
 			}
 			if(action=='card_design'){
 				var d = bootbox.alert('Front View: <br><br><img src='+$("#front_design").val()+' style="width: 100%;height: inherit;"><br>Back View: <br><img src='+$("#back_design").val()+' style="width: 100%;height: inherit;transform:rotate(180deg)">');

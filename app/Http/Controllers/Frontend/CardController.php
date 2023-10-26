@@ -30,6 +30,7 @@ use App\Notifications\NewRegistration;
 use App\Models\MetaData;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use ZipArchive;
 
 class CardController extends Controller
 {
@@ -122,8 +123,9 @@ class CardController extends Controller
 
     public function step4a(Request $request)
     {
-        $carddesigns = CardDesign::whereIn('user_id',[0,auth()->user()->id])->where('type','outer')->latest()->take(10)->get();
-        $innercarddesigns = CardDesign::whereIn('user_id',[0,auth()->user()->id])->where('type','inner')->latest()->take(10)->get();
+        $carddesignswithouttype = CardDesign::whereIn('user_id',[0,auth()->user()->id])->where('type',null)->latest()->take(6)->get();
+        $carddesigns = CardDesign::whereIn('user_id',[0,auth()->user()->id])->where('type','outer')->latest()->take(6)->get();
+        $innercarddesigns = CardDesign::whereIn('user_id',[0,auth()->user()->id])->where('type','inner')->latest()->take(6)->get();
         $final_array=$request->session()->get('final_array');
         $preview_message=final_message(@$final_array['excel_data']['data'][2], $final_array['hwl_custom_msg'], $final_array['system_property_1']);
         $final_array['preview_image'] = generate_Preview_Image($preview_message);
@@ -141,7 +143,7 @@ class CardController extends Controller
         $request->session()->put('final_array', $final_array);
 
         
-        return view('frontend.step4a', compact('final_array','carddesigns','innercarddesigns'));
+        return view('frontend.step4a', compact('final_array','carddesigns','innercarddesigns','carddesignswithouttype'));
     }
 
     public function step4b(Request $request)
@@ -521,14 +523,42 @@ class CardController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function saveDesignType(Request $request){
+        if ($request->isMethod('post')) {
+            $data=$request->all();
+            foreach ($data['save_type'] as $key => $value) {
+                if($value=='both'){
+                    
+                    $card = CardDesign::find($key);
+                    $card->type = 'inner';
+                    $card->save();
+
+                    $carddesign = new CardDesign;
+                    $carddesign->user_id = auth()->user()->id;
+                    $carddesign->type = 'outer';
+                    $carddesign->image_path = $card->image_path;
+                    $carddesign->front_image_path = $card->front_image_path;
+                    $carddesign->back_image_path =$card->back_image_path;
+                    $carddesign->save();
+                    
+                }else{
+                    $card = CardDesign::find($key);
+                    $card->type = $value;
+                    $card->save();
+                }
+            }
+            return redirect()->route('frontend.cards.step4a');  
+        }
+    }
+
     public function cardDesignUpload(Request $request)
     {
         if ($request->isMethod('post')) {
             $data=$request->all();
             $final_array=$request->session()->get('final_array');
             $extension = $request->file('design_file')->getClientOriginalExtension();
-            if("png"!=$extension){
-                Session::flash('error', 'Only png file accepted.');
+            if("png"!=$extension&&"zip"!=$extension){
+                Session::flash('error', 'Only png or zip file accepted.');
                 return redirect()->route('frontend.cards.step4a');   
             }
             $image_name='card_design_'.time();
@@ -539,14 +569,53 @@ class CardController extends Controller
                 //     Session::flash('error', 'Image should have 300 dpi.');
                 //     return redirect()->route('frontend.cards.step4a');   
                 // }
-                divideImage($image_name,$extension);
-                $carddesign = new CardDesign;
-                $carddesign->user_id = auth()->user()->id;
-                $carddesign->type = $request->get('type');
-                $carddesign->image_path = $image_path;
-                $carddesign->front_image_path = 'card_design/cropped/'.$image_name.'_0.'.$extension;
-                $carddesign->back_image_path = 'card_design/cropped/'.$image_name.'_1.'.$extension;
-                $carddesign->save();
+                if("zip"==$extension){
+                    $zipArchive = new ZipArchive();
+                    $result = $zipArchive->open(public_path("storage/".$image_path));
+                    $zipArchive ->extractTo(public_path("storage/card_design/extract"));
+                    if ($result === TRUE) {
+                        $name='';
+                        for( $i = 0; $i < $zipArchive->numFiles; $i++ ){
+                            $name = $zipArchive->getNameIndex($i);
+                            $ext = pathinfo(public_path("storage/card_design/extract/".$name), PATHINFO_EXTENSION);
+                            $image_name='card_design_'.time().rand(1,1000);
+                            rename(public_path("storage/card_design/extract/".$name),public_path("storage/card_design/".$image_name.".".$ext));
+                            divideImage($image_name,$ext);
+                            $carddesign = new CardDesign;
+                            $carddesign->user_id = auth()->user()->id;
+                            $carddesign->type = null;
+                            $carddesign->image_path = "card_design/".$image_name.".".$ext;
+                            $carddesign->front_image_path = 'card_design/cropped/'.$image_name.'_0.'.$ext;
+                            $carddesign->back_image_path = 'card_design/cropped/'.$image_name.'_1.'.$ext;
+                            $carddesign->save();
+                        }
+                        $zipArchive ->close();
+                        // Do something else on success
+                    } else {
+                        Session::flash('error', 'something went wrong with zip file.');
+                        return redirect()->route('frontend.cards.step4a');   
+                    }
+                }else{
+                    divideImage($image_name,$extension);
+                    $carddesign = new CardDesign;
+                    $carddesign->user_id = auth()->user()->id;
+                    $carddesign->type = $request->get('type');
+                    $carddesign->image_path = $image_path;
+                    $carddesign->front_image_path = 'card_design/cropped/'.$image_name.'_0.'.$extension;
+                    $carddesign->back_image_path = 'card_design/cropped/'.$image_name.'_1.'.$extension;
+                    $carddesign->save();
+                    $final_array=$request->session()->get('final_array');
+                    if($request->get('type')=='outer'){
+                        $final_array['main_design']=$image_path;
+                        $final_array['front_design']=$carddesign->front_image_path;
+                        $final_array['back_design']=$carddesign->back_image_path;
+                    }
+                    if($request->get('type')=='inner'){
+                        $final_array['main_design']=$image_path;
+                        $final_array['inner_design']=$image_path;
+                    }
+                    $request->session()->put('final_array',$final_array);
+                }
             }else{
                 Session::flash('error', 'something went wrong.');
                 return redirect()->route('frontend.cards.step4a');  

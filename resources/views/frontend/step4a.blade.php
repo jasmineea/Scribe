@@ -164,7 +164,7 @@ box-shadow: rgba(255,255,255, 0.75) 1.5em 0 0 0, rgba(255,255,255, 0.75) 1.1em 1
 								<div class="row-field row">
 									<div class="col-12 design-cont-wrapper">
 										<div class="design-container">
-											<span>Outside View</span>
+											<span><b>Outside View</b></span>
 												<div class="design-view-section"><!-- Design View Section -->
 													<div class="tab-content" id="myTabContent">
 														<div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
@@ -191,7 +191,7 @@ box-shadow: rgba(255,255,255, 0.75) 1.5em 0 0 0, rgba(255,255,255, 0.75) 1.1em 1
 										</div><!-- Design View Section Ends -->
 										<br>
 										<div class="col-12">
-										<label>Design your card using canva template</label><br>
+										<label><b>Design your card using canva template</b></label><br>
 										<a href="https://www.canva.com/design/DAFxz_x-wrM/OFzQr-3l_qZimrt7SL5eWA/view?utm_content=DAFxz_x-wrM&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview" style="color:#ef7600;" target="_blank">Click to design card template</a>
 										</div>
 										<br>
@@ -234,7 +234,7 @@ box-shadow: rgba(255,255,255, 0.75) 1.5em 0 0 0, rgba(255,255,255, 0.75) 1.1em 1
 
 
 										<div class="design-container">
-											<span>Inside View</span>
+											<span><b>Inside View</b></span>
 											<div class="design-view-section"><!-- Design View Section -->
 												<div class="design-area design-area-double">
 												<img style="height: -webkit-fill-available;" class="final_preview font_change" data-url="{{asset('img/preview/')}}/{{$final_array['preview_image']}}" src="{{asset('img/preview/')}}/{{$final_array['preview_image']}}"/>

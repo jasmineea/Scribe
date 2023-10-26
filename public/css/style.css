@@ -1833,7 +1833,7 @@ ul.recharge_block {
 
 .final_preview {
     background-color: #fff;
-    cursor: zoom-in;
+    /* cursor: zoom-in; */
     /* padding: 383px 145px 531px 145px; */
     color: blue;
     font-size: 22px;

@@ -54,7 +54,7 @@ class CardController extends Controller
      */
     public function step0(Request $request)
     {
-        createFinalPrintImage('card_design/2.png','card_design/2.png','card_design/2.png','card_design/2.png');
+        // createFinalPrintImage('card_design/2.png','card_design/2.png','card_design/2.png','card_design/2.png');
         // mergeTwoImages();
        if (!$request->session()->has('final_array')) {
             $request->session()->put('final_array',['tags'=>['FIRST_NAME'=>'FIRST NAME','LAST_NAME'=>'LAST NAME'],'listing_id'=>0,'list_id'=>0]);

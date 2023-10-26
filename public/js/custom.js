@@ -599,7 +599,7 @@ $(document).ready(function(){
 			});
 		d.find('.modal-dialog').addClass('modal-dialog-centered');
 	})
-	$(".final_preview,.model_preview").click(function(){
+	$(".model_preview").click(function(){
 		var img_link=$(this).data('url');
 		var d = bootbox.alert({
 			message: "<img src='"+img_link+"'>",

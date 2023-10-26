@@ -24,7 +24,12 @@ if(@isset($final_array['campaign_type'])&&!empty($final_array['campaign_type'])&
   bottom: 0;
   right: 0;
 }
-
+.form-group.field-full.checkbox {
+    display: flex;
+    justify-content: left;
+    flex-direction: revert;
+    align-items: center;
+}
 /* Transparent Overlay */
 .loading:before {
   content: '';
@@ -184,31 +189,13 @@ box-shadow: rgba(255,255,255, 0.75) 1.5em 0 0 0, rgba(255,255,255, 0.75) 1.1em 1
 												</li>
 											</ul>
 										</div><!-- Design View Section Ends -->
+										<br>
+										<div class="col-12">
+										<label>Design your card using canva template</label><br>
+										<a href="https://www.canva.com/design/DAFxz_x-wrM/OFzQr-3l_qZimrt7SL5eWA/view?utm_content=DAFxz_x-wrM&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview" style="color:#ef7600;" target="_blank">Click to design card template</a>
 										</div>
-
-
-
-										<div class="design-container">
-											<span>Inside View</span>
-											<div class="design-view-section"><!-- Design View Section -->
-												<div class="design-area design-area-double">
-												<img style="height: -webkit-fill-available;" class="final_preview font_change" data-url="{{asset('img/preview/')}}/{{$final_array['preview_image']}}" src="{{asset('img/preview/')}}/{{$final_array['preview_image']}}"/>
-												</div>
-										</div><!-- Design View Section Ends -->
-										</div>
-										<!-- <div class="approve-design-btn">
-											<a href="#" class="theme-btn">Approve this Design</a>
-										</div> -->
-										<div class="row-field">
-									<div class="form-group field-full checkbox">
-										<input type="checkbox" name="remember" value="1">
-										<label>Accept Terms and Conditions</label>
-									</div>
-								</div>
-
-										
-									</div>
-									<div class="col-12">
+										<br>
+										<div class="col-12">
 									<label><b>Outer Design</b></label>
 										<div class="template-word-section step-4-right-buttons">
 											<div class="design-upload-btn dub1" style="cursor: pointer;">
@@ -236,6 +223,34 @@ box-shadow: rgba(255,255,255, 0.75) 1.5em 0 0 0, rgba(255,255,255, 0.75) 1.1em 1
 											@endforeach
 										</div>
 									</div>
+									<div class="col-12">
+									<div class="form-group field-full checkbox">
+										<input type="checkbox" {{@$final_array['remember']=='1'?'checked':''}} id="remember" name="remember" value="1" required>
+										<label for="remember">Accept <a href="" target="_blank">Terms and Conditions</a></label>
+									</div>
+									</div>
+										</div>
+
+
+
+										<div class="design-container">
+											<span>Inside View</span>
+											<div class="design-view-section"><!-- Design View Section -->
+												<div class="design-area design-area-double">
+												<img style="height: -webkit-fill-available;" class="final_preview font_change" data-url="{{asset('img/preview/')}}/{{$final_array['preview_image']}}" src="{{asset('img/preview/')}}/{{$final_array['preview_image']}}"/>
+												</div>
+										</div><!-- Design View Section Ends -->
+										</div>
+										<!-- <div class="approve-design-btn">
+											<a href="#" class="theme-btn">Approve this Design</a>
+										</div> -->
+										<div class="row-field">
+									
+								</div>
+
+										
+									</div>
+									
 								</div>
 							
 								<input type="hidden" name="front_design" value="{{@$final_array['front_design']}}">
@@ -247,12 +262,12 @@ box-shadow: rgba(255,255,255, 0.75) 1.5em 0 0 0, rgba(255,255,255, 0.75) 1.1em 1
 						</form>
 						<form class="design_form1" action="{{ route("frontend.cards.cardDesignUpload")}}" method="POST" id="xsl_upload" enctype="multipart/form-data">
 							{{ csrf_field() }}
-							<input type="file"  accept="image/*" style="opacity:0;" name="design_file" class="uploadDesign1">
+							<input type="file"  accept=".png,.zip" style="opacity:0;" name="design_file" class="uploadDesign1">
 							<input type="hidden" name="type" id="card_design_type" value="outer">
 						</form>
 						<form class="design_form2" action="{{ route("frontend.cards.cardDesignUpload")}}" method="POST" id="xsl_upload" enctype="multipart/form-data">
 							{{ csrf_field() }}
-							<input type="file"  accept="image/*" style="opacity:0;" name="design_file" class="uploadDesign2">
+							<input type="file"  accept=".png,.zip" style="opacity:0;" name="design_file" class="uploadDesign2">
 							<input type="hidden" name="type" id="card_design_type" value="inner">
 						</form>
 							</div>
@@ -263,6 +278,29 @@ box-shadow: rgba(255,255,255, 0.75) 1.5em 0 0 0, rgba(255,255,255, 0.75) 1.1em 1
 	</div>
 
 </section>
+<div class="design_form3_div">
+	<form class="design_form3" action="{{ route("frontend.cards.saveDesignType")}}" method="POST">
+		{{ csrf_field() }}
+		<table class="table">
+			<thead>
+				<tr>
+					<th>Design</th>
+					<th>Select Type</th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach($carddesignswithouttype as $key=>$value)
+				<tr><td><img src="{{asset('storage/'.$value['image_path'])}}" style="max-width: 80px;"></td><td><select required name="save_type[{{$value['id']}}]">
+					<option value="">select type</option>
+					<option value="inner">Inner Design</option>
+					<option value="outer">Outer Design</option>
+					<option value="both">Both Inner and Outer Design</option>
+				</select></td></tr>
+				@endforeach
+			</tbody>
+		</table>
+	<form>
+</div>
 @if(@$final_array['front_design'])
 <input id="front_design" type="hidden" value="{{asset('storage/'.$final_array['front_design'])}}">
 <input id="back_design" type="hidden" value="{{asset('storage/'.$final_array['back_design'])}}">
@@ -271,6 +309,16 @@ box-shadow: rgba(255,255,255, 0.75) 1.5em 0 0 0, rgba(255,255,255, 0.75) 1.1em 1
 <input id="inner_design" type="hidden" value="{{asset('storage/'.$final_array['inner_design'])}}">
 @endif
 <script>
+	$(document).ready(function(){
+		if({{count($carddesignswithouttype)}}!='0'){
+				var d = bootbox.confirm($(".design_form3_div").html(), function(result) {
+					if(result){
+						$('.design_form3').submit();
+					}
+			});
+				d.find('.modal-dialog').addClass('modal-dialog-centered');
+		}
+	});
 $(".loading").hide();
 	var front_design=$("#front_design").val();
 	var back_design=$("#back_design").val();
@@ -278,26 +326,22 @@ $(".loading").hide();
 	if(front_design){
 		$(".design-area__front img").css('background','url('+front_design+') #f8f8f8');
 		$(".design-area__front img").css('background-position','center');
-		$(".design-area__front img").css('background-size','90%');
+		$(".design-area__front img").css('background-size','92%');
 		$(".design-area__front img").css('background-repeat','no-repeat');
 	}
 	if(back_design){
 		$(".design-area__back img").css('background','url('+back_design+') #f8f8f8');
 		$(".design-area__back img").css('background-position','center');
-		$(".design-area__back img").css('background-size','90%');
+		$(".design-area__back img").css('background-size','92%');
 		$(".design-area__back img").css('background-repeat','no-repeat');
 		$(".design-area__back img").css('transform','rotate(180deg)');
 	}
 
 	if(inner_design){
 		$(".design-area-double img").css('background','url('+inner_design+') #f8f8f8');
-		$(".design-area-double img").css('background-size','contain');
-
-		// $(".design-area__back img").css('background','url('+inner_design+') #f8f8f8');
-		// $(".design-area__back img").css('background-position','center');
-		// $(".design-area__back img").css('background-size','90%');
-		// $(".design-area__back img").css('background-repeat','no-repeat');
-		// $(".design-area__back img").css('transform','rotate(180deg)');
+		$(".design-area-double img").css('background-position','center');
+		$(".design-area-double img").css('background-size','92%');
+		$(".design-area-double img").css('background-repeat','no-repeat');
 	}
 
 	$(".dub1").click(function(){
@@ -328,11 +372,11 @@ $(".loading").hide();
 		//$(".design-area__front img").attr('src',src_b);
 		$(".design-area__front img").css('background','url('+src_b+') #f8f8f8');
 		$(".design-area__front img").css('background-position','center');
-		$(".design-area__front img").css('background-size','90%');
+		$(".design-area__front img").css('background-size','92%');
 		$(".design-area__front img").css('background-repeat','no-repeat');
 		$(".design-area__back img").css('background','url('+src_f+') #f8f8f8');
 		$(".design-area__back img").css('background-position','center');
-		$(".design-area__back img").css('background-size','90%');
+		$(".design-area__back img").css('background-size','92%');
 		$(".design-area__back img").css('background-repeat','no-repeat');
 		$(".design-area__back img").css('transform','rotate(180deg)');
 
@@ -346,7 +390,9 @@ $(".loading").hide();
 		var path=$(this).data('path');
 		
 		$(".design-area-double img").css('background','url('+src+') #f8f8f8');
-		$(".design-area-double img").css('background-size','contain');
+		$(".design-area-double img").css('background-position','center');
+		$(".design-area-double img").css('background-size','92%');
+		$(".design-area-double img").css('background-repeat','no-repeat');
 		 $("input[name='inner_design']").val(path);
 	})
 	</script>

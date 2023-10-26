@@ -1652,7 +1652,7 @@ if (! function_exists('generate_Preview_Image')) {
         $lines = substr_count($text, "\n");
         $txt = str_replace('&zwnj;','',str_replace('&ensp;', '  ', strip_tags($text)));//your text
         $fontFile = realpath(public_path('fonts/Lexi-Regular.ttf'));//replace with your font
-        $fontSize = 43;
+        $fontSize = 41;
         $centerX = 90;
         foreach(range(11,14) as $k=>$v){
 
@@ -1689,8 +1689,8 @@ if (! function_exists('generate_Preview_Image')) {
         $fontColor = imagecolorallocate($img, 255, 255, 255);
         $black = imagecolorallocate($img, 0, 0, 255);
         $angle = 0;
-        $centerY = 1200;
-        imagettftext($img, $fontSize, $angle, $centerX, $centerY, $black, $fontFile, $txt);
+        $centerY = 1160;
+        imagettftext($img, $fontSize, $angle, $centerX, $centerY, $black, $fontFile, $txt, array("linespacing" => 0.4));
         $image_name=auth()->user()->id."_".time().rand().".png";
         imagesavealpha($img, true);
         imagepng($img,public_path('img/preview/'.$image_name));//save image

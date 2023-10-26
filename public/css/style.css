@@ -898,7 +898,7 @@ form .row-field {
 .template-word-section {
     display: flex;
     flex-wrap: wrap;
-    padding-top: 25px;
+    padding-top: 5px;
 }
 .field-group span {
     font-size: 14px;
@@ -1016,7 +1016,7 @@ header#header {
 .template-word-section {
     display: flex;
     flex-wrap: wrap;
-    padding-top: 25px;
+    padding-top: 5px;
 }
 .design-template-thumb {
     height: 200px;
@@ -1844,7 +1844,7 @@ ul.recharge_block {
     background-size: cover;
     overflow: hidden;
     margin: auto;
-    margin-top: 35px;
+    /* margin-top: 35px; */
     background-repeat: no-repeat;
 
 }

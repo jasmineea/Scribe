@@ -34,7 +34,7 @@
 											<span class="material-icons remove-file-icon">delete</span>
 											<div class="progress-bar"> </div>
 										</div>
-										<input type="submit" class="upload-button theme-btn" value="Upload">
+										<!-- <input type="submit" class="upload-button theme-btn" value="Upload"> -->
 										@if (isset($final_array['upload_recipients'])&&(empty($final_array['listing_id'])&&empty($final_array['list_id'])))
 										<p><a target="_blank" class="action_btn" href="files/{{@$final_array['upload_recipients']}}">Download uploaded Recipient File <i class="fa fa-file-download" aria-hidden="true"></i></a></p>
 										@else

@@ -123,9 +123,10 @@ class CardController extends Controller
 
     public function step4a(Request $request)
     {
-        $carddesignswithouttype = CardDesign::whereIn('user_id',[0,auth()->user()->id])->where('type',null)->latest()->take(6)->get();
-        $carddesigns = CardDesign::whereIn('user_id',[0,auth()->user()->id])->where('type','outer')->latest()->take(6)->get();
-        $innercarddesigns = CardDesign::whereIn('user_id',[0,auth()->user()->id])->where('type','inner')->latest()->take(6)->get();
+        $default_card_design = CardDesign::whereIn('user_id',[0])->latest()->get();
+        $carddesignswithouttype = CardDesign::whereIn('user_id',[auth()->user()->id])->where('type',null)->latest()->get();
+        $carddesigns = CardDesign::whereIn('user_id',[auth()->user()->id])->where('type','outer')->latest()->get();
+        $innercarddesigns = CardDesign::whereIn('user_id',[auth()->user()->id])->where('type','inner')->latest()->get();
         $final_array=$request->session()->get('final_array');
         $preview_message=final_message(@$final_array['excel_data']['data'][2], $final_array['hwl_custom_msg'], $final_array['system_property_1']);
         $final_array['preview_image'] = generate_Preview_Image($preview_message);
@@ -143,7 +144,7 @@ class CardController extends Controller
         $request->session()->put('final_array', $final_array);
 
         
-        return view('frontend.step4a', compact('final_array','carddesigns','innercarddesigns','carddesignswithouttype'));
+        return view('frontend.step4a', compact('final_array','carddesigns','innercarddesigns','carddesignswithouttype','default_card_design'));
     }
 
     public function step4b(Request $request)
@@ -599,22 +600,22 @@ class CardController extends Controller
                     divideImage($image_name,$extension);
                     $carddesign = new CardDesign;
                     $carddesign->user_id = auth()->user()->id;
-                    $carddesign->type = $request->get('type');
+                    $carddesign->type = null;
                     $carddesign->image_path = $image_path;
                     $carddesign->front_image_path = 'card_design/cropped/'.$image_name.'_0.'.$extension;
                     $carddesign->back_image_path = 'card_design/cropped/'.$image_name.'_1.'.$extension;
                     $carddesign->save();
-                    $final_array=$request->session()->get('final_array');
-                    if($request->get('type')=='outer'){
-                        $final_array['main_design']=$image_path;
-                        $final_array['front_design']=$carddesign->front_image_path;
-                        $final_array['back_design']=$carddesign->back_image_path;
-                    }
-                    if($request->get('type')=='inner'){
-                        $final_array['main_design']=$image_path;
-                        $final_array['inner_design']=$image_path;
-                    }
-                    $request->session()->put('final_array',$final_array);
+                    // $final_array=$request->session()->get('final_array');
+                    // if($request->get('type')=='outer'){
+                    //     $final_array['main_design']=$image_path;
+                    //     $final_array['front_design']=$carddesign->front_image_path;
+                    //     $final_array['back_design']=$carddesign->back_image_path;
+                    // }
+                    // if($request->get('type')=='inner'){
+                    //     $final_array['main_design']=$image_path;
+                    //     $final_array['inner_design']=$image_path;
+                    // }
+                    // $request->session()->put('final_array',$final_array);
                 }
             }else{
                 Session::flash('error', 'something went wrong.');

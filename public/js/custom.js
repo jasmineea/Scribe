@@ -345,8 +345,7 @@ $(document).ready(function(){
 					strNewValue += strRawValue.substr(i, nLineLength) + "\n";
 					i += nLineLength;
 				}
-				console.log(strNewValue.split("\n").length);
-				return false;
+				
 				oTextarea.value = strNewValue;
 				oTextarea.setAttribute("wrap", "");
 				var final_html = oTextarea.value;

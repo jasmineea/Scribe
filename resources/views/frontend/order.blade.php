@@ -33,7 +33,7 @@
 							<td>{{ $data->campaign_type }}</td>
 							<td><a href="{{route('frontend.cards.contacts',$data->listing_id)}}">{{isset($data->listing)?$data->listing->contacts->count():0}}</a></td>
 							<td>{{ $data->order_amount }}</td>
-							<td>@php if(@$data->campaign_message&&file_exists(public_path('img/preview/'.@$data->campaign_message))){ $preview_image=asset('img/preview/'.@$data->campaign_message); echo("<img width='100px' class='model_preview'  style='display:inline;' data-url='".$preview_image."' src='".$preview_image."'>"); }else{ echo $data->campaign_message;} @endphp</td>
+							<td>@php if(@$data->campaign_message&&file_exists(public_path('img/preview/'.@$data->campaign_message))){ $preview_image=asset('img/preview/'.@$data->campaign_message); echo("<img width='100px' class='model_preview'  style='display:inline;background:url(".asset("storage/".$data->inner_design).") #f8f8f8;background-position:center;background-size:92%;background-repeat:no-repeat;' data-url='".$preview_image."' src='".$preview_image."'>"); if(!empty($data->main_design)){ echo("&nbsp;<img width='100px' class='model_preview' data-url='".asset("storage/".$data->main_design)."' src='".asset("storage/".$data->main_design)."'>");} }else{ echo $data->campaign_message;} @endphp</td>
 							<td>{{ $data->created_at }}</td>
 							<td>
 							@if($data->campaign_type=='on-going')

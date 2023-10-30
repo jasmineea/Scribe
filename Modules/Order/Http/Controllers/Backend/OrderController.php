@@ -145,6 +145,74 @@ class OrderController extends Controller
                         ->make(true);
     }
 
+    public function masterdesignfiles(Request $request){
+        
+        $module_title = 'Master Design Files';
+        $module_name = 'master_design_files';
+        $module_icon = $this->module_icon;
+        $module_model = 'Modules\Order\Entities\MasterDesignFiles';
+        $module_name_singular = Str::singular($module_name);
+
+        $module_action = 'List';
+        $$module_name = $module_model::paginate();
+
+        Log::info(label_case($module_title.' '.$module_action).' | User:'.Auth::user()->name.'(ID:'.Auth::user()->id.')');
+
+        return view(
+            "order::backend.$module_name.index_datatable",
+            compact('module_title', 'module_name', "$module_name", 'module_icon', 'module_name_singular', 'module_action')
+        );
+    }
+
+    public function master_design_files_data(Request $request)
+    {
+
+        $module_title = 'Master Design Files';
+        $module_name = 'master_files';
+        $module_icon = $this->module_icon;
+        $module_model = 'Modules\Order\Entities\MasterDesignFiles';
+        $module_name_singular = Str::singular($module_name);
+
+        $module_action = 'List';
+
+        $type=$request->query('type');
+
+        $$module_name = $module_model::select('id','order_id', 'campaign_name','inner_design', 'main_design','downloaded_times','downloaded_at','total_records', 'created_at');
+
+        $data = $$module_name;
+
+        return Datatables::of($$module_name)
+
+                        ->addColumn('inner_design', function ($data) {
+                            return  '<a target="_blank" download href="'.asset("storage/".$data->inner_design).'"><img width="100px" class="model_preview" data-url="'.asset("storage/".$data->inner_design).'" src="'.asset("storage/".$data->inner_design).'"></a>';
+                        })
+                        ->addColumn('main_design', function ($data) {
+                            return  '<a target="_blank" download href="'.asset("storage/".$data->main_design).'"><img width="100px" class="model_preview" data-url="'.asset("storage/".$data->main_design).'" src="'.asset("storage/".$data->main_design).'"></a>';
+                        })
+                       
+                        ->addColumn('downloaded_times', function ($data) {
+                            return  $data->downloaded_times." times";
+                        })
+                        ->editColumn('created_at', function ($data) {
+                            $module_name = $this->module_name;
+
+                            $diff = Carbon::now()->diffInHours($data->created_at);
+
+                            if ($diff < 25) {
+                                return $data->created_at->diffForHumans();
+                            } else {
+                                return $data->created_at->isoFormat('LLLL');
+                            }
+                        })
+                        ->addColumn('action', function ($data) {
+                            $master_file_record_limit = setting('master_file_record_limit');
+                            return  $master_file_record_limit<$data->total_records?"<a href='/admin/orders/dividefile/".$data->id."'>Divide</a>":"-";
+                        })
+                        ->rawColumns(['main_design','inner_design','action'])
+                        ->orderColumns(['id'], '-:column $1')
+                        ->make(true);
+    }
+
     public function index_data(Request $request)
     {
         $module_title = $this->module_title;
@@ -159,7 +227,7 @@ class OrderController extends Controller
         $type=$request->query('type');
         $s_id=$request->query('s_id');
 
-        $$module_name = $module_model::select('id', 'user_id','campaign_name','campaign_type', 'campaign_message', 'order_amount', 'final_printing_file', 'status', 'updated_at','listing_id');
+        $$module_name = $module_model::select('id', 'user_id','campaign_name','inner_design','main_design','campaign_type', 'campaign_message', 'order_amount', 'final_printing_file', 'status', 'updated_at','listing_id');
         if ($user_id) {
             $$module_name=$$module_name->where('user_id', $user_id);
         }
@@ -180,7 +248,9 @@ class OrderController extends Controller
                             return $return_string;
                         })
                         ->addColumn('message_overview', function ($data) {
-                            if(@$data->campaign_message&&file_exists(public_path('img/preview/'.@$data->campaign_message))){ $preview_image=asset('img/preview/'.@$data->campaign_message); return "<img width='100px' class='model_preview'  style='display:inline;cursor: zoom-in;' data-url='".$preview_image."' src='".$preview_image."'>"; }else{
+                            if(@$data->campaign_message&&file_exists(public_path('img/preview/'.@$data->campaign_message))){ $preview_image=asset('img/preview/'.@$data->campaign_message); $r='';if($data->main_design){
+                                $r="&nbsp;<img width='100px' class='model_preview' data-url='".asset("storage/".$data->main_design)."' src='".asset("storage/".$data->main_design)."'>";
+                            } return "<img width='100px' class='model_preview' style='display:inline;background:url(".asset("storage/".$data->inner_design).") #f8f8f8;cursor: zoom-in;background-position:center;background-size:92%;background-repeat:no-repeat;'  data-url='".$preview_image."' src='".$preview_image."'>".$r; }else{
                                 return $data->campaign_message;
                             }
                         })

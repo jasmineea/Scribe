@@ -1492,6 +1492,8 @@ if (! function_exists('create_excel_for_master_file')) {
             $sheet->setCellValue('M1', 'Recipient State');
             $sheet->setCellValue('N1', 'Recipient Zip');
             $sheet->setCellValue('O1', 'Custom Message ID');
+            $sheet->setCellValue('P1', 'Outer Design');
+            $sheet->setCellValue('Q1', 'Inner Design');
 
             $latest_record=MasterFiles::latest()->first();
             $master_id=1;
@@ -1523,6 +1525,10 @@ if (! function_exists('create_excel_for_master_file')) {
                 $sheet->setCellValue('M'.$i, $row['state']);
                 $sheet->setCellValue('N'.$i, $row['zip']);
                 $sheet->setCellValue('O'.$i, $list->id);
+                $sheet->setCellValue('P'.$i, '=Hyperlink("'.$row['outer_design'].'","View Outer Design")');
+                $sheet->setCellValue('Q'.$i, '=Hyperlink("'.$row['inner_design'].'","View Inner Design")');
+                $sheet->getHyperlink('P'.$i)->setUrl($row['outer_design']);
+                $sheet->getHyperlink('Q'.$i)->setUrl($row['inner_design']);
                 $i++;
             }
             

@@ -54,11 +54,13 @@ Route::group(['namespace' => '\Modules\Order\Http\Controllers\Backend', 'as' => 
     $module_name = 'orders';
     $controller_name = 'OrderController';
     Route::get("$module_name/masterfiles", ['as' => "$module_name.masterfiles", 'uses' => "$controller_name@masterfiles"]);
+    Route::get("$module_name/masterdesignfiles", ['as' => "$module_name.masterdesignfiles", 'uses' => "$controller_name@masterdesignfiles"]);
     Route::get("$module_name/dividefile/{id}", ['as' => "$module_name.dividefile", 'uses' => "$controller_name@dividefile"]);
     Route::get("$module_name/changeStatus/{id}/{status}", ['as' => "$module_name.changeStatus", 'uses' => "$controller_name@changeStatus"]);
     Route::get("$module_name/index_list", ['as' => "$module_name.index_list", 'uses' => "$controller_name@index_list"]);
     Route::get("$module_name/index_data", ['as' => "$module_name.index_data", 'uses' => "$controller_name@index_data"]);
     Route::get("master_files/index_data", ['as' => "master_files.index_data", 'uses' => "$controller_name@master_files_data"]);
+    Route::get("master_design_files/index_data", ['as' => "master_design_files.index_data", 'uses' => "$controller_name@master_design_files_data"]);
     Route::get("$module_name/trashed", ['as' => "$module_name.trashed", 'uses' => "$controller_name@trashed"]);
     Route::get("$module_name/downloadAction/{file_name}/{id}", ['as' => "$module_name.downloadAction", 'uses' => "$controller_name@downloadAction"]);
 

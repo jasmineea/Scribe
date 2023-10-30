@@ -24,6 +24,7 @@ use Illuminate\Support\Facades\Hash;
 use Modules\Listing\Entities\Listing;
 use Modules\Listing\Entities\Contact;
 use Modules\Order\Entities\MasterFiles;
+use Modules\Order\Entities\MasterDesignFiles;
 use App\Events\Frontend\OrderPlaced;
 use App\Events\Frontend\WalletRecharge;
 use App\Notifications\NewRegistration;
@@ -125,8 +126,7 @@ class CardController extends Controller
     {
         $default_card_design = CardDesign::whereIn('user_id',[0])->latest()->get();
         $carddesignswithouttype = CardDesign::whereIn('user_id',[auth()->user()->id])->where('type',null)->latest()->get();
-        $carddesigns = CardDesign::whereIn('user_id',[auth()->user()->id])->where('type','outer')->latest()->get();
-        $innercarddesigns = CardDesign::whereIn('user_id',[auth()->user()->id])->where('type','inner')->latest()->get();
+        $carddesigns = CardDesign::whereIn('user_id',[auth()->user()->id])->whereIn('type',['outer','inner'])->latest()->get();
         $final_array=$request->session()->get('final_array');
         $preview_message=final_message(@$final_array['excel_data']['data'][2], $final_array['hwl_custom_msg'], $final_array['system_property_1']);
         $final_array['preview_image'] = generate_Preview_Image($preview_message);
@@ -144,7 +144,7 @@ class CardController extends Controller
         $request->session()->put('final_array', $final_array);
 
         
-        return view('frontend.step4a', compact('final_array','carddesigns','innercarddesigns','carddesignswithouttype','default_card_design'));
+        return view('frontend.step4a', compact('final_array','carddesigns','carddesignswithouttype','default_card_design'));
     }
 
     public function step4b(Request $request)
@@ -690,6 +690,10 @@ class CardController extends Controller
                 }
                 $order->campaign_type= $order_data['campaign_type']=='on-going'?'on-going':'one-time';
                 $order->campaign_message= 'order_'.$order_data['preview_image'];
+                $order->front_design= $order_data['front_design'];
+                $order->back_design= $order_data['back_design'];
+                $order->main_design= $order_data['main_design'];
+                $order->inner_design= $order_data['inner_design'];
                 $order->schedule_status= $order_data['publish_type']=='schedule'?1:0;
                 $order->auto_charge= $order_data['auto_charge']?1:0;
                 $order->threshold= $order_data['threshold']?$order_data['threshold']:0;
@@ -1191,6 +1195,14 @@ class CardController extends Controller
             create_copy_excel($value->id);
             $latest_order=Order::find($value->id);
             $order_json=read_excel_data($latest_order->final_printing_file, 1);
+            MasterDesignFiles::create([
+                'campaign_name' => trim($latest_order->campaign_name),
+                'order_id' => $latest_order->id,
+                'main_design' => $latest_order->main_design,
+                'inner_design' => $latest_order->inner_design,
+                'total_records' => count($order_json['data'])
+            ]);
+
 
             foreach ($order_json['data'] as $key_1 => $value_1) {
                 $final_message[$i]['order_date']=date('Y-m-d H:i:s',strtotime($value->created_at));
@@ -1208,6 +1220,8 @@ class CardController extends Controller
                 $final_message[$i]['state']=$value_1['STATE'];
                 $final_message[$i]['zip']=$value_1['ZIP'];
                 $final_message[$i]['final_message']=$value_1['FINAL_PRINTING_MESSAGE'];
+                $final_message[$i]['outer_design']=asset("storage/".$latest_order->main_design);
+                $final_message[$i]['inner_design']=asset("storage/".$latest_order->inner_design);
 
                 if(count($final_message)>=$master_file_record_limit){
                     $return_file_name=create_excel_for_master_file($final_message);

@@ -85,6 +85,22 @@ class GenerateMenus
             ]);
         })->sortBy('order');
 
+        \Menu::make('admin_sidebar', function ($menu) {
+            // comments
+            $menu->add('<i class="nav-icon fas fa-file"></i> Master Design Files', [
+                'route' => 'backend.orders.masterdesignfiles',
+                'class' => 'nav-item',
+            ])
+            ->data([
+                'order' => 8,
+                'activematches' => ['admin/masterdesignfiles*'],
+                'permission' => ['view_masterdesignfiles'],
+            ])
+            ->link->attr([
+                'class' => 'nav-link',
+            ]);
+        })->sortBy('order');
+
         return $next($request);
     }
 }

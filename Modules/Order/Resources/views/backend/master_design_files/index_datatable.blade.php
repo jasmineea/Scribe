@@ -9,19 +9,37 @@
 @endsection
 
 @section('content')
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/6.0.0/bootbox.min.js" integrity="sha512-oVbWSv2O4y1UzvExJMHaHcaib4wsBMS5tEP3/YkMP6GmkwRJAa79Jwsv+Y/w7w2Vb/98/Xhvck10LyJweB8Jsw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<style>
+#page-loader {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 10000;
+    display: none;
+    text-align: center;
+    width: 100%;
+    padding-top: 25px;
+    background-color: rgba(255, 255, 255, 0.7);
+}
+</style>
+<div id="page-loader">
+<h3>Loading page...</h3>
+<img src="http://css-tricks.com/examples/PageLoadLightBox/loader.gif" alt="loader">
+<p><small>please wait we are creating master files for you.</small></p>
+</div>
 <div class="card">
     <div class="card-body">
 
         <x-backend.section-header>
-            <i class="{{ $module_icon }}"></i> {{ucfirst($type)}} {{ __($module_title) }} <small class="text-muted">{{ __($module_action) }}</small>
+        <i class="{{ $module_icon }}"></i>{{ __($module_title) }} <small class="text-muted">{{ __($module_action) }}</small>
 
-            {{-- <x-slot name="subtitle">
-                @lang(":module_name Management Dashboard", ['module_name'=>Str::title($module_name)])
-            </x-slot> --}}
-            <x-slot name="toolbar">
-            <a href='{{ route("frontend.cards.autoCreateOrder","web") }}' class="btn btn-success  " data-toggle="tooltip" aria-label="Create Order" data-coreui-original-title="Fetch Orders">Fetch Orders</a>
-            </x-slot>
+
+        <x-slot name="toolbar">
+        <a href='{{ route("backend.settings",["type"=>"master_file_limit"]) }}' class="btn btn-warning" data-toggle="tooltip" data-coreui-original-title="Set Master File Record Limit"><i class="fa fa-cog"></i></a>
+        <a href='{{ route("frontend.cards.createMasterFile","web") }}' onclick="javascript:document.getElementById('page-loader').style.display='block';" class="btn btn-success  " data-toggle="tooltip" aria-label="Create Order" data-coreui-original-title="Generate master file">Generate master print file</a>
+        </x-slot>
 
         </x-backend.section-header>
 
@@ -34,28 +52,32 @@
                                 #
                             </th>
                             <th>
-                                User
+                                Campaign ID
                             </th>
                             <th>
-                                Name
+                                Campaign Name
                             </th>
                             <th>
-                                Type
+                                Inner Design Files
                             </th>
                             <th>
-                                Total Recipient
-                            </th>
-                            <th>Download Campaign List</th>
-							<th>Message Overview</th>
-                            <th>
-                                Status
+                                Outer Design Files
                             </th>
                             <th>
-                                Updated At
+                                Total Records
                             </th>
-                            {{-- <th class="text-end">
+                            <th>
+                                Downloaded
+                            </th>
+                            <th>
+                                Downloaded At
+                            </th>
+                            <th>
+                                Created At
+                            </th>
+                            <th class="text-end">
                                 Action
-                            </th> --}}
+                            </th>
                         </tr>
                     </thead>
                 </table>
@@ -91,64 +113,56 @@
 <script type="module" src="{{ asset('vendor/datatable/datatables.min.js') }}"></script>
 
 <script type="module">
-    $('body').on('change','.change_status',function(){
-        var id=$(this).data('id');
-        var status=$(this).val();
-        window.location.href = "/admin/orders/changeStatus/"+id+"/"+status;
+    $("body").on('click','.divide_file',function(){
+        alert($(this).data('id'));
     })
     $('#datatable').DataTable({
         processing: true,
         serverSide: true,
         autoWidth: true,
         responsive: true,
-        ajax: '{{ route("backend.$module_name.index_data",["user_id"=>$user_id,"s_id"=>$s_id,"type"=>$type]) }}',
+        ajax: '{{ route("backend.$module_name.index_data") }}',
         columns: [{
                 data: 'id',
                 name: 'id'
             },
             {
-                data: 'user_id',
-                name: 'user_id'
+                data: 'order_id',
+                name: 'order_id'
             },
             {
                 data: 'campaign_name',
                 name: 'campaign_name'
             },
             {
-                data: 'campaign_type',
-                name: 'campaign_type'
+                data: 'inner_design',
+                name: 'inner_design'
             },
             {
-                data: 'total_recipient',
-                name: 'total_recipient'
+                data: 'main_design',
+                name: 'main_design'
             },
             {
-                data: 'download_print_file',
-                name: 'download_print_file'
+                data: 'total_records',
+                name: 'total_records'
             },
             {
-                data: 'message_overview',
-                name: 'message_overview'
+                data: 'downloaded_times',
+                name: 'downloaded_times'
             },
             {
-                data: 'status',
-                name: 'status'
+                data: 'downloaded_at',
+                name: 'downloaded_at'
             },
             {
-                data: 'updated_at',
-                name: 'updated_at'
+                data: 'created_at',
+                name: 'created_at'
+            },
+            {
+                data: 'action',
+                name: 'action'
             }
         ]
     });
-    $("body").on('click','.model_preview',function(){
-		var img_link=$(this).data('url');
-		var style=$(this).attr('style');
-		var d = bootbox.alert({
-			message: "<img width='100%'  style='"+style+"' src='"+img_link+"'>",
-			size: 'large',
-			backdrop: true
-			});
-		d.find('.modal-dialog').addClass('modal-dialog-centered');
-	})
 </script>
 @endpush

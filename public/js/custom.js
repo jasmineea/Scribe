@@ -176,7 +176,7 @@ $(document).ready(function(){
 			var text_max = 120;
 			var set_target = 10;
 
-			$('.wrd-cuntng').html(text_max + ' words remaining');
+			$('.wrd-cuntng').html(text_max + ' words or 25 lines remaining');
 			jQuery('.wrd-cuntng').attr('count',text_max);
 
 			// jQuery(document).on('keyup','.hwl_custom_msg', function(event) {
@@ -228,6 +228,8 @@ $(document).ready(function(){
 				jQuery(document).find('.hwl_custom_msg').trigger('keyup');
 			},200);
 			jQuery(document).on('keyup','.hwl_custom_msg', function(event) {
+				var total_lines=calulateLines(event);
+				var remaining_lines=25-total_lines;
 				var word_count1 = 0;
 				jQuery(this).parents(".single_row2").find('.textmsg').val(jQuery(this).val());
 				var split = jQuery(this).val().split(' ');
@@ -237,14 +239,14 @@ $(document).ready(function(){
 					}
 				}
 				var text_remaining = text_max - word_count1;
-				if(text_remaining<=0){
+				if(text_remaining<=0||remaining_lines<=0){
 					var str=jQuery(this).val();
 					jQuery(this).val(str.substring(0, str.lastIndexOf(" ")));
-					jQuery(this).parents(".single_row2").find('.wrd-cuntng').html(text_remaining + ' words remaining');
+					jQuery(this).parents(".single_row2").find('.wrd-cuntng').html(text_remaining + ' words or '+remaining_lines+' lines  remaining');
 					jQuery(this).parents(".single_row2").find('.wrd-cuntng').attr('count',text_remaining);
 					return false;
 				}
-				jQuery(this).parents(".single_row2").find('.wrd-cuntng').html(text_remaining + ' words remaining');
+				jQuery(this).parents(".single_row2").find('.wrd-cuntng').html(text_remaining + ' words or '+remaining_lines+' lines remaining');
 				jQuery(this).parents(".single_row2").find('.wrd-cuntng').attr('count',text_remaining);
 
 				line_no=getLineNumber(this);
@@ -274,6 +276,13 @@ $(document).ready(function(){
 				}
 				
 			})
+			function calulateLines(){
+				var text = $("#hwl_custom_msg_1").val();   
+				var lines = text.split(/\r|\r\n|\n/);
+				var count = lines.length;
+				
+				return count;
+			}
 			
 			function ApplyLineBreaks(strTextAreaId) {
 				var oTextarea = document.getElementById(strTextAreaId);
@@ -599,9 +608,10 @@ $(document).ready(function(){
 		d.find('.modal-dialog').addClass('modal-dialog-centered');
 	})
 	$(".model_preview").click(function(){
+		var style=$(this).attr('style');
 		var img_link=$(this).data('url');
 		var d = bootbox.alert({
-			message: "<img src='"+img_link+"'>",
+			message: "<img style='"+style+"' src='"+img_link+"'>",
 			size: 'large',
 			backdrop: true
 			});

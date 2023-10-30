@@ -24,9 +24,11 @@
 									@else
 									<div class="upload-files-container">
 										<div class="drag-file-area">
+										<label class="label">
 											<span class="material-icons-outlined upload-icon"></span>
-											<h3 class="dynamic-message"> Drag & drop any file here </h3>
-											<label class="label"> or <span class="browse-files"> <input type="file" onchange="sub(this)" name="upload_recipients" id="upload_recipients" class="default-file-input"/> <span class="browse-files-text">browse file</span> <span>from device</span> </span> </label>
+											<h3 class="dynamic-message"> Browse file from device</h3>
+										<input type="file" style="display:none;" onchange="sub(this)" name="upload_recipients" id="upload_recipients" class="default-file-input"/><span>supported files xls,xlsx or csv</span>
+										</label>
 										</div>
 										<span class="cannot-upload-message"> <span class="material-icons-outlined">error</span> Please select a file first <span class="material-icons-outlined cancel-alert-button">cancel</span> </span>
 										<div class="file-block">
@@ -48,8 +50,8 @@
 								
 							</div>
 							<div class="step-2-option">
-								   <div class="cstm-dropdown">
-										<select name="listing_id" id="listing_select" class="custom-select sources" placeholder="Source Type">
+								   <div class="cstm-dropdown" style="text-align:center">
+										<select name="listing_id" id="listing_select" class="custom-select sources" placeholder="Source Type"  style="background: #E7934C;border-radius: 22px;color: white;font-weight: bold;">
 											<option value="0">Select Campaign List</option>
 											@foreach ($listings as $item)
 											<option value="{{$item->id}}" {{@$final_array['listing_id']==$item->id||@$final_array['list_id']==$item->id?"selected":""}}>{{$item->name}}</option>

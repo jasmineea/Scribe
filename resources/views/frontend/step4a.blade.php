@@ -209,19 +209,19 @@ $class_tooltip="step_5a";
                                  </div>
                                  <!-- Design View Section Ends -->
 								 <div class="row">
-									<div class="col-6">
+									<div class="col-7">
 										<br>
 											<div class="col-12">
-											<label><b>Upload Own Card Design</b></label><br>
+											<label><b>Upload Your Card Design</b></label><br>
 												<div class="design-upload-btn dub1" style="cursor: pointer;">
 													<span class="upload-icon upload-icon-white"></span>
 													<span>Upload</span>
 												</div>
-												supported format png, jpg or zip file.
+												Supported format: png, jpg or zip file (containing png.jpg files).
 											</div>
 										<br>
 										<div class="col-12">
-											<label><b>Design your card</b></label><br>
+											<label><b>Design your card using below template</b></label><br>
 											<a href="https://www.canva.com/design/DAFxz_x-wrM/OFzQr-3l_qZimrt7SL5eWA/view?utm_content=DAFxz_x-wrM&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview" style="color:#ef7600;" target="_blank">Click to design card template</a>
 										</div>
 										<br>
@@ -238,33 +238,23 @@ $class_tooltip="step_5a";
 										</div>
 									
 									</div>
-									<div class="col-6">
+									<div class="col-5">
 										<div class="row">
-										<div class="col-6">
-											<label><b>Outer Design</b></label>
-											<div class="template-word-section step-4-right-buttons my-slider1">
+										<div class="col-8" style="min-height: 454px;">
+											<label><b>Uploaded Designs</b></label>
+											<div class="template-word-section step-4-right-buttons my-slider1" style="max-width:80%;">
 											
 											@foreach($carddesigns as $k=>$v)
 											<div class="design-template-thumb"  style="cursor: pointer;">
-												<img class="image_t" src="{{asset('storage/'.$v['image_path'])}}" data-path="{{$v['image_path']}}" data-front-src="{{asset('storage/'.$v['front_image_path'])}}" data-back-src="{{asset('storage/'.$v['back_image_path'])}}" data-front="{{$v['front_image_path']}}" data-back="{{$v['back_image_path']}}">
+												<img class="{{$v['type']=='outer'?'image_t':'image_t2'}}" src="{{asset('storage/'.$v['image_path'])}}" data-path="{{$v['image_path']}}" data-front-src="{{asset('storage/'.$v['front_image_path'])}}" data-back-src="{{asset('storage/'.$v['back_image_path'])}}" data-front="{{$v['front_image_path']}}" data-back="{{$v['back_image_path']}}">
 											</div>
 											@endforeach
 											</div>
 										</div>
-										<div class="col-6">
-											<label><b>Inner Design</b></label>
-											<div class="template-word-section step-4-right-buttons my-slider2">
-											
-											@foreach($innercarddesigns as $k=>$v)
-											<div class="design-template-thumb"  style="cursor: pointer;">
-												<img class="image_t2" src="{{asset('storage/'.$v['image_path'])}}" data-path="{{$v['image_path']}}" data-front-src="{{asset('storage/'.$v['front_image_path'])}}" data-back-src="{{asset('storage/'.$v['back_image_path'])}}" data-front="{{$v['front_image_path']}}" data-back="{{$v['back_image_path']}}">
-											</div>
-											@endforeach
-											</div>
-										</div>
+										
 										<div class="col-12">
 											<div class="form-group field-full checkbox">
-											<input type="checkbox" {{@$final_array['remember']=='1'?'checked':''}} id="remember" name="remember" value="1" required>
+											<input type="checkbox" checked id="remember" name="remember" value="1" required>
 											<label for="remember">Accept <a href="" target="_blank">Terms and Conditions</a></label>
 											</div>
 										</div>

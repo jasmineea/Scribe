@@ -27,6 +27,8 @@
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;300;400;500;600;700&display=swap" rel="stylesheet">
 	<link rel="stylesheet" type="text/css" href="{{asset('css/style.css')}}?v={{env('ASSET_VERSION')}}">
+    <link rel="stylesheet" type="text/css" href="{{asset('css/owl.carousel.min.css')}}?v={{env('ASSET_VERSION')}}">
+    <link rel="stylesheet" type="text/css" href="{{asset('css/owl.theme.default.min.css')}}?v={{env('ASSET_VERSION')}}">
 	<link rel="stylesheet" type="text/css" href="{{asset('css/responsive.css')}}?v={{env('ASSET_VERSION')}}">
 	<link rel="stylesheet" type="text/css" href="{{asset('css/nice-alert.css')}}">
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
@@ -34,6 +36,7 @@
 	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js" integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V" crossorigin="anonymous"></script>
 	<script type="text/javascript" src="{{asset('js/script.js')}}?v={{env('ASSET_VERSION')}}"></script>
+    <script type="text/javascript" src="{{asset('js/owl.carousel.min.js')}}?v={{env('ASSET_VERSION')}}"></script>
 
 	<script type="text/javascript" src="{{asset('js/countries.js')}}"></script>
 	<script type="text/javascript" src="{{asset('js/nice-alert.js')}}"></script>
@@ -48,7 +51,7 @@
 	<!-- <link rel="stylesheet" type="text/css" href="{{asset('build/assets/app-frontend-f67f5c8c.css')}}"> -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shepherd.js/7.1.2/css/shepherd.css" integrity="sha512-3j1rWrVQKFkf7HvtwfKf1rct2n3jaPFcW2ovsk+vcMt+gxISB0wI0NOBWFnzlGymjK2PLPgyMd/aLmhFxciBGQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/shepherd.js/7.1.2/js/shepherd.min.js" integrity="sha512-Sy962BupVURsOoUAJWvZMJOurIl3F8ijnbO1Mx+t8cytaDCjK5TixnayZm3c8v0KSsn9AlTiy+wIL7zQlp1YKA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script type="text/javascript" src="{{asset('js/custom.js')}}?v={{env('ASSET_VERSION')}}"></script>
+    <script type="text/javascript" src="{{asset('js/custom.js')}}?v={{rand(0,1000)}}"></script>
     @stack('after-styles')
 
     <x-google-analytics />

@@ -1187,6 +1187,7 @@ if (! function_exists('create_copy_excel')) {
 if (! function_exists('final_message')) {
     function final_message($data, $message,$mapping_fields=[],$action=0)
     {
+        
         foreach ($mapping_fields as $key => $value) {
             if($action){
                 $preview_array['/\b'.$key.'\b/']=isset($mapping_fields[$key])?isset($data[$mapping_fields[$key]])?trim($data[$mapping_fields[$key]]):$mapping_fields[$key]:'';
@@ -1196,6 +1197,8 @@ if (! function_exists('final_message')) {
         }
         $final_message = isset($preview_array)?preg_replace(array_keys($preview_array), array_values($preview_array), $message):$message;
         $final_message = str_replace('&ensp;','  ',  $final_message);
+        $final_message = str_replace("\t", '       ', $final_message);
+        $final_message = str_replace('     ','   ',  $final_message);
         $final_message = preg_replace( '/[\x{200B}-\x{200D}\x{FEFF}]/u', '', $final_message );
         return str_replace(array( '{', '}' ), '', $final_message);
     }

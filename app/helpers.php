@@ -1196,6 +1196,8 @@ if (! function_exists('final_message')) {
         }
         $final_message = isset($preview_array)?preg_replace(array_keys($preview_array), array_values($preview_array), $message):$message;
         $final_message = str_replace('&ensp;','  ',  $final_message);
+        $final_message = str_replace("\t", '       ', $final_message);
+        $final_message = str_replace('     ','   ',  $final_message);
         $final_message = preg_replace( '/[\x{200B}-\x{200D}\x{FEFF}]/u', '', $final_message );
         return str_replace(array( '{', '}' ), '', $final_message);
     }
@@ -1696,7 +1698,7 @@ if (! function_exists('generate_Preview_Image')) {
         $black = imagecolorallocate($img, 0, 0, 255);
         $angle = 0;
         $centerY = 1160;
-        imagettftext($img, $fontSize, $angle, $centerX, $centerY, $black, $fontFile, $txt, array("linespacing" => 0.4));
+        imagettftext($img, $fontSize, $angle, $centerX, $centerY, $black, $fontFile, $txt, array("linespacing" => 1));
         $image_name=auth()->user()->id."_".time().rand().".png";
         imagesavealpha($img, true);
         imagepng($img,public_path('img/preview/'.$image_name));//save image

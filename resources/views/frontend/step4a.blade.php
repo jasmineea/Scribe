@@ -376,6 +376,9 @@ $class_tooltip="step_5a";
    
    
    $(".design-template-thumb .image_t").click(function(){
+      $('.image_t').removeClass('active_thumb');
+      $(this).addClass('active_thumb');
+
    	var src=$(this).attr('src');
    	var src_f=$(this).data('front-src');
    	var src_b=$(this).data('back-src');

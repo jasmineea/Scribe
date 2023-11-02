@@ -28,6 +28,9 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
         });
+        Schema::table('contacts', function (Blueprint $table) {
+            $table->enum('status', ['0','1','2'])->default(0);
+        });
     }
 
     /**

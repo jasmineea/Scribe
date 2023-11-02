@@ -10,6 +10,9 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use App\Models\Userprofile;
+use Modules\Listing\Entities\Listing;
+use Modules\Listing\Entities\Contact;
 use Illuminate\Support\Str;
 use Modules\Order\Entities\MasterFiles;
 use Modules\Comment\Http\Requests\Backend\CommentsRequest;
@@ -18,6 +21,7 @@ use Spatie\Activitylog\Models\Activity;
 use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Backend\BackendBaseController;
 use Session;
+use Illuminate\Support\Facades\Http;
 
 class OrderController extends Controller
 {
@@ -304,6 +308,16 @@ class OrderController extends Controller
         $order=$module_model::find($order_id);
         $order->status =$status;
         $order->save();
+        $userprofile = Userprofile::where('user_id',$order->user_id)->first();
+        $list = Listing::where('id',$order->listing_id)->first();
+        $post_data = Contact::where('listing_id',$order->listing_id)->select(['email','phone'])->get()->toArray();
+        foreach($post_data as $k=>$v){
+            $post_data[$k]['list_name']=$list->name;
+            $post_data[$k]['card_status']=$order->status;
+        }
+        if(!empty($userprofile->url_website)){
+            $response = Http::post($userprofile->url_website,$post_data);
+        }
         Session::flash('success', 'Status changed successfully.');
         return redirect()->route('backend.orders.index',['type'=>'published']);
     }

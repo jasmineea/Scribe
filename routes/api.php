@@ -21,6 +21,7 @@ Route::controller(AuthController::class)->group(function () {
     Route::post('logout', 'logout');
     Route::post('add-contact', 'addLisiting');
     Route::post('get-campaigns', 'getCampaigns');
+    Route::post('delete-contact', 'deleteContact');
     Route::post('get-master-files', 'getMasterFiles');
 });
 

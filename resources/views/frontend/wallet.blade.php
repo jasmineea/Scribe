@@ -3,6 +3,7 @@
 @section('title') {{app_name()}} @endsection
 
 @section('content')
+<link rel="stylesheet" type="text/css" href="{{asset('build/assets/app-frontend-f67f5c8c.css')}}">
     <style type="text/css">
         .container {
             margin-top: 40px;

@@ -14,7 +14,9 @@ $class_tooltip="step_5a";
 <!-- NOTE: prior to v2.2.1 tiny-slider.js need to be in <body> -->
 <style>
    /* Absolute Center Spinner */
-
+   .design-cont-wrapper label {
+    margin-bottom: 10px;
+}
 	.tns-outer [aria-controls], .tns-outer [data-action] {
 		cursor: pointer;
 		color: white;
@@ -213,19 +215,25 @@ $class_tooltip="step_5a";
 										<br>
 											<div class="col-12">
 											<label><b>Upload Your Card Design</b></label><br>
+												<div class="upd-btn-wrap">
 												<div class="design-upload-btn dub1" style="cursor: pointer;">
 													<span class="upload-icon upload-icon-white"></span>
 													<span>Upload</span>
 												</div>
-												Supported format: png, jpg or zip file (containing png.jpg files).
+												<p>Supported format: png, jpg or zip file (containing png.jpg files).</p>
+											</div>
 											</div>
 										<br>
 										<div class="col-12">
 											<label><b>Design your card using below template</b></label><br>
 											<a href="https://www.canva.com/design/DAFxz_x-wrM/OFzQr-3l_qZimrt7SL5eWA/view?utm_content=DAFxz_x-wrM&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview" style="color:#ef7600;" target="_blank">Click to design card template</a>
 										</div>
-										<br>
-										<div class="col-12">
+			
+									
+									</div>
+									<div class="col-5">
+										<div class="row">
+										<div class="col-12" style=""><br>
 											<label><b>Scribe Templates</b></label>
 											<div class="template-word-section step-4-right-buttons my-slider0">
 											
@@ -235,33 +243,49 @@ $class_tooltip="step_5a";
 											</div>
 											@endforeach
 											</div>
-										</div>
-									
-									</div>
-									<div class="col-5">
-										<div class="row">
-										<div class="col-8" style="min-height: 454px;">
-											<label><b>Uploaded Designs</b></label>
-											<div class="template-word-section step-4-right-buttons my-slider1" style="max-width:80%;">
 											
-											@foreach($carddesigns as $k=>$v)
-											<div class="design-template-thumb"  style="cursor: pointer;">
+										</div>
+										
+									
+										</div>
+
+									</div>
+                              	 </div>
+                             
+                              <div class="row">
+                              		<div class="col-12">
+										<label><b>Uploaded Designs</b></label>
+										<div class="owl-carousel" id="uploadDesignsSlider" style="max-width:85%;">
+											<div class="owl-nav"></div> 
+												@foreach($carddesigns as $k=>$v)
+											<div class="item design-template-thumb" style="cursor: pointer;">
 												<img class="{{$v['type']=='outer'?'image_t':'image_t2'}}" src="{{asset('storage/'.$v['image_path'])}}" data-path="{{$v['image_path']}}" data-front-src="{{asset('storage/'.$v['front_image_path'])}}" data-back-src="{{asset('storage/'.$v['back_image_path'])}}" data-front="{{$v['front_image_path']}}" data-back="{{$v['back_image_path']}}">
 											</div>
 											@endforeach
-											</div>
-										</div>
-										
-										<div class="col-12">
+
+										</div>	
+
+
+
+										<!-- <div class="template-word-section step-4-right-buttons my-slider1" style="max-width:80%;">
+											@foreach($carddesigns as $k=>$v)
+											<div class="design-template-thumb"  style="cursor: pointer;">
+												<img class="{{$v['type']=='outer'?'image_t':'image_t2'}}" src="{{asset('storage/'.$v['image_path'])}}" data-path="{{$v['image_path']}}" data-front-src="{{asset('storage/'.$v['front_image_path'])}}" data-back-src="{{asset('storage/'.$v['back_image_path'])}}" data-front="{{$v['front_image_path']}}" data-back="{{$v['back_image_path']}}">
+										     </div>
+											@endforeach
+										</div> -->
+									</div>
+                              	</div>
+                              <div class="row">
+                              	<div class="col-12">
+                              			<div class="col-12">
 											<div class="form-group field-full checkbox">
 											<input type="checkbox" checked id="remember" name="remember" value="1" required>
 											<label for="remember">Accept <a href="" target="_blank">Terms and Conditions</a></label>
 											</div>
 										</div>
-										</div>
-									</div>
-                              	 </div>
-                              </div>
+                              	</div>
+                              </div> </div>
                               
                               <!-- <div class="approve-design-btn">
                                  <a href="#" class="theme-btn">Approve this Design</a>
@@ -291,7 +315,7 @@ $class_tooltip="step_5a";
       </div>
    </div>
 </section>
-<div class="design_form3_div">
+<div class="design_form3_div" style="display:none;">
    <form class="design_form3" action="{{ route("frontend.cards.saveDesignType")}}" method="POST">
    {{ csrf_field() }}
    <table class="table">
@@ -402,6 +426,10 @@ $class_tooltip="step_5a";
    	$("input[name='main_design']").val(path);
    })
    $(".design-template-thumb .image_t2").click(function(){
+      
+      $('.image_t2').removeClass('active_thumb');
+      $(this).addClass('active_thumb');
+
    	var src=$(this).attr('src');
    	var path=$(this).data('path');
    	

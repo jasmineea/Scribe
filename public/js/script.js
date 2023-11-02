@@ -1,5 +1,6 @@
 $(document).ready(function() {
 
+
   $(".sidebar-parent-menu a").click(function(){
     var me_sidebar =$(this);
     $id = $(this).data('id');
@@ -226,5 +227,12 @@ $(".custom-option").on("click", function() {
 
 });
 
-
+$(document).ready(function(){
+  $('.owl-carousel').owlCarousel({
+    loop:true,
+    nav:true,
+    autoWidth:true,
+    items:2
+})
+});
 

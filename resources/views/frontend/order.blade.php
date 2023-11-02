@@ -3,7 +3,7 @@
 @section('title') {{app_name()}} @endsection
 
 @section('content')
-
+<link rel="stylesheet" type="text/css" href="{{asset('build/assets/app-frontend-f67f5c8c.css')}}">
 <section id="hero-section">
 	<div class="container-fluid" style="padding-left: 368px;">
 	<ul class="btn btn-outline-primary theme_button" style="padding: var(--bs-btn-padding-y) 10px;"><li style="list-style: none;float: left;padding-right: 8px;"><i class="fa fa-info-circle step-info" data-element="step_7_tooltip"></i></li><li  style="list-style: none;
@@ -30,7 +30,7 @@
 							<th scope="row">{{ $data->id }}</th>
 							<td>{{ $data->campaign_name }}</td>
 							<td>{{ status_format($data->status) }}</td>
-							<td>{{ $data->campaign_type }}</td>
+							<td>{{ $data->campaign_type_2 }}</td>
 							<td><a href="{{route('frontend.cards.contacts',$data->listing_id)}}">{{isset($data->listing)?$data->listing->contacts->count():0}}</a></td>
 							<td>{{ $data->order_amount }}</td>
 							<td>@php if(@$data->campaign_message&&file_exists(public_path('img/preview/'.@$data->campaign_message))){ $preview_image=asset('img/preview/'.@$data->campaign_message); echo("<img width='100px' class='model_preview'  style='display:inline;background:url(".asset("storage/".$data->inner_design).") #f8f8f8;background-position:center;background-size:92%;background-repeat:no-repeat;' data-url='".$preview_image."' src='".$preview_image."'>"); if(!empty($data->main_design)){ echo("&nbsp;<img width='100px' class='model_preview' data-url='".asset("storage/".$data->main_design)."' src='".asset("storage/".$data->main_design)."'>");} }else{ echo $data->campaign_message;} @endphp</td>

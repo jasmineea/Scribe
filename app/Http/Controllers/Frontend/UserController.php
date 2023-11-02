@@ -160,6 +160,7 @@ class UserController extends Controller
      */
     public function profileUpdate(Request $request, $id)
     {
+        $id=decode_id($id);
         $module_title = $this->module_title;
         $module_name = $this->module_name;
         $module_path = $this->module_path;
@@ -167,7 +168,6 @@ class UserController extends Controller
         $module_model = $this->module_model;
         $module_name_singular = Str::singular($module_name);
         $module_action = 'Profile Update';
-
         if ($id != auth()->user()->id) {
             return redirect()->route('frontend.users.profile', $id);
         }
@@ -210,7 +210,7 @@ class UserController extends Controller
 
         event(new UserProfileUpdated($user_profile));
 
-        return redirect()->route('frontend.users.profile', $$module_name_singular->id)->with('flash_success', 'Update successful!');
+        return redirect()->route('frontend.users.profile', encode_id($$module_name_singular->id))->with('flash_success', 'Update successful!');
     }
 
     /**

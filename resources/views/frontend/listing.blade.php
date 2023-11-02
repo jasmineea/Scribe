@@ -3,7 +3,7 @@
 @section('title') {{app_name()}} @endsection
 
 @section('content')
-
+<link rel="stylesheet" type="text/css" href="{{asset('build/assets/app-frontend-f67f5c8c.css')}}">
 <section id="hero-section">
 	<div class="container-fluid" style="padding-left: 368px;">
 	<ul class="btn btn-outline-primary theme_button" style="padding: var(--bs-btn-padding-y) 10px;"><li style="list-style: none;float: left;padding-right: 8px;"><i class="fa fa-info-circle step-info" data-element="step_9_tooltip"></i></li><li  style="list-style: none;

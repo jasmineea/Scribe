@@ -1187,6 +1187,7 @@ if (! function_exists('create_copy_excel')) {
 if (! function_exists('final_message')) {
     function final_message($data, $message,$mapping_fields=[],$action=0)
     {
+        
         foreach ($mapping_fields as $key => $value) {
             if($action){
                 $preview_array['/\b'.$key.'\b/']=isset($mapping_fields[$key])?isset($data[$mapping_fields[$key]])?trim($data[$mapping_fields[$key]]):$mapping_fields[$key]:'';

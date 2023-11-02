@@ -231,7 +231,7 @@ class OrderController extends Controller
         $type=$request->query('type');
         $s_id=$request->query('s_id');
 
-        $$module_name = $module_model::select('id', 'user_id','campaign_name','inner_design','main_design','campaign_type', 'campaign_message', 'order_amount', 'final_printing_file', 'status', 'updated_at','listing_id');
+        $$module_name = $module_model::select('id', 'user_id','campaign_name','inner_design','main_design','campaign_type_2', 'campaign_message', 'order_amount', 'final_printing_file', 'status', 'updated_at','listing_id');
         if ($user_id) {
             $$module_name=$$module_name->where('user_id', $user_id);
         }

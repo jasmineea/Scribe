@@ -605,9 +605,9 @@ span.file-name {
 .upload-icon {
     content: "";
     background: url(../img/upload.png);
-    height: 50px;
+    height: 30px;
     display: block;
-    width: 50px;
+    width: 30px;
     background-position: center;
     background-size: contain;
     margin: 0 auto;
@@ -812,8 +812,8 @@ body {
 .step-2-form form .form-group input[type="text"], .form-control {
     padding: 10px 20px;
     border-radius: 50px;
-    border: none;
-    background: #f5f5f5 !important;
+    /* border: none;
+    background: #f5f5f5 !important; */
 }
 
 .step-2-form form .form-group input[type="text"]:focus, .form-control:focus {
@@ -2216,7 +2216,10 @@ display: none !important;
     height: 50px;
     display: block;
     padding: 10px 50px;
-    color: white !important;
+    color: white !important; 
+}
+#msform .action-button.create_custom_parameter {
+  width: 100%;
 }
 
 #msform .action-button:hover {
@@ -2289,6 +2292,54 @@ button.btn.btn-secondary.btn-default.bootbox-cancel, button.btn.btn-primary.boot
     flex-direction: row;
     justify-content: flex-start;
 }
+
+textarea#hwl_custom_msg_1 {
+  padding: 10px !important;
+}
+.upd-btn-wrap {
+    display: flex;
+}
+
+.upd-btn-wrap p {
+    display: inline-block !important;
+    text-align: left;
+    margin-left: 5px;
+    font-size: 14px;
+}
+.form-group.field-full.checkbox label {
+    margin: 0;
+}
+
+.form-group.field-full.checkbox {
+    padding: 10px 0;
+}
+
+.form-group.field-full.checkbox a {
+    color: #f97d00;
+}
+div#uploadDesignsSlider {
+    max-width: 80%;
+    overflow: hidden;
+}
+.owl-item.active:first-child .item.design-template-thumb {
+    margin-left: 0 !important;
+}
+#uploadDesignsSlider.owl-carousel .owl-nav button.owl-next, #uploadDesignsSlider.owl-carousel .owl-nav button.owl-prev {
+      padding: 5px 10px !important;
+    background: #f1871b;
+    color: white;
+    font-size: 26px !important;
+    margin-right: 5px;
+    line-height: 25px;
+}
+.owl-item.active.center {
+    position: relative !important;
+    top: unset;
+    left: unset;
+}
+
+/* Responsive */
+
 @media  (min-width: 640px) and (max-width: 768px) {
    #progressbar li {
     	width: 30.6%;

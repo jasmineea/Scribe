@@ -115,8 +115,8 @@
                 name: 'campaign_name'
             },
             {
-                data: 'campaign_type',
-                name: 'campaign_type'
+                data: 'campaign_type_2',
+                name: 'campaign_type_2'
             },
             {
                 data: 'total_recipient',

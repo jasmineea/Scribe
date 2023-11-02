@@ -639,6 +639,7 @@ class CardController extends Controller
     public function step5Update(Request $request)
     {
         ini_set('max_execution_time', 1000);
+        $type_sort_code=['single'=>'SOL','one-time'=>'OTC','on-going'=>'OGC'];
         if ($request->isMethod('post')) {
             $data=$request->all();
             $final_array=$request->session()->get('final_array');
@@ -686,9 +687,10 @@ class CardController extends Controller
                 if(@$order_data['step_0_action_2']=='duplicate_existing'){
                     $order->campaign_name= $order_data['campaign_name']." Copy";
                 }else{
-                    $order->campaign_name= @$order_data['campaign_name'];
+                    $order->campaign_name= $type_sort_code[$order_data['campaign_type']]."_".time();
                 }
                 $order->campaign_type= $order_data['campaign_type']=='on-going'?'on-going':'one-time';
+                $order->campaign_type_2= $order_data['campaign_type'];
                 $order->campaign_message= 'order_'.$order_data['preview_image'];
                 $order->front_design= $order_data['front_design'];
                 $order->back_design= $order_data['back_design'];
@@ -1191,52 +1193,54 @@ class CardController extends Controller
         $i=0;
 
         foreach ($orders as $key => $value) {
-            create_copy_excel_from_listing_id($value->listing_id);
-            create_copy_excel($value->id);
-            $latest_order=Order::find($value->id);
-            $order_json=read_excel_data($latest_order->final_printing_file, 1);
-            MasterDesignFiles::create([
-                'campaign_name' => trim($latest_order->campaign_name),
-                'order_id' => $latest_order->id,
-                'main_design' => $latest_order->main_design,
-                'inner_design' => $latest_order->inner_design,
-                'total_records' => count($order_json['data'])
-            ]);
+            if($value->listing_id){
+                create_copy_excel_from_listing_id($value->listing_id);
+                create_copy_excel($value->id);
+                $latest_order=Order::find($value->id);
+                $order_json=read_excel_data($latest_order->final_printing_file, 1);
+                MasterDesignFiles::create([
+                    'campaign_name' => trim($latest_order->campaign_name),
+                    'order_id' => $latest_order->id,
+                    'main_design' => $latest_order->main_design,
+                    'inner_design' => $latest_order->inner_design,
+                    'total_records' => count($order_json['data'])
+                ]);
 
 
-            foreach ($order_json['data'] as $key_1 => $value_1) {
-                $final_message[$i]['order_date']=date('Y-m-d H:i:s',strtotime($value->created_at));
-                $final_message[$i]['order_id']=$value->id;
-                $final_message[$i]['order_name']=$value->campaign_name;
-                $final_message[$i]['order_owner']=$value->user->name;
-                $final_message[$i]['order_status']=$value->status;
-                $final_message[$i]['first_name']=$value_1['FIRST_NAME'];
-                $final_message[$i]['last_name']=$value_1['LAST_NAME'];
-                $final_message[$i]['email']=$value_1['EMAIL'];
-                $final_message[$i]['company_name']=$value_1['COMPANY_NAME'];
-                $final_message[$i]['phone']=$value_1['PHONE'];
-                $final_message[$i]['address']=$value_1['ADDRESS'];
-                $final_message[$i]['city']=$value_1['CITY'];
-                $final_message[$i]['state']=$value_1['STATE'];
-                $final_message[$i]['zip']=$value_1['ZIP'];
-                $final_message[$i]['final_message']=$value_1['FINAL_PRINTING_MESSAGE'];
-                $final_message[$i]['outer_design']=asset("storage/".$latest_order->main_design);
-                $final_message[$i]['inner_design']=asset("storage/".$latest_order->inner_design);
+                foreach ($order_json['data'] as $key_1 => $value_1) {
+                    $final_message[$i]['order_date']=date('Y-m-d H:i:s',strtotime($value->created_at));
+                    $final_message[$i]['order_id']=$value->id;
+                    $final_message[$i]['order_name']=$value->campaign_name;
+                    $final_message[$i]['order_owner']=$value->user->name;
+                    $final_message[$i]['order_status']=$value->status;
+                    $final_message[$i]['first_name']=$value_1['FIRST_NAME'];
+                    $final_message[$i]['last_name']=$value_1['LAST_NAME'];
+                    $final_message[$i]['email']=$value_1['EMAIL'];
+                    $final_message[$i]['company_name']=$value_1['COMPANY_NAME'];
+                    $final_message[$i]['phone']=$value_1['PHONE'];
+                    $final_message[$i]['address']=$value_1['ADDRESS'];
+                    $final_message[$i]['city']=$value_1['CITY'];
+                    $final_message[$i]['state']=$value_1['STATE'];
+                    $final_message[$i]['zip']=$value_1['ZIP'];
+                    $final_message[$i]['final_message']=$value_1['FINAL_PRINTING_MESSAGE'];
+                    $final_message[$i]['outer_design']=asset("storage/".$latest_order->main_design);
+                    $final_message[$i]['inner_design']=asset("storage/".$latest_order->inner_design);
 
-                if(count($final_message)>=$master_file_record_limit){
-                    $return_file_name=create_excel_for_master_file($final_message);
-                    MasterFiles::create([
-                        'uploaded_recipient_file' => trim($return_file_name['file_name']),
-                        'total_records' => count($final_message)
-                    ]);
-                    $final_message = [];
+                    if(count($final_message)>=$master_file_record_limit){
+                        $return_file_name=create_excel_for_master_file($final_message);
+                        MasterFiles::create([
+                            'uploaded_recipient_file' => trim($return_file_name['file_name']),
+                            'total_records' => count($final_message)
+                        ]);
+                        $final_message = [];
+                    }
+                    $i=$i+1;
                 }
-                $i=$i+1;
-            }
-            if($order_json['data']){
-                $order=Order::find($value->id);
-                $order->status='processing';
-                $order->save();
+                if($order_json['data']){
+                    $order=Order::find($value->id);
+                    $order->status='processing';
+                    $order->save();
+                }
             }
         }
         if($final_message){

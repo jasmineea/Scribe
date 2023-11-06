@@ -217,6 +217,87 @@ class OrderController extends Controller
                         ->make(true);
     }
 
+    public function designfiles(Request $request,$type=""){
+        
+        $module_title = 'Design Files';
+        $module_name = 'design_files';
+        $module_icon = $this->module_icon;
+        $module_model = 'Modules\Order\Entities\CardDesign';
+        $module_name_singular = Str::singular($module_name);
+
+        $module_action = 'List';
+            $$module_name = $module_model::paginate();
+
+        Log::info(label_case($module_title.' '.$module_action).' | User:'.Auth::user()->name.'(ID:'.Auth::user()->id.')');
+        $carddesignswithouttype = $module_model::whereIn('user_id',[0])->where('type',null)->latest()->get();
+        return view(
+            "order::backend.$module_name.index_datatable",
+            compact('module_title', 'module_name', "$module_name",'carddesignswithouttype','type', 'module_icon', 'module_name_singular', 'module_action')
+        );
+    }
+
+    public function design_files_data(Request $request,$type="")
+    {
+
+        $module_title = 'Design Files';
+        $module_name = 'design_files';
+        $module_icon = $this->module_icon;
+        $module_model = 'Modules\Order\Entities\CardDesign';
+        $module_name_singular = Str::singular($module_name);
+
+        $module_action = 'List';
+
+       // $type=$request->query('type');
+
+        
+        if($type=='default'){
+            $$module_name = $module_model::where('user_id',0)->whereIn('status',['0','1'])->select('id','image_path', 'user_id','type', 'created_at');
+        }else{
+            $$module_name = $module_model::whereIn('status',['0','1'])->select('id','image_path', 'user_id','type', 'created_at','status');
+        }
+
+        $data = $$module_name;
+
+        return Datatables::of($$module_name)
+
+                       ->addColumn('image_path', function ($data) {
+                            return  '<a target="_blank" download href="'.asset("storage/".$data->image_path).'"><img width="100px" class="model_preview" data-url="'.asset("storage/".$data->image_path).'" src="'.asset("storage/".$data->image_path).'"></a>';
+                        })
+                        ->editColumn('user_id', function ($data) {
+                            $return_string = !empty($data->user)?'<strong>'.$data->user->name.'</strong>':'<strong>Default</strong>';
+                            return $return_string;
+                        })
+                        ->editColumn('type', function ($data) {
+                            return ucfirst($data->type);
+                        })
+                       
+                        ->editColumn('created_at', function ($data) {
+                            $module_name = $this->module_name;
+
+                            $diff = Carbon::now()->diffInHours($data->created_at);
+
+                            if ($diff < 25) {
+                                return $data->created_at->diffForHumans();
+                            } else {
+                                return $data->created_at->isoFormat('LLLL');
+                            }
+                        })
+                        ->addColumn('action', function ($data) {
+                            return  '<a href="'.route('backend.design_files.delete_image',['id'=>$data]).'" class="btn btn-danger btn-sm mt-1" data-toggle="tooltip" title="view customer detail"><i class="fas fa-trash"></i></a>';
+                        })
+                        ->rawColumns(['image_path','inner_design','action','user_id'])
+                        ->orderColumns(['id'], '-:column $1')
+                        ->make(true);
+    }
+
+    public function delete_image(Request $request,$id){
+        $module_model = 'Modules\Order\Entities\CardDesign';
+        $card = $module_model::find($id);
+        $card->status = '2';
+        $card->save();
+        return redirect()->route('backend.orders.designfiles');  
+    }
+
     public function index_data(Request $request)
     {
         $module_title = $this->module_title;

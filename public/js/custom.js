@@ -173,10 +173,12 @@ $(document).ready(function(){
 
 
 			// Character counting for Message text area
-			var text_max = 120;
+			var default_lines=$("#input_lines").val();
+			var default_words=$("#input_words").val();
+			var text_max = default_words;
 			var set_target = 10;
 
-			$('.wrd-cuntng').html(text_max + ' words or 25 lines remaining');
+			$('.wrd-cuntng').html(default_words + ' words or '+default_lines+' lines remaining');
 			jQuery('.wrd-cuntng').attr('count',text_max);
 
 			// jQuery(document).on('keyup','.hwl_custom_msg', function(event) {
@@ -228,8 +230,10 @@ $(document).ready(function(){
 				jQuery(document).find('.hwl_custom_msg').trigger('keyup');
 			},200);
 			jQuery(document).on('keyup','.hwl_custom_msg', function(event) {
+				var default_lines=$("#input_lines").val();
+				text_max = default_words=$("#input_words").val();
 				var total_lines=calulateLines(event);
-				var remaining_lines=25-total_lines;
+				var remaining_lines=default_lines-total_lines;
 				var word_count1 = 0;
 				jQuery(this).parents(".single_row2").find('.textmsg').val(jQuery(this).val());
 				var split = jQuery(this).val().split(' ');
@@ -262,16 +266,19 @@ $(document).ready(function(){
 				
 			});
 			$(".ApplyLineBreaks").click(function(){
+				var default_lines=$("#input_lines").val();
+				var default_words=$("#input_words").val();
+				
 				var count=jQuery('.wrd-cuntng').attr('count');
 				ApplyLineBreaks('hwl_custom_msg_1');
 				console.log(parseInt(count));
 				if(parseInt(count)<'0'){
-					Alert.error("Message word's count should be less then equal to 120 words.",'Error',{displayDuration: 5000, pos: 'top'})
+					Alert.error("Message word's count should be less then equal to "+default_words+" words.",'Error',{displayDuration: 5000, pos: 'top'})
 					return false;
 				}
 				if($(".textmsg").val().split("<br />").length>25){
 					var lines = $(".textmsg").val().split("<br />").length;
-					Alert.error("you have "+lines+" lines in your message. It should be less then equal to 25 lines.",'Error',{displayDuration: 5000, pos: 'top'})
+					Alert.error("you have "+lines+" lines in your message. It should be less then equal to "+default_lines+" lines.",'Error',{displayDuration: 5000, pos: 'top'})
 					return false;
 				}
 				

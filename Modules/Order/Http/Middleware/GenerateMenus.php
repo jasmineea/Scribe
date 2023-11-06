@@ -101,6 +101,22 @@ class GenerateMenus
             ]);
         })->sortBy('order');
 
+        \Menu::make('admin_sidebar', function ($menu) {
+            // comments
+            $menu->add('<i class="nav-icon fa-solid fa-file-image"></i>Design Files', [
+                'route' => 'backend.orders.designfiles',
+                'class' => 'nav-item',
+            ])
+            ->data([
+                'order' => 5,
+                'activematches' => ['admin/designfiles*'],
+                'permission' => ['view_designfiles'],
+            ])
+            ->link->attr([
+                'class' => 'nav-link',
+            ]);
+        })->sortBy('order');
+
         return $next($request);
     }
 }

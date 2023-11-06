@@ -239,7 +239,9 @@ $class_tooltip="step_5a";
 											
 											@foreach($default_card_design as $k=>$v)
 											<div class="design-template-thumb"  style="cursor: pointer;">
+                                 <!-- <i class="fa fa-trash delete_image" data-id="{{$v['id']}}" style="position: absolute;right: 4px;top: 4px;"></i> -->
 												<img class="image_t" src="{{asset('storage/'.$v['image_path'])}}" data-path="{{$v['image_path']}}" data-front-src="{{asset('storage/'.$v['front_image_path'])}}" data-back-src="{{asset('storage/'.$v['back_image_path'])}}" data-front="{{$v['front_image_path']}}" data-back="{{$v['back_image_path']}}">
+                                    
 											</div>
 											@endforeach
 											</div>
@@ -259,7 +261,26 @@ $class_tooltip="step_5a";
 											<div class="owl-nav"></div> 
 												@foreach($carddesigns as $k=>$v)
 											<div class="item design-template-thumb" style="cursor: pointer;">
-												<img class="{{$v['type']=='outer'?'image_t':'image_t2'}}" src="{{asset('storage/'.$v['image_path'])}}" data-path="{{$v['image_path']}}" data-front-src="{{asset('storage/'.$v['front_image_path'])}}" data-back-src="{{asset('storage/'.$v['back_image_path'])}}" data-front="{{$v['front_image_path']}}" data-back="{{$v['back_image_path']}}">
+                                    <i class="fa fa-trash delete_image" data-id="{{$v['id']}}" style="position: absolute;right: 4px;top: 4px;z-index: 99;"></i>
+                                    @php
+                                    if($v['type']=='outer'){
+                                       $class="image_t";
+                                    }
+                                    if($v['type']=='inner'){
+                                       $class="image_t2";
+                                    }
+                                    if($v['type']=='both'){
+                                       $class="image_t3";
+                                    }
+                                    @endphp
+                                    @if($class=='image_t3')
+                                       <img class="{{$class}}" src="{{asset('storage/'.$v['image_path'])}}" data-path="{{$v['image_path']}}" data-front-src="{{asset('storage/'.$v['front_image_path'])}}" data-back-src="{{asset('storage/'.$v['back_image_path'])}}" data-front="{{$v['front_image_path']}}" data-back="{{$v['back_image_path']}}">
+                                       <img class="{{$class}}" src="{{asset('storage/'.$v['image_path'])}}" data-path="{{$v['image_path']}}" data-front-src="{{asset('storage/'.$v['front_image_path'])}}" data-back-src="{{asset('storage/'.$v['back_image_path'])}}" data-front="{{$v['front_image_path']}}" data-back="{{$v['back_image_path']}}" style="opacity: 1;    position: absolute;    top: 0px;    width: 80%;    height: 90%;    border: 1px solid;    border-radius: 11%;">
+                                    @else
+                                       <img class="{{$class}}" src="{{asset('storage/'.$v['image_path'])}}" data-path="{{$v['image_path']}}" data-front-src="{{asset('storage/'.$v['front_image_path'])}}" data-back-src="{{asset('storage/'.$v['back_image_path'])}}" data-front="{{$v['front_image_path']}}" data-back="{{$v['back_image_path']}}">
+                                    @endif
+												
+                                    
 											</div>
 											@endforeach
 
@@ -341,8 +362,12 @@ $class_tooltip="step_5a";
          @endforeach
       </tbody>
    </table>
-   <form>
+   </form>
 </div>
+<form class="delete_image_form" action='{{ route("frontend.cards.DeleteDesignFile")}}' method="POST">
+   {{ csrf_field() }}
+   <input type="hidden" name="image_id" id="image_id">
+</form>
 @if(@$final_array['front_design'])
 <input id="front_design" type="hidden" value="{{asset('storage/'.$final_array['front_design'])}}">
 <input id="back_design" type="hidden" value="{{asset('storage/'.$final_array['back_design'])}}">
@@ -396,6 +421,29 @@ $class_tooltip="step_5a";
        $(".loading").show();
           $('.design_form1').submit();
       });
+
+   $(".delete_image").on( 'click', function () {
+      var id = $(this).data('id');
+      var d = bootbox.confirm({
+                                message: 'are you sure?',
+                                buttons: {
+                                confirm: {
+                                label: 'Yes',
+                                className: 'btn-success'
+                                },
+                                cancel: {
+                                label: 'No',
+                                className: 'btn-danger'
+                                }
+                                },
+                                callback: function (result) {
+                                 if(result){
+                                       $(".loading").show();
+                                       $("#image_id").val(id);
+                                       $('.delete_image_form').submit();
+                                    }
+                                }});
+   });
    
    
    
@@ -439,6 +487,45 @@ $class_tooltip="step_5a";
    	$(".design-area-double img").css('background-repeat','no-repeat');
    	 $("input[name='inner_design']").val(path);
    })
+   $(".design-template-thumb .image_t3").click(function(){
+      $('.image_t').removeClass('active_thumb');
+      $('.image_t2').removeClass('active_thumb');
+      $('.image_t3').removeClass('active_thumb');
+      $(this).addClass('active_thumb');
+
+   	var src=$(this).attr('src');
+   	var src_f=$(this).data('front-src');
+   	var src_b=$(this).data('back-src');
+   	var path=$(this).data('path');
+   	var path_f=$(this).data('front');
+   	var path_b=$(this).data('back');
+   	
+   	$(".design-area-double img").css('background','url('+src+') #f8f8f8');
+   	$(".design-area-double img").css('background-position','center');
+   	$(".design-area-double img").css('background-size','92%');
+   	$(".design-area-double img").css('background-repeat','no-repeat');
+   	$("input[name='inner_design']").val(path);
+
+
+    	//$(".design-area__front img").attr('src',src_b);
+   	$(".design-area__front img").css('background','url('+src_b+') #f8f8f8');
+   	$(".design-area__front img").css('background-position','center');
+   	$(".design-area__front img").css('background-size','92%');
+   	$(".design-area__front img").css('background-repeat','no-repeat');
+   	$(".design-area__back img").css('background','url('+src_f+') #f8f8f8');
+   	$(".design-area__back img").css('background-position','center');
+   	$(".design-area__back img").css('background-size','92%');
+   	$(".design-area__back img").css('background-repeat','no-repeat');
+   	$(".design-area__back img").css('transform','rotate(180deg)');
+   
+   	//$(".design-area__back img").attr('src',src_f);
+   	$("input[name='front_design']").val(path_b);
+   	$("input[name='back_design']").val(path_f);
+   	$("input[name='main_design']").val(path);
+
+
+   })
+
    var slider = tns({
 		container: '.my-slider0',
 		items: 4,

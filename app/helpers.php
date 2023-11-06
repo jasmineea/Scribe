@@ -1655,12 +1655,24 @@ if (! function_exists('generate_design_Image')) {
 }
 if (! function_exists('generate_Preview_Image')) {
 
-    function generate_Preview_Image($text){
+    function generate_Preview_Image($text,$message_length=''){
         array_map('unlink', glob(public_path('img/preview/'.auth()->user()->id."_*")));
         $img = imagecreatefrompng(public_path('img/Inside-1500-with-line.png'));//replace with your image 
         $lines = substr_count($text, "\n");
         $txt = str_replace('&zwnj;','',str_replace('&ensp;', '  ', strip_tags($text)));//your text
         $fontFile = realpath(public_path('fonts/Lexi-Regular.ttf'));//replace with your font
+        if($message_length=='long'){
+           $exp=explode( "\r\n", $txt);
+           $text1=$exp[0]."\r\n".$exp[1]."\r\n".$exp[2];
+           unset($exp[0]);
+           unset($exp[1]);
+           unset($exp[2]);
+           foreach($exp as $k=>$v){
+            
+           }
+           $txt=implode("\r\n",$exp);
+        }
+        
         $fontSize = 41;
         $centerX = 90;
         foreach(range(11,14) as $k=>$v){
@@ -1699,7 +1711,10 @@ if (! function_exists('generate_Preview_Image')) {
         $black = imagecolorallocate($img, 0, 0, 255);
         $angle = 0;
         $centerY = 1160;
-        imagettftext($img, $fontSize, $angle, $centerX, $centerY, $black, $fontFile, $txt, array("linespacing" => 0.4));
+        if($message_length=='long'){
+            imagettftext($img,$fontSize,$angle, $centerX,$centerY-450, $black, $fontFile,$text1, array("linespacing" => 2.5));
+         }
+        imagettftext($img, $fontSize, $angle, $centerX, $centerY, $black, $fontFile, $txt, array("linespacing" => 2.5));
         $image_name=auth()->user()->id."_".time().rand().".png";
         imagesavealpha($img, true);
         imagepng($img,public_path('img/preview/'.$image_name));//save image

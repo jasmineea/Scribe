@@ -126,10 +126,10 @@ class CardController extends Controller
     {
         $default_card_design = CardDesign::whereIn('user_id',[0])->latest()->get();
         $carddesignswithouttype = CardDesign::whereIn('user_id',[auth()->user()->id])->where('type',null)->latest()->get();
-        $carddesigns = CardDesign::whereIn('user_id',[auth()->user()->id])->whereIn('type',['outer','inner'])->latest()->get();
+        $carddesigns = CardDesign::whereIn('user_id',[auth()->user()->id])->whereIn('type',['outer','inner','both'])->where('status',2)->latest()->get();
         $final_array=$request->session()->get('final_array');
         $preview_message=final_message(@$final_array['excel_data']['data'][2], $final_array['hwl_custom_msg'], $final_array['system_property_1']);
-        $final_array['preview_image'] = generate_Preview_Image($preview_message);
+        $final_array['preview_image'] = generate_Preview_Image($preview_message,$final_array['message_length']);
         $final_array['front_preview_image'] = public_path('img/front_design.jpg');
         $final_array['back_preview_image'] = public_path('img/back_design.jpg');
 
@@ -527,20 +527,25 @@ class CardController extends Controller
     public function saveDesignType(Request $request){
         if ($request->isMethod('post')) {
             $data=$request->all();
+            if($data['sent_from']='backend'){
+                $return_url='backend.orders.designfiles';
+            }else{
+                $return_url='frontend.cards.step4a';
+            }
             foreach ($data['save_type'] as $key => $value) {
                 if($value=='both'){
                     
                     $card = CardDesign::find($key);
-                    $card->type = 'inner';
+                    $card->type = 'both';
                     $card->save();
 
-                    $carddesign = new CardDesign;
-                    $carddesign->user_id = auth()->user()->id;
-                    $carddesign->type = 'outer';
-                    $carddesign->image_path = $card->image_path;
-                    $carddesign->front_image_path = $card->front_image_path;
-                    $carddesign->back_image_path =$card->back_image_path;
-                    $carddesign->save();
+                    // $carddesign = new CardDesign;
+                    // $carddesign->user_id = auth()->user()->id;
+                    // $carddesign->type = 'outer';
+                    // $carddesign->image_path = $card->image_path;
+                    // $carddesign->front_image_path = $card->front_image_path;
+                    // $carddesign->back_image_path =$card->back_image_path;
+                    // $carddesign->save();
                     
                 }else{
                     $card = CardDesign::find($key);
@@ -548,6 +553,16 @@ class CardController extends Controller
                     $card->save();
                 }
             }
+            return redirect()->route($return_url);  
+        }
+    }
+
+    public function DeleteDesignFile(Request $request){
+        if ($request->isMethod('post')) {
+            $data=$request->all();
+            $card = CardDesign::find($data['image_id']);
+            $card->status = '2';
+            $card->save();
             return redirect()->route('frontend.cards.step4a');  
         }
     }
@@ -556,11 +571,18 @@ class CardController extends Controller
     {
         if ($request->isMethod('post')) {
             $data=$request->all();
+            if($data['sent_from']='backend'){
+                $return_url='backend.orders.designfiles';
+                $user_id=0;
+            }else{
+                $return_url='frontend.cards.step4a';
+                $user_id=auth()->user()->id;
+            }
             $final_array=$request->session()->get('final_array');
             $extension = $request->file('design_file')->getClientOriginalExtension();
             if("png"!=$extension&&"zip"!=$extension){
                 Session::flash('error', 'Only png or zip file accepted.');
-                return redirect()->route('frontend.cards.step4a');   
+                return redirect()->route($return_url);   
             }
             $image_name='card_design_'.time();
             $image_path = $request->file('design_file')->storeAs('card_design', $image_name.'.'.$extension, 'public');
@@ -568,7 +590,7 @@ class CardController extends Controller
                 // $dpi = getDPIImageMagick($image_path);
                 // if($dpi<300){
                 //     Session::flash('error', 'Image should have 300 dpi.');
-                //     return redirect()->route('frontend.cards.step4a');   
+                //     return redirect()->route($return_url);   
                 // }
                 if("zip"==$extension){
                     $zipArchive = new ZipArchive();
@@ -583,7 +605,7 @@ class CardController extends Controller
                             rename(public_path("storage/card_design/extract/".$name),public_path("storage/card_design/".$image_name.".".$ext));
                             divideImage($image_name,$ext);
                             $carddesign = new CardDesign;
-                            $carddesign->user_id = auth()->user()->id;
+                            $carddesign->user_id = $user_id;
                             $carddesign->type = null;
                             $carddesign->image_path = "card_design/".$image_name.".".$ext;
                             $carddesign->front_image_path = 'card_design/cropped/'.$image_name.'_0.'.$ext;
@@ -594,12 +616,12 @@ class CardController extends Controller
                         // Do something else on success
                     } else {
                         Session::flash('error', 'something went wrong with zip file.');
-                        return redirect()->route('frontend.cards.step4a');   
+                        return redirect()->route($return_url);   
                     }
                 }else{
                     divideImage($image_name,$extension);
                     $carddesign = new CardDesign;
-                    $carddesign->user_id = auth()->user()->id;
+                    $carddesign->user_id = $user_id;
                     $carddesign->type = null;
                     $carddesign->image_path = $image_path;
                     $carddesign->front_image_path = 'card_design/cropped/'.$image_name.'_0.'.$extension;
@@ -619,11 +641,11 @@ class CardController extends Controller
                 }
             }else{
                 Session::flash('error', 'something went wrong.');
-                return redirect()->route('frontend.cards.step4a');  
+                return redirect()->route($return_url);  
             }
 
 
-            return redirect()->route('frontend.cards.step4a');
+            return redirect()->route($return_url);
         }
         // return view('dashboard', compact('body_class'));
         return view('frontend.step4a', compact('body_class'));
@@ -639,6 +661,7 @@ class CardController extends Controller
     public function step5Update(Request $request)
     {
         ini_set('max_execution_time', 1000);
+        $type_sort_code=['single'=>'SOL','one-time'=>'OTC','on-going'=>'OGC'];
         if ($request->isMethod('post')) {
             $data=$request->all();
             $final_array=$request->session()->get('final_array');
@@ -686,9 +709,10 @@ class CardController extends Controller
                 if(@$order_data['step_0_action_2']=='duplicate_existing'){
                     $order->campaign_name= $order_data['campaign_name']." Copy";
                 }else{
-                    $order->campaign_name= @$order_data['campaign_name'];
+                    $order->campaign_name= $type_sort_code[$order_data['campaign_type']]."_".time();
                 }
                 $order->campaign_type= $order_data['campaign_type']=='on-going'?'on-going':'one-time';
+                $order->campaign_type_2= $order_data['campaign_type'];
                 $order->campaign_message= 'order_'.$order_data['preview_image'];
                 $order->front_design= $order_data['front_design'];
                 $order->back_design= $order_data['back_design'];
@@ -1191,52 +1215,54 @@ class CardController extends Controller
         $i=0;
 
         foreach ($orders as $key => $value) {
-            create_copy_excel_from_listing_id($value->listing_id);
-            create_copy_excel($value->id);
-            $latest_order=Order::find($value->id);
-            $order_json=read_excel_data($latest_order->final_printing_file, 1);
-            MasterDesignFiles::create([
-                'campaign_name' => trim($latest_order->campaign_name),
-                'order_id' => $latest_order->id,
-                'main_design' => $latest_order->main_design,
-                'inner_design' => $latest_order->inner_design,
-                'total_records' => count($order_json['data'])
-            ]);
+            if($value->listing_id){
+                create_copy_excel_from_listing_id($value->listing_id);
+                create_copy_excel($value->id);
+                $latest_order=Order::find($value->id);
+                $order_json=read_excel_data($latest_order->final_printing_file, 1);
+                MasterDesignFiles::create([
+                    'campaign_name' => trim($latest_order->campaign_name),
+                    'order_id' => $latest_order->id,
+                    'main_design' => $latest_order->main_design,
+                    'inner_design' => $latest_order->inner_design,
+                    'total_records' => count($order_json['data'])
+                ]);
 
 
-            foreach ($order_json['data'] as $key_1 => $value_1) {
-                $final_message[$i]['order_date']=date('Y-m-d H:i:s',strtotime($value->created_at));
-                $final_message[$i]['order_id']=$value->id;
-                $final_message[$i]['order_name']=$value->campaign_name;
-                $final_message[$i]['order_owner']=$value->user->name;
-                $final_message[$i]['order_status']=$value->status;
-                $final_message[$i]['first_name']=$value_1['FIRST_NAME'];
-                $final_message[$i]['last_name']=$value_1['LAST_NAME'];
-                $final_message[$i]['email']=$value_1['EMAIL'];
-                $final_message[$i]['company_name']=$value_1['COMPANY_NAME'];
-                $final_message[$i]['phone']=$value_1['PHONE'];
-                $final_message[$i]['address']=$value_1['ADDRESS'];
-                $final_message[$i]['city']=$value_1['CITY'];
-                $final_message[$i]['state']=$value_1['STATE'];
-                $final_message[$i]['zip']=$value_1['ZIP'];
-                $final_message[$i]['final_message']=$value_1['FINAL_PRINTING_MESSAGE'];
-                $final_message[$i]['outer_design']=asset("storage/".$latest_order->main_design);
-                $final_message[$i]['inner_design']=asset("storage/".$latest_order->inner_design);
+                foreach ($order_json['data'] as $key_1 => $value_1) {
+                    $final_message[$i]['order_date']=date('Y-m-d H:i:s',strtotime($value->created_at));
+                    $final_message[$i]['order_id']=$value->id;
+                    $final_message[$i]['order_name']=$value->campaign_name;
+                    $final_message[$i]['order_owner']=$value->user->name;
+                    $final_message[$i]['order_status']=$value->status;
+                    $final_message[$i]['first_name']=$value_1['FIRST_NAME'];
+                    $final_message[$i]['last_name']=$value_1['LAST_NAME'];
+                    $final_message[$i]['email']=$value_1['EMAIL'];
+                    $final_message[$i]['company_name']=$value_1['COMPANY_NAME'];
+                    $final_message[$i]['phone']=$value_1['PHONE'];
+                    $final_message[$i]['address']=$value_1['ADDRESS'];
+                    $final_message[$i]['city']=$value_1['CITY'];
+                    $final_message[$i]['state']=$value_1['STATE'];
+                    $final_message[$i]['zip']=$value_1['ZIP'];
+                    $final_message[$i]['final_message']=$value_1['FINAL_PRINTING_MESSAGE'];
+                    $final_message[$i]['outer_design']=asset("storage/".$latest_order->main_design);
+                    $final_message[$i]['inner_design']=asset("storage/".$latest_order->inner_design);
 
-                if(count($final_message)>=$master_file_record_limit){
-                    $return_file_name=create_excel_for_master_file($final_message);
-                    MasterFiles::create([
-                        'uploaded_recipient_file' => trim($return_file_name['file_name']),
-                        'total_records' => count($final_message)
-                    ]);
-                    $final_message = [];
+                    if(count($final_message)>=$master_file_record_limit){
+                        $return_file_name=create_excel_for_master_file($final_message);
+                        MasterFiles::create([
+                            'uploaded_recipient_file' => trim($return_file_name['file_name']),
+                            'total_records' => count($final_message)
+                        ]);
+                        $final_message = [];
+                    }
+                    $i=$i+1;
                 }
-                $i=$i+1;
-            }
-            if($order_json['data']){
-                $order=Order::find($value->id);
-                $order->status='processing';
-                $order->save();
+                if($order_json['data']){
+                    $order=Order::find($value->id);
+                    $order->status='processing';
+                    $order->save();
+                }
             }
         }
         if($final_message){

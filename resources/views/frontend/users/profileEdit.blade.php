@@ -3,7 +3,7 @@
 @section('title') {{$$module_name_singular->name}}'s Profile @endsection
 
 @section('content')
-
+<link rel="stylesheet" type="text/css" href="{{asset('build/assets/app-frontend-f67f5c8c.css')}}">
 <div class="container mx-auto flex justify-center">
 
     @include('frontend.includes.messages')
@@ -13,6 +13,7 @@
     <div class="row justify-content-center">
         <div class="col-12">
 <div class="container max-w-7xl mx-auto px-4 sm:px-6 py-10">
+{{ html()->modelForm($userprofile, 'PATCH', route('frontend.users.profileUpdate', encode_id($$module_name_singular->id)))->acceptsFiles()->open() }}
     <div class="mb-10 md:grid md:grid-cols-3 md:gap-6">
         <div class="md:col-span-1">
             <div class="px-4 sm:px-0">
@@ -30,7 +31,7 @@
             </div>
         </div>
         <div class="mt-5 md:mt-0 md:col-span-2">
-            {{ html()->modelForm($userprofile, 'PATCH', route('frontend.users.profileUpdate', encode_id($$module_name_singular->id)))->acceptsFiles()->open() }}
+            
             <div class="shadow sm:rounded-md sm:overflow-hidden">
                 <div class="px-4 py-5 bg-white space-y-6 sm:p-6">
                     <div class="grid grid-cols-6 gap-6">
@@ -84,7 +85,7 @@
                             $field_placeholder = $field_lable;
                             $required = "";
                             ?>
-                            {{ html()->label($field_lable, $field_name)->class('block-inline text-sm font-medium text-gray-700') }} {!! fielf_required($required) !!}
+                            {{ html()->label('Webhook Url', $field_name)->class('block-inline text-sm font-medium text-gray-700') }} {!! fielf_required($required) !!}
                             {{ html()->text($field_name)->placeholder($field_placeholder)->class('mt-1 border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-300 rounded border shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent')->attributes(["$required"]) }}
                         </div>
 

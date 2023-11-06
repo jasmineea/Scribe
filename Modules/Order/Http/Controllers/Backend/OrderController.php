@@ -10,6 +10,9 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use App\Models\Userprofile;
+use Modules\Listing\Entities\Listing;
+use Modules\Listing\Entities\Contact;
 use Illuminate\Support\Str;
 use Modules\Order\Entities\MasterFiles;
 use Modules\Comment\Http\Requests\Backend\CommentsRequest;
@@ -18,6 +21,7 @@ use Spatie\Activitylog\Models\Activity;
 use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Backend\BackendBaseController;
 use Session;
+use Illuminate\Support\Facades\Http;
 
 class OrderController extends Controller
 {
@@ -213,6 +217,87 @@ class OrderController extends Controller
                         ->make(true);
     }
 
+    public function designfiles(Request $request,$type=""){
+        
+        $module_title = 'Design Files';
+        $module_name = 'design_files';
+        $module_icon = $this->module_icon;
+        $module_model = 'Modules\Order\Entities\CardDesign';
+        $module_name_singular = Str::singular($module_name);
+
+        $module_action = 'List';
+            $$module_name = $module_model::paginate();
+
+        Log::info(label_case($module_title.' '.$module_action).' | User:'.Auth::user()->name.'(ID:'.Auth::user()->id.')');
+        $carddesignswithouttype = $module_model::whereIn('user_id',[0])->where('type',null)->latest()->get();
+        return view(
+            "order::backend.$module_name.index_datatable",
+            compact('module_title', 'module_name', "$module_name",'carddesignswithouttype','type', 'module_icon', 'module_name_singular', 'module_action')
+        );
+    }
+
+    public function design_files_data(Request $request,$type="")
+    {
+
+        $module_title = 'Design Files';
+        $module_name = 'design_files';
+        $module_icon = $this->module_icon;
+        $module_model = 'Modules\Order\Entities\CardDesign';
+        $module_name_singular = Str::singular($module_name);
+
+        $module_action = 'List';
+
+       // $type=$request->query('type');
+
+        
+        if($type=='default'){
+            $$module_name = $module_model::where('user_id',0)->whereIn('status',['0','1'])->select('id','image_path', 'user_id','type', 'created_at');
+        }else{
+            $$module_name = $module_model::whereIn('status',['0','1'])->select('id','image_path', 'user_id','type', 'created_at','status');
+        }
+
+        $data = $$module_name;
+
+        return Datatables::of($$module_name)
+
+                       ->addColumn('image_path', function ($data) {
+                            return  '<a target="_blank" download href="'.asset("storage/".$data->image_path).'"><img width="100px" class="model_preview" data-url="'.asset("storage/".$data->image_path).'" src="'.asset("storage/".$data->image_path).'"></a>';
+                        })
+                        ->editColumn('user_id', function ($data) {
+                            $return_string = !empty($data->user)?'<strong>'.$data->user->name.'</strong>':'<strong>Default</strong>';
+                            return $return_string;
+                        })
+                        ->editColumn('type', function ($data) {
+                            return ucfirst($data->type);
+                        })
+                       
+                        ->editColumn('created_at', function ($data) {
+                            $module_name = $this->module_name;
+
+                            $diff = Carbon::now()->diffInHours($data->created_at);
+
+                            if ($diff < 25) {
+                                return $data->created_at->diffForHumans();
+                            } else {
+                                return $data->created_at->isoFormat('LLLL');
+                            }
+                        })
+                        ->addColumn('action', function ($data) {
+                            return  '<a href="'.route('backend.design_files.delete_image',['id'=>$data]).'" class="btn btn-danger btn-sm mt-1" data-toggle="tooltip" title="view customer detail"><i class="fas fa-trash"></i></a>';
+                        })
+                        ->rawColumns(['image_path','inner_design','action','user_id'])
+                        ->orderColumns(['id'], '-:column $1')
+                        ->make(true);
+    }
+
+    public function delete_image(Request $request,$id){
+        $module_model = 'Modules\Order\Entities\CardDesign';
+        $card = $module_model::find($id);
+        $card->status = '2';
+        $card->save();
+        return redirect()->route('backend.orders.designfiles');  
+    }
+
     public function index_data(Request $request)
     {
         $module_title = $this->module_title;
@@ -227,7 +312,7 @@ class OrderController extends Controller
         $type=$request->query('type');
         $s_id=$request->query('s_id');
 
-        $$module_name = $module_model::select('id', 'user_id','campaign_name','inner_design','main_design','campaign_type', 'campaign_message', 'order_amount', 'final_printing_file', 'status', 'updated_at','listing_id');
+        $$module_name = $module_model::select('id', 'user_id','campaign_name','inner_design','main_design','campaign_type_2', 'campaign_message', 'order_amount', 'final_printing_file', 'status', 'updated_at','listing_id');
         if ($user_id) {
             $$module_name=$$module_name->where('user_id', $user_id);
         }
@@ -304,6 +389,16 @@ class OrderController extends Controller
         $order=$module_model::find($order_id);
         $order->status =$status;
         $order->save();
+        $userprofile = Userprofile::where('user_id',$order->user_id)->first();
+        $list = Listing::where('id',$order->listing_id)->first();
+        $post_data = Contact::where('listing_id',$order->listing_id)->select(['email','phone'])->get()->toArray();
+        foreach($post_data as $k=>$v){
+            $post_data[$k]['list_name']=$list->name;
+            $post_data[$k]['card_status']=$order->status;
+        }
+        if(!empty($userprofile->url_website)){
+            $response = Http::post($userprofile->url_website,$post_data);
+        }
         Session::flash('success', 'Status changed successfully.');
         return redirect()->route('backend.orders.index',['type'=>'published']);
     }

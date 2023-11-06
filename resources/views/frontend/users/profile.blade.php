@@ -3,6 +3,7 @@
 @section('title') {{$$module_name_singular->name}}'s Profile @endsection
 
 @section('content')
+<link rel="stylesheet" type="text/css" href="{{asset('build/assets/app-frontend-f67f5c8c.css')}}">
 <div class="container-fluid padding_top_135" style="padding-left: 368px;">
     <div class="row justify-content-center">
         <div class="col-12">

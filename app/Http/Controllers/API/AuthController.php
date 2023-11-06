@@ -80,6 +80,29 @@ class AuthController extends Controller
             'success' => 1,
         ]);
     }
+
+    public function deleteContact(Request $request)
+    {
+        if(!empty($request->list_name)){
+            $list = Listing::where('name', $request->list_name)
+            ->first();
+            if($list->listing_id){
+                Contact::where('listing_id',$list->listing_id)->where('email',$request->email)->update(['status'=>2]);
+            }else{
+                return response()->json([
+                    'message' => 'list not found.',
+                    'success' => 0,
+                ]);
+            }
+        }else{
+            Contact::where('email',$request->email)->update(['status'=>2]);
+        }
+        return response()->json([
+            'message' => 'Contact Deleted.',
+            'success' => 1,
+        ]);
+    }
+
     public function getMasterFiles()
     {
         $master_files = MasterFiles::select(['id','uploaded_recipient_file','downloaded_at','downloaded_times','total_records','created_at'])->orderBy('id','desc')->limit(10)->get()->toArray();

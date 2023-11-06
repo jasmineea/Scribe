@@ -102,6 +102,7 @@ Route::group(['namespace' => 'App\Http\Controllers\Frontend', 'as' => 'frontend.
 
         Route::post('card-design-upload', ['as' => "$module_name.cardDesignUpload", 'uses' => "$controller_name@cardDesignUpload"]);
         Route::post('save-design-type', ['as' => "$module_name.saveDesignType", 'uses' => "$controller_name@saveDesignType"]);
+        Route::post('delete-design-file', ['as' => "$module_name.DeleteDesignFile", 'uses' => "$controller_name@DeleteDesignFile"]);
 
         Route::get('orders', ['as' => "$module_name.orders", 'uses' => "$controller_name@orders"]);
         Route::get('listing', ['as' => "$module_name.listing", 'uses' => "$controller_name@listing"]);

@@ -52,7 +52,7 @@ if(@isset($final_array['campaign_type'])&&!empty($final_array['campaign_type'])&
 								</div>
 							@else
 							<div class="step-5-buttons">
-							<a href="#" class="send-campaign disabled"><span>Send Campaign</span></a>
+								<a href="#" class="send-campaign disabled"><span>Send Campaign</span></a>
 								<a href="#" class="save-campaign"><span>Save Campaign & Send Later</span></a>
 							</div>
 							<div class="purchase-credit">
@@ -330,8 +330,12 @@ $required_balance= number_format((float)$required_balance, 2, '.', '');
 			}
 		})
 		$(".send-campaign").click(function(){
-			$("input[name='publish_type']").val('pending');
-			$("#final_form").submit();
+			if(!$(this).hasClass('disabled')){
+				$("input[name='publish_type']").val('pending');
+				$("#final_form").submit();
+			}else{
+				Alert.error('please recharge first.','Error',{displayDuration: 5000, pos: 'top'})
+			}
 		})
 		$(".save-campaign").click(function(){
 			$("input[name='publish_type']").val('draft');

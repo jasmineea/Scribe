@@ -3,7 +3,7 @@
 @section('title') {{app_name()}} @endsection
 
 @section('content')
-
+<link rel="stylesheet" type="text/css" href="{{asset('build/assets/app-frontend-f67f5c8c.css')}}">
 <section id="hero-section">
     <div class="container-fluid" style="padding-left: 368px;">
 		<div class="row">
@@ -49,7 +49,7 @@
 							$json_decode=json_decode($order_detail['order_json'],1);
 						@endphp
                         <tr><th>Campaign_name</th><td>{{$order_detail['campaign_name']}}</td></tr>
-                        <tr><th>Campaign Type</th><td>{{$order_detail['campaign_type']}}</td></tr>
+                        <tr><th>Campaign Type</th><td>{{$order_detail['campaign_type_2']}}</td></tr>
                         <!-- <tr><th>Campaign Message</th><td>{!!nl2br($order_detail['campaign_message'])!!}</td></tr> -->
                         <tr><th>Message Preview</th><td align="center">@php if(@$order_detail['campaign_message']&&file_exists(public_path('img/preview/'.@$order_detail['campaign_message']))){ $preview_image=asset('img/preview/'.@$order_detail['campaign_message']); echo("<img width='100px' style='display:inline;background:url(".asset("storage/".$order_detail['inner_design']).") #f8f8f8;background-position:center;background-size:92%;background-repeat:no-repeat;'  class='model_preview' data-url='".$preview_image."' src='".$preview_image."'>"); if(!empty($order_detail['main_design'])){ echo("&nbsp;<img width='100px' class='model_preview' data-url='".asset("storage/".$order_detail['main_design'])."' src='".asset("storage/".$order_detail['main_design'])."'>");} }else{ echo$order_detail['campaign_message']; } @endphp</td></tr>
                         <tr><th>schedule Status</th><td>{{$order_detail['schedule_status']?'Yes':'No'}}</td></tr>

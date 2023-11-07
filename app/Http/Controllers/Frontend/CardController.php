@@ -527,7 +527,7 @@ class CardController extends Controller
     public function saveDesignType(Request $request){
         if ($request->isMethod('post')) {
             $data=$request->all();
-            if($data['sent_from']='backend'){
+            if(@$data['sent_from']=='backend'){
                 $return_url='backend.orders.designfiles';
             }else{
                 $return_url='frontend.cards.step4a';
@@ -571,7 +571,7 @@ class CardController extends Controller
     {
         if ($request->isMethod('post')) {
             $data=$request->all();
-            if($data['sent_from']='backend'){
+            if(@$data['sent_from']=='backend'){
                 $return_url='backend.orders.designfiles';
                 $user_id=0;
             }else{

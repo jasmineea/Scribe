@@ -23,6 +23,9 @@ $class_tooltip="step_5a";
 		background-color: #EC8234;
 		border: 1px solid;
 	}
+   #tns1-ow{
+      width: 261px;
+   }
    .tns-nav{
 	display:none;
    }
@@ -235,7 +238,7 @@ $class_tooltip="step_5a";
 										<div class="row">
 										<div class="col-12" style=""><br>
 											<label><b>Scribe Templates</b></label>
-											<div class="template-word-section step-4-right-buttons my-slider0">
+											<div class="template-word-section step-4-right-buttons my-slider0" style="max-height: 168px;width: max-content;">
 											
 											@foreach($default_card_design as $k=>$v)
 											<div class="design-template-thumb"  style="cursor: pointer;">
@@ -257,11 +260,11 @@ $class_tooltip="step_5a";
                               <div class="row">
                               		<div class="col-12">
 										<label><b>Uploaded Designs</b></label>
-										<div class="owl-carousel" id="uploadDesignsSlider" style="max-width:85%;">
+										<div class="owl-carousel" id="uploadDesignsSlider" style="max-width:100%;">
 											<div class="owl-nav"></div> 
 												@foreach($carddesigns as $k=>$v)
 											<div class="item design-template-thumb" style="cursor: pointer;">
-                                    <i class="fa fa-trash delete_image" data-id="{{$v['id']}}" style="position: absolute;right: 4px;top: 4px;z-index: 99;"></i>
+                                    <i class="fa fa-trash delete_image" data-id="{{$v['id']}}" style="position: absolute;right: 4px;top: 4px;z-index: 99;    background: white;    border: 1px solid;    padding: 2px 4px;    border-radius: 15px;color:red;"></i>
                                     @php
                                     if($v['type']=='outer'){
                                        $class="image_t";
@@ -429,11 +432,11 @@ $class_tooltip="step_5a";
                                 buttons: {
                                 confirm: {
                                 label: 'Yes',
-                                className: 'btn-success'
+                              //   className: 'btn-success'
                                 },
                                 cancel: {
                                 label: 'No',
-                                className: 'btn-danger'
+                              //   className: 'btn-danger'
                                 }
                                 },
                                 callback: function (result) {

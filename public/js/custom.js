@@ -243,7 +243,7 @@ $(document).ready(function(){
 					}
 				}
 				var text_remaining = text_max - word_count1;
-				if(text_remaining<=0||remaining_lines<=0){
+				if(text_remaining<=0||remaining_lines<0){
 					var str=jQuery(this).val();
 					jQuery(this).val(str.substring(0, str.lastIndexOf(" ")));
 					jQuery(this).parents(".single_row2").find('.wrd-cuntng').html(text_remaining + ' words or '+remaining_lines+' lines  remaining');

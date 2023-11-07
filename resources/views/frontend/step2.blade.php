@@ -41,14 +41,14 @@ if(@isset($final_array['listing_id'])&&!empty($final_array['listing_id'])){
 										<div class="row">
 										<div class="col-6">
 											<h4 style="font-size: 19px;"><b>Please enter your custom message</b></h4>
-											<div class="mb-2"><textarea required name="hwl_custom_msg" id="hwl_custom_msg_1" class="hwl_custom_msg custm-edtr" style="min-height: 3.5in;max-height: 3.5in;width: 4.5in;max-width: 4.5in;padding: 0px; outline: none;border: none;" placeholder="Type your Note here.">{{@$final_array['hwl_custom_msg']}}</textarea></div>
+											<div class="mb-2"><textarea required name="hwl_custom_msg" id="hwl_custom_msg_1" class="hwl_custom_msg custm-edtr" style="min-height: 3.5in;max-height: 3.5in;width: 4.5in;max-width: 4.5in;padding: 0px; outline: none;border: none;overflow: hidden;" placeholder="Type your Note here.">{{@$final_array['hwl_custom_msg']}}</textarea></div>
 											<h6 class="wrd-cuntng">110 words remaining</h6>
 										</div>
 									  <div class="col-6" style="padding-left: 3%;">
 									  <h4 style="font-size: 19px;"><b>Select message length option  </b></h4>
 											<select name="message_length"  class="form-select message_length">
-												<option value="short">Short Text (upto 110 words or max 12 lines)</option>
-												<option value="long">Long Text (upto 140 words or max 15 lines)</option>
+												<option value="short" {{@$final_array['message_length']=='short'?'selected':''}}>Short Text (upto 110 words or max 12 lines)</option>
+												<option value="long" {{@$final_array['message_length']=='long'?'selected':''}}>Long Text (upto 140 words or max 15 lines)</option>
 											</select>
 									  <div class="group-btn">
 											<p class="template_words"></p>
@@ -95,8 +95,14 @@ if(@isset($final_array['listing_id'])&&!empty($final_array['listing_id'])){
 		</div>
 	</div>
 </section>
+@if($final_array['message_length']=='long')
+<input id="input_lines" type="hidden" value="15">
+<input id="input_words" type="hidden" value="140">
+@else
 <input id="input_lines" type="hidden" value="12">
 <input id="input_words" type="hidden" value="110">
+@endif
+
 <style>
 	.select_design,#yourBtn,#listing_select{
   position: relative;
@@ -116,19 +122,20 @@ if(@isset($final_array['listing_id'])&&!empty($final_array['listing_id'])){
 <script>
 	$(document).ready(function(){
 		$(".message_length").change(function(){
-	if($(this).val()=='long'){
-		$("#hwl_custom_msg_1").css('max-height','4.5in');
-		$("#hwl_custom_msg_1").css('min-height','4.5in');
-		$("#input_lines").val('15');
-		$("#input_words").val('140');
-	}else{
-		$("#hwl_custom_msg_1").css('max-height','3.5in');
-		$("#hwl_custom_msg_1").css('min-height','3.5in');
-		$("#input_lines").val('12');
-		$("#input_words").val('110');
-	}
-	
-})
+			
+			if($(this).val()=='long'){
+				$("#hwl_custom_msg_1").css('max-height','4.5in');
+				$("#hwl_custom_msg_1").css('min-height','4.5in');
+				$("#input_lines").val('15');
+				$("#input_words").val('140');
+			}else{
+				$("#hwl_custom_msg_1").css('max-height','3.5in');
+				$("#hwl_custom_msg_1").css('min-height','3.5in');
+				$("#input_lines").val('12');
+				$("#input_words").val('110');
+			}
+			$('.hwl_custom_msg').trigger('keyup');
+		})
 })
 	function getFile() {
   document.getElementById("upload_recipients").click();

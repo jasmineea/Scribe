@@ -1710,11 +1710,11 @@ if (! function_exists('generate_Preview_Image')) {
         $fontColor = imagecolorallocate($img, 255, 255, 255);
         $black = imagecolorallocate($img, 0, 0, 255);
         $angle = 0;
-        $centerY = 1160;
+        $centerY = 1190;
         if($message_length=='long'){
-            imagettftext($img,$fontSize,$angle, $centerX,$centerY-450, $black, $fontFile,$text1, array("linespacing" => 2.5));
+            imagettftext($img,$fontSize,$angle, $centerX,$centerY-450, $black, $fontFile,$text1, array("linespacing" => 0.45));
          }
-        imagettftext($img, $fontSize, $angle, $centerX, $centerY, $black, $fontFile, $txt, array("linespacing" => 2.5));
+        imagettftext($img, $fontSize, $angle, $centerX, $centerY, $black, $fontFile, $txt, array("linespacing" => 0.45));
         $image_name=auth()->user()->id."_".time().rand().".png";
         imagesavealpha($img, true);
         imagepng($img,public_path('img/preview/'.$image_name));//save image

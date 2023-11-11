@@ -64,7 +64,10 @@ if(@isset($final_array['campaign_type'])&&!empty($final_array['campaign_type'])&
 							
 							<h2 class="mt-50">Campaign Details</h2>
 							<div class="campaign-details">
-								<h3>Total Credits Required: <span>{{$order_total}}</span></h3>
+								<ul style="width:100%;list-style:none;padding-left: 0rem;">
+								<li style="float:left;"><h3>Total Credits Required: <span>{{$order_total}}</span></h3></li>
+								<li style="float:right;"><h3>Current Balance: <span>{{auth()->user()->wallet_balance}}</span></h3></li>
+								</ul>
 								<ul class="campaign-details-list">
 									<li class="bootbox_click" data-action="view_recpients">View Recipients<a class="close"></a></li>
 									<li class="bootbox_click" data-action="message">View Message<a class="close"></a></li>

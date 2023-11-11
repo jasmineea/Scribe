@@ -1615,7 +1615,7 @@ if (! function_exists('enevolopePreview')) {
         $centerY = 500;
         
         imagettftext($img, $fontSize, $angle, $centerX, $centerY, $black, $fontFile, $txt, array("linespacing" => 0.45));
-        imagettftext($img, $fontSize, $angle,150,150, $black, $fontFile, $txt1, array("linespacing" => 0.45));
+        imagettftext($img, $fontSize-2, $angle,150,150, $black, $fontFile, $txt1, array("linespacing" => 0.45));
         $image_name=auth()->user()->id."_enevolope_".time().rand().".png";
         imagesavealpha($img, true);
         imagepng($img,public_path('img/preview/'.$image_name));//save image
@@ -1696,6 +1696,7 @@ if (! function_exists('generate_Preview_Image')) {
             
         //    }
           // array_splice($exp, 3, 0,["\r\n"]);
+          array_splice($exp, 3, 0,[""]);
            $txt=implode("\r\n",$exp);
         }
         $font_weight=0;
@@ -1846,7 +1847,7 @@ if (! function_exists('generate_Preview_Image')) {
         $angle = 0;
         $centerY = 1190;
         if($message_length=='long'){
-            $centerY=$centerY-310;
+            $centerY=$centerY-285;
             $centerY=$centerY+$font_weight;
             //imagettftext($img,$fontSize,$angle, $centerX,$centerY-450, $black, $fontFile,$text1, array("linespacing" => 0.45));
         }

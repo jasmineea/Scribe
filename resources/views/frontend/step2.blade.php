@@ -44,6 +44,7 @@ if(@isset($final_array['listing_id'])&&!empty($final_array['listing_id'])){
 											<div class="mb-2">
 												<textarea required name="hwl_custom_msg" id="hwl_custom_msg_1" class="hwl_custom_msg custm-edtr" style="min-height: 3.5in;max-height: 3.5in;width: 4.5in;max-width: 4.5in;padding: 0px !important; outline: none;border: none;overflow: hidden;resize: none;" placeholder="Type your Note here.">{{@$final_array['hwl_custom_msg']}}</textarea></div>
 											<h6 class="wrd-cuntng" id="lines">110 words remaining</h6>
+											<p style="width: 71%;font-weight: 500;"><b style="color:#EF7600;">Note:</b> When you paste text into the editor, it might require re-formatting.</p>
 										</div>
 									  <div class="col-6" style="padding-left: 3%;">
 									  <h4 style="font-size: 19px;"><b>Select message length option  </b></h4>
@@ -65,10 +66,10 @@ if(@isset($final_array['listing_id'])&&!empty($final_array['listing_id'])){
 											<input type="button" name="" class="create_custom_parameter action-button action-button-tag" value="Create Custom Parameter" style="">
 											
 										 </div>
-										 <b style="color:#EF7600;">Note:</b> When you paste text into the editor, it might require re-formatting.
+										 
 										 <div class="row-field">
 										@if (isset($return_address)&&!empty($return_address))
-										<div class="form-group field-half">
+										<div class="form-group field-half" style="padding-top:11px;">
 										 	<select required name="return_address_id" class="custom-select sources return_address_id required_class" style="padding: 10px 10px;border: 1px solid #ef7600;background: #E7934C;border-radius: 22px;color: white;font-weight: bold;">
 											<option value="">Select Address</option>
 											@foreach ($return_address as $key => $item)
@@ -76,7 +77,7 @@ if(@isset($final_array['listing_id'])&&!empty($final_array['listing_id'])){
 											@endforeach
 											</select>
 											</div>
-											<div>
+											<div style="padding-left: 15px;padding-top: 19px;padding-right: 9px;">
 												or
 											</div>
 										@endif

@@ -807,7 +807,7 @@ class CardController extends Controller
                 if(@$order_data['step_0_action_2']=='duplicate_existing'){
                     $order->campaign_name= $order_data['campaign_name']." Copy";
                 }else{
-                    $order->campaign_name= $order_data['campaign_name'];
+                    $order->campaign_name= $type_sort_code[$order_data['campaign_type']]."_".time();
                 }
                 
                 $order->campaign_type= $order_data['campaign_type']=='on-going'?'on-going':'one-time';

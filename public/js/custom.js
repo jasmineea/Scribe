@@ -178,7 +178,7 @@ $(document).ready(function(){
 			var text_max = default_words;
 			var set_target = 10;
 
-			$('.wrd-cuntng').html(default_words + ' words or '+default_lines+' lines remaining');
+			$('.wrd-cuntng').html(default_words + ' words remaining');
 			jQuery('.wrd-cuntng').attr('count',text_max);
 
 			// jQuery(document).on('keyup','.hwl_custom_msg', function(event) {
@@ -243,14 +243,14 @@ $(document).ready(function(){
 					}
 				}
 				var text_remaining = text_max - word_count1;
-				if(text_remaining<=0||remaining_lines<0){
+				if(text_remaining<=0){
 					var str=jQuery(this).val();
 					jQuery(this).val(str.substring(0, str.lastIndexOf(" ")));
-					jQuery(this).parents(".single_row2").find('.wrd-cuntng').html(text_remaining + ' words or '+remaining_lines+' lines  remaining');
+					jQuery(this).parents(".single_row2").find('.wrd-cuntng').html(text_remaining + ' words remaining');
 					jQuery(this).parents(".single_row2").find('.wrd-cuntng').attr('count',text_remaining);
 					return false;
 				}
-				jQuery(this).parents(".single_row2").find('.wrd-cuntng').html(text_remaining + ' words or '+remaining_lines+' lines remaining');
+				jQuery(this).parents(".single_row2").find('.wrd-cuntng').html(text_remaining + ' words remaining');
 				jQuery(this).parents(".single_row2").find('.wrd-cuntng').attr('count',text_remaining);
 
 				line_no=getLineNumber(this);
@@ -276,7 +276,8 @@ $(document).ready(function(){
 					Alert.error("Message word's count should be less then equal to "+default_words+" words.",'Error',{displayDuration: 5000, pos: 'top'})
 					return false;
 				}
-				if($(".textmsg").val().split("<br />").length>25){
+				console.log($(".textmsg").val());
+				if($(".textmsg").val().split("<br />").length>default_lines){
 					var lines = $(".textmsg").val().split("<br />").length;
 					Alert.error("you have "+lines+" lines in your message. It should be less then equal to "+default_lines+" lines.",'Error',{displayDuration: 5000, pos: 'top'})
 					return false;
@@ -365,6 +366,7 @@ $(document).ready(function(){
 				oTextarea.value = strNewValue;
 				oTextarea.setAttribute("wrap", "");
 				var final_html = oTextarea.value;
+				final_html=final_html.replace(/\n$/, "");
 				final_html = final_html.replace(new RegExp("\\n", "g"), "<br />");
 				console.log(final_html);
 				$(".textmsg").val(final_html);
@@ -390,8 +392,12 @@ $(document).ready(function(){
 			}
 
 			$(document).on('paste','.hwl_custom_msg', function(e) {
+				
 				var me=$(this);
-				addbreak(me,e);
+				var text=me.val();
+				text.replace(/<[\/]{0,1}(p)[^><]*>/ig,"");
+				me.val(text);
+				// addbreak(me,e);
 			})
 
 			function addbreak(me,e){
@@ -405,10 +411,13 @@ $(document).ready(function(){
 							word_count += 1;
 							total_word_count +=1;
 							if(word_count==11&&final_message.slice(-2)!="\n"){
-								final_message+="\n";
+								final_message+=" ";
 								word_count=0;
 							}else{
 								final_message+=split[i]+" ";
+							}
+							if(text_max<total_word_count){
+								break;
 							}
 						}
 						
@@ -416,7 +425,10 @@ $(document).ready(function(){
 					var text_remaining = text_max - total_word_count;
 					me.parents(".single_row2").find('.wrd-cuntng').html(text_remaining + ' words remaining');
 					me.parents(".single_row2").find('.wrd-cuntng').attr('count',text_remaining);
+					console.log(final_message);
+					console.log(final_message);
 					set_target=roundUpToAny(split.length,10);
+					//me.val(final_message);
 				}, 100);
 			}
 

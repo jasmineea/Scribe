@@ -86,11 +86,12 @@
 		@auth
 		<ul class="sidebar-parent-menu">
 			<li><span class="theme-icon ico-account"></span><a href="javascript:void(0)" data-id="7">My Account</a> <i class="fa fa-angle-down pull-right"></i></li>
-				<ul class="sidebar-child-menu {{in_array(request()->route()->getName(),['frontend.users.profile','frontend.cards.wallet','frontend.cards.orders','frontend.cards.listing','frontend.cards.contacts','frontend.users.profileEdit','frontend.cards.orderDetail'])? "show" :"" }}" data-content-id="7">
+				<ul class="sidebar-child-menu {{in_array(request()->route()->getName(),['frontend.users.profile','frontend.cards.returnaddress','frontend.cards.wallet','frontend.cards.orders','frontend.cards.listing','frontend.cards.contacts','frontend.users.profileEdit','frontend.cards.orderDetail'])? "show" :"" }}" data-content-id="7">
 					<li><a href="{{ route('frontend.users.profile', encode_id(auth()->user()->id)) }}">My Profile</a></li>
 					<li><a href="{{ route("frontend.cards.wallet") }}">My Wallet</a></li>
 					<li><a href="{{ route("frontend.cards.orders") }}">My Campaigns</a></li>
 					<li><a href="{{ route("frontend.cards.listing") }}">My Recipient List</a></li>
+					<li><a href="{{ route("frontend.cards.returnaddress") }}">My Return Addresses</a></li>
 					<li><a href="{{ route('frontend.users.profileEdit', encode_id(auth()->user()->id)) }}">Settings</a></li>
 					<li><a href="javascript:void(0)" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a></li>
 				</ul>

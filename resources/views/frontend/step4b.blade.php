@@ -241,10 +241,7 @@ if(@isset($final_array['campaign_type'])&&!empty($final_array['campaign_type'])&
 
 										 </div>
 									  </div>
-									  <div class="col-md-8">
-										 <h4 class="frm-hdng"><b>Envelope Preview</b></h4>
-										 <div class="preview_background font_change">{!!enevolopePreview(@$final_array['excel_data']['data'][2],$final_array['system_property_2'])!!}</div>
-									  </div>
+									
 								   </div>
 								</div>
 							 </div>
@@ -264,10 +261,19 @@ if(@isset($final_array['campaign_type'])&&!empty($final_array['campaign_type'])&
 	</div>
 
 </section>
+@if(!empty($final_array['front_design']))
 <input id="front_design" type="hidden" value="{{asset('storage/'.$final_array['front_design'])}}">
+@else
+<input id="front_design" type="hidden" value="{{asset('img/1500-with-shadow.png')}}">
+@endif
+@if(!empty($final_array['front_design']))
 <input id="back_design" type="hidden" value="{{asset('storage/'.$final_array['back_design'])}}">
+@else
+<input id="back_design" type="hidden" value="{{asset('img/1500-with-shadow.png')}}">
+@endif
 <input id="inner_design" type="hidden" value="{{asset('storage/'.$final_array['inner_design'])}}">
 <input id="preview_image" type="hidden" value="{{asset('img/preview/')}}/{{$final_array['preview_image']}}">
+<input id="enevolope_preview_image" type="hidden" value="{{asset('img/preview/')}}/{{$final_array['enevolope_preview_image']}}">
 <div  id="view_res" style="display:none">
 <table  class="table">
 	<thead>
@@ -353,7 +359,7 @@ $required_balance= number_format((float)$required_balance, 2, '.', '');
 				
 			}
 			if(action=='card_design'){
-				var d = bootbox.alert('<b>Front View:</b><br><img src='+$("#front_design").val()+' style="width: 100%;height: inherit;"><br><br><b>Back View:</b> <br><img src='+$("#back_design").val()+' style="width: 100%;height: inherit;transform:rotate(180deg)">');
+				var d = bootbox.alert('<b>Front View:</b><br><img src='+$("#front_design").val()+' style="width: 100%;height: inherit;"><br><br><b>Back View:</b> <br><img src='+$("#back_design").val()+' style="width: 100%;height: inherit;transform:rotate(180deg)"><br><br><b>Envelope View:</b> <br><img src='+$("#enevolope_preview_image").val()+' style="width: 100%;height: inherit;">');
 			}
 			
 			d.find('.modal-dialog').addClass('modal-dialog-centered');

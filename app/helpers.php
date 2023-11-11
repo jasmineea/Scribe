@@ -1584,10 +1584,10 @@ if (! function_exists('duplicateOrder')) {
 }
 
 if (! function_exists('enevolopePreview')) {
-    function enevolopePreview($data,$mapping_fields)
+    function enevolopePreview($data,$mapping_fields,$return_address=[])
     {
         $dummy_data=['FIRST_NAME'=>'Kiley','LAST_NAME'=>'Caldarera','ADDRESS'=>'25 E 75th St #69','CITY'=>'Los Angeles','STATE'=>'California','ZIP'=>'90034'];
-        $message="{FIRST_NAME} {LAST_NAME}<br>{ADDRESS}<br>{CITY}, {STATE} {ZIP}";
+        $message="{FIRST_NAME} {LAST_NAME}\r\n{ADDRESS}\r\n{CITY}, {STATE} {ZIP}";
         foreach ($mapping_fields as $key => $value) {
             $preview_array["{".$key."}"]=isset($data[$mapping_fields[$key]])&&!empty($data[$mapping_fields[$key]])?$data[$mapping_fields[$key]]:$dummy_data[$key];
         }
@@ -1595,9 +1595,32 @@ if (! function_exists('enevolopePreview')) {
         $final_message = isset($preview_array)?preg_replace(array_keys($preview_array), array_values($preview_array), $message):$message;
         $final_message = str_replace(array( '{', '}' ), '', $final_message);
         if(empty($final_message)||strlen($final_message)=='12'){
-            $final_message="Kiley Caldarera<br>25 E 75th St #69<br>Los Angeles, California 90034";
+            $final_message="Kiley Caldarera\r\n25 E 75th St #69\r\nLos Angeles, California 90034";
         }
-        return $final_message;
+        $final_message1=$return_address['full_name']."\r\n".$return_address['address']."\r\n".$return_address['city'].", ".$return_address['state']." ".$return_address['zip'];
+
+        array_map('unlink', glob(public_path('img/preview/'.auth()->user()->id."_enevolope_*")));
+        $img = imagecreatefrompng(public_path('img/1500-with-shadow-final.png'));//replace with your image 
+        $txt = str_replace('&zwnj;','',str_replace('&ensp;', '  ', strip_tags($final_message)));//your text
+        $txt1 = str_replace('&zwnj;','',str_replace('&ensp;', '  ', strip_tags($final_message1)));//your text
+        $fontFile = realpath(public_path('fonts/Lexi-Regular.ttf'));//replace with your font
+        
+        $font_weight=0;
+        $fontSize = 30;
+        $centerX = 550;
+        
+        $fontColor = imagecolorallocate($img, 255, 255, 255);
+        $black = imagecolorallocate($img, 0, 0, 255);
+        $angle = 0;
+        $centerY = 500;
+        
+        imagettftext($img, $fontSize, $angle, $centerX, $centerY, $black, $fontFile, $txt, array("linespacing" => 0.45));
+        imagettftext($img, $fontSize, $angle,150,150, $black, $fontFile, $txt1, array("linespacing" => 0.45));
+        $image_name=auth()->user()->id."_enevolope_".time().rand().".png";
+        imagesavealpha($img, true);
+        imagepng($img,public_path('img/preview/'.$image_name));//save image
+        imagedestroy($img);
+        return $image_name;
     }
 }
 
@@ -1653,6 +1676,8 @@ if (! function_exists('generate_design_Image')) {
         return $image_name;
     }
 }
+
+
 if (! function_exists('generate_Preview_Image')) {
 
     function generate_Preview_Image($text,$message_length=''){
@@ -1663,57 +1688,168 @@ if (! function_exists('generate_Preview_Image')) {
         $fontFile = realpath(public_path('fonts/Lexi-Regular.ttf'));//replace with your font
         if($message_length=='long'){
            $exp=explode( "\r\n", $txt);
-           $text1=$exp[0]."\r\n".$exp[1]."\r\n".$exp[2];
-           unset($exp[0]);
-           unset($exp[1]);
-           unset($exp[2]);
-           foreach($exp as $k=>$v){
+        //    $text1=$exp[0]."\r\n".$exp[1]."\r\n".$exp[2];
+        //    unset($exp[0]);
+        //    unset($exp[1]);
+        //    unset($exp[2]);
+        //    foreach($exp as $k=>$v){
             
-           }
+        //    }
+          // array_splice($exp, 3, 0,["\r\n"]);
            $txt=implode("\r\n",$exp);
         }
+        $font_weight=0;
+        $fontSize = 36;
+        $centerX = 140;
         
-        $fontSize = 41;
-        $centerX = 90;
-        foreach(range(11,14) as $k=>$v){
-
-            $fontSize -= 1;
-            $centerX += 25;
-
-            if($v>=$lines){
+        switch ($lines) {
+            // case 1:
+            //     $fontSize -= 1;
+            //     $centerX += 20;
+            //     break;
+            // case 2:
+            //     $fontSize -= 1;
+            //     $centerX += 20;
+            //     break;
+            // case 3:
+            //     $fontSize -= 1;
+            //     $centerX += 20;
+            //     break;
+            // case 4:
+            //     $fontSize -= 1;
+            //     $centerX += 20;
+            //     break;
+            // case 5:
+            //     $fontSize -= 1;
+            //     $centerX += 20;
+            //     break;
+            // case 6:
+            //     $fontSize -= 1;
+            //     $centerX += 20;
+            //     break;
+            // case 7:
+            //     $fontSize -= 1;
+            //     $centerX += 20;
+            //     break;
+            case 8:
+                $fontSize -= 1;
+                $centerX += 20;
                 break;
-            }
+            case 9:
+                $fontSize -= 1;
+                $centerX += 20;
+                break;
+            
+            case 10:
+                $fontSize -= 1;
+                $centerX += 20;
+                break;
+            case 11:
+                $fontSize -= 1;
+                $centerX += 20;
+                break;
+            case 12:
+                $fontSize -= 1;
+                $centerX += 20;
+                break;
+            case 13:
+                $fontSize -= 1;
+                $centerX += 20;
+                break;
+            case 14:
+                $fontSize -= 1;
+                $centerX += 20;
+              //  $font_weight=30;
+                break;
+            case 15:
+                $fontSize -= 1;
+                $centerX += 20;
+            //    $font_weight=30;
+                break;
+            case 16:
+                $fontSize -= 1;
+                $centerX += 20;
+                // $font_weight=30;
+                break;
+            case 17:
+                $fontSize -= 1;
+                $centerX += 20;
+                // $font_weight=50;
+                // $font_weight=30;
+                break;
+            case 18:
+                $fontSize -= 1;
+                $centerX += 20;
+                // $font_weight=30;
+                break;
+            case 19:
+                $fontSize -= 1;
+                $centerX += 20;
+                // $font_weight=30;
+                break;
+            case 20:
+                $fontSize -= 1;
+                $centerX += 20;
+                // $font_weight=30;
+                break;
         }
 
-        foreach(range(15,20) as $k=>$v){
-            if($lines<15){
-                break;
-            }
-            $fontSize -= 2;
-            $centerX += 25;
 
-            if($v>=$lines){
-                break;
-            }
-        }
-        foreach(range(22,26) as $k=>$v){
-            if($lines<22){
-                break;
-            }
-            $fontSize -= 2;
-            $centerX += 25;
+        // foreach(range(7,10) as $k=>$v){
+        //     if(in_array($lines,range(7,10))){
+        //         break;
+        //     }
+        //     $fontSize -= 1;
+        //     $centerX += 20;
 
-            if($v>=$lines){
-                break;
-            }
-        }
+        //     if($v>=$lines){
+        //         break;
+        //     }
+        // }
+
+        // foreach(range(11,14) as $k=>$v){
+        //     if(in_array($lines,range(11,14))){
+        //         break;
+        //     }
+        //     $fontSize -= 1.5;
+        //     $centerX += 25;
+
+        //     if($v>=$lines){
+        //         break;
+        //     }
+        // }
+
+        // foreach(range(15,20) as $k=>$v){
+        //     if($lines<15){
+        //         break;
+        //     }
+        //     $fontSize -= 2;
+        //     $centerX += 25;
+
+        //     if($v>=$lines){
+        //         break;
+        //     }
+        // }
+        // foreach(range(22,26) as $k=>$v){
+        //     if($lines<22){
+        //         break;
+        //     }
+        //     $fontSize -= 2;
+        //     $centerX += 25;
+
+        //     if($v>=$lines){
+        //         break;
+        //     }
+        // }
         $fontColor = imagecolorallocate($img, 255, 255, 255);
         $black = imagecolorallocate($img, 0, 0, 255);
         $angle = 0;
         $centerY = 1190;
         if($message_length=='long'){
-            imagettftext($img,$fontSize,$angle, $centerX,$centerY-450, $black, $fontFile,$text1, array("linespacing" => 0.45));
-         }
+            $centerY=$centerY-310;
+            $centerY=$centerY+$font_weight;
+            //imagettftext($img,$fontSize,$angle, $centerX,$centerY-450, $black, $fontFile,$text1, array("linespacing" => 0.45));
+        }
         imagettftext($img, $fontSize, $angle, $centerX, $centerY, $black, $fontFile, $txt, array("linespacing" => 0.45));
         $image_name=auth()->user()->id."_".time().rand().".png";
         imagesavealpha($img, true);

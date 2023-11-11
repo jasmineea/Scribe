@@ -41,14 +41,15 @@ if(@isset($final_array['listing_id'])&&!empty($final_array['listing_id'])){
 										<div class="row">
 										<div class="col-6">
 											<h4 style="font-size: 19px;"><b>Please enter your custom message</b></h4>
-											<div class="mb-2"><textarea required name="hwl_custom_msg" id="hwl_custom_msg_1" class="hwl_custom_msg custm-edtr" style="min-height: 3.5in;max-height: 3.5in;width: 4.5in;max-width: 4.5in;padding: 0px; outline: none;border: none;overflow: hidden;" placeholder="Type your Note here.">{{@$final_array['hwl_custom_msg']}}</textarea></div>
-											<h6 class="wrd-cuntng">110 words remaining</h6>
+											<div class="mb-2">
+												<textarea required name="hwl_custom_msg" id="hwl_custom_msg_1" class="hwl_custom_msg custm-edtr" style="min-height: 3.5in;max-height: 3.5in;width: 4.5in;max-width: 4.5in;padding: 0px !important; outline: none;border: none;overflow: hidden;resize: none;" placeholder="Type your Note here.">{{@$final_array['hwl_custom_msg']}}</textarea></div>
+											<h6 class="wrd-cuntng" id="lines">110 words remaining</h6>
 										</div>
 									  <div class="col-6" style="padding-left: 3%;">
 									  <h4 style="font-size: 19px;"><b>Select message length option  </b></h4>
 											<select name="message_length"  class="form-select message_length">
-												<option value="short" {{@$final_array['message_length']=='short'?'selected':''}}>Short Text (upto 110 words or max 12 lines)</option>
-												<option value="long" {{@$final_array['message_length']=='long'?'selected':''}}>Long Text (upto 140 words or max 15 lines)</option>
+												<option value="short" {{@$final_array['message_length']=='short'?'selected':''}}>Short Text (upto 110 words or max 13 lines)</option>
+												<option value="long" {{@$final_array['message_length']=='long'?'selected':''}}>Long Text (upto 140 words or max 16 lines)</option>
 											</select>
 									  <div class="group-btn">
 											<p class="template_words"></p>
@@ -65,6 +66,58 @@ if(@isset($final_array['listing_id'])&&!empty($final_array['listing_id'])){
 											
 										 </div>
 										 <b style="color:#EF7600;">Note:</b> When you paste text into the editor, it might require re-formatting.
+										 <div class="row-field">
+										@if (isset($return_address)&&!empty($return_address))
+										<div class="form-group field-half">
+										 	<select required name="return_address_id" class="custom-select sources return_address_id required_class" style="padding: 10px 10px;border: 1px solid #ef7600;background: #E7934C;border-radius: 22px;color: white;font-weight: bold;">
+											<option value="">Select Address</option>
+											@foreach ($return_address as $key => $item)
+												<option value="{{$item['id']}}" {{$item['id']==@$final_array['return_address_id']?'selected':''}}>{{$item['full_name']}}, {{$item['address']}}, {{$item['city']}}, {{$item['state']}}, {{$item['zip']}}</option>
+											@endforeach
+											</select>
+											</div>
+											<div>
+												or
+											</div>
+										@endif
+										<div class="form-group field-half">
+										<input type="button" name="" class="add_return_address action-button action-button-tag" value="Add Return Address" style="">
+										</div>
+										</div>
+											<div class="return_address_class">
+												<div class="row-field">
+													<div class="form-group field-half">
+														<label>First Name</label>
+														<input type="text" name="return_first_name" value="" class="form-control" id="exampleFormControlInput1" placeholder="Enter your first name">
+													</div>
+													<div class="form-group field-half">
+														<label>Last Name</label>
+														<input type="text" name="return_last_name" value="" class="form-control" id="exampleFormControlInput1" placeholder="Enter your last name">
+													</div>
+												</div>
+												<div class="row-field">
+													<div class="form-group field-half">
+														<label>Street Address</label>
+														<input type="text" name="return_address" value="" class="form-control" id="exampleFormControlInput1" placeholder="Enter your street address">
+													</div>
+													<div class="form-group field-half">
+														<label>City</label>
+														<input type="text" name="return_city" value="" class="form-control" id="exampleFormControlInput1" placeholder="Enter your town / city name">
+													</div>
+												</div>
+												<div class="row-field">
+													
+													<div class="form-group  field-half">
+														<label>State</label>
+														<input type="text" name="return_state" value="" class="form-control" id="exampleFormControlInput1" placeholder="Enter your state name">
+													</div>
+													<div class="form-group  field-half">
+														<label>Zip Code</label>
+														<input type="text" name="return_pincode" value="" class="form-control" id="exampleFormControlInput1" placeholder="Enter your address pin Code">
+													</div>
+												
+												</div>
+											</div>
 									  </div>
 									  </div>
 									  <input type="hidden" name="textmsg" value="{{@$final_array['textmsg']}}" class="textmsg">
@@ -95,12 +148,23 @@ if(@isset($final_array['listing_id'])&&!empty($final_array['listing_id'])){
 		</div>
 	</div>
 </section>
-@if($final_array['message_length']=='long')
-<input id="input_lines" type="hidden" value="15">
+@if(@$final_array['message_length']=='long')
+<input id="input_lines" type="hidden" value="16">
 <input id="input_words" type="hidden" value="140">
+<script>
+	$("#hwl_custom_msg_1").css('max-height','4.5in');
+				$("#hwl_custom_msg_1").css('min-height','4.5in');
+				$(".line_15").show();
+				
+</script>
 @else
-<input id="input_lines" type="hidden" value="12">
+<input id="input_lines" type="hidden" value="13">
 <input id="input_words" type="hidden" value="110">
+<script>
+	$("#hwl_custom_msg_1").css('max-height','3.5in');
+				$("#hwl_custom_msg_1").css('min-height','3.5in');
+				$(".line_15").hide();
+</script>
 @endif
 
 <style>
@@ -121,18 +185,35 @@ if(@isset($final_array['listing_id'])&&!empty($final_array['listing_id'])){
 	</style>
 <script>
 	$(document).ready(function(){
+		$(".return_address_class").hide();
+		$(".add_return_address").click(function(){
+			$(".return_address_class").toggle('slow');
+			if($(".return_address_id").hasClass('required_class')){
+				$(".return_address_id").removeClass('required_class');
+				$('.return_address_id').prop('required',false);;
+				$(".return_address_class").find('.form-control').prop('required',true);;
+				console.log('1');
+			}else{
+				$(".return_address_id").addClass('required_class');
+				$('.return_address_id').prop('required',true);;
+				$(".return_address_class").find('.form-control').prop('required',false);;
+				console.log('2');
+			}
+		})
 		$(".message_length").change(function(){
 			
 			if($(this).val()=='long'){
 				$("#hwl_custom_msg_1").css('max-height','4.5in');
 				$("#hwl_custom_msg_1").css('min-height','4.5in');
-				$("#input_lines").val('15');
+				$("#input_lines").val('16');
 				$("#input_words").val('140');
+				$(".line_15").show();
 			}else{
 				$("#hwl_custom_msg_1").css('max-height','3.5in');
 				$("#hwl_custom_msg_1").css('min-height','3.5in');
-				$("#input_lines").val('12');
+				$("#input_lines").val('13');
 				$("#input_words").val('110');
+				$(".line_15").hide();
 			}
 			$('.hwl_custom_msg').trigger('keyup');
 		})

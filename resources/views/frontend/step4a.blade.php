@@ -202,6 +202,12 @@ $class_tooltip="step_5a";
                                              <!-- <img src="{{asset('img/back1.png')}}"> -->
                                           </div>
                                        </div>
+                                       <div class="tab-pane fade" id="envelope" role="tabpanel" aria-labelledby="envelope-tab">
+                                          <div class="design-area design-area__back">
+                                             <img src="{{asset('img/preview/')}}/{{$final_array['enevolope_preview_image']}}"  style="width: 100%;height: inherit;">
+                                             <!-- <img src="{{asset('img/back1.png')}}"> -->
+                                          </div>
+                                       </div>
                                     </div>
                                     <ul class="nav nav-tabs" id="myTab" role="tablist">
                                        <li class="nav-item" role="presentation">
@@ -209,6 +215,9 @@ $class_tooltip="step_5a";
                                        </li>
                                        <li class="nav-item" role="presentation">
                                           <button class="nav-link1 theme-btn" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">Back View</button>
+                                       </li>
+                                       <li class="nav-item" role="presentation">
+                                          <button class="nav-link1 theme-btn" id="envelope-tab" data-bs-toggle="tab" data-bs-target="#envelope" type="button" role="tab" aria-controls="envelope" aria-selected="false">Envelope View</button>
                                        </li>
                                     </ul>
                                  </div>
@@ -260,7 +269,36 @@ $class_tooltip="step_5a";
                               <div class="row">
                               		<div class="col-12">
 										<label><b>Uploaded Designs</b></label>
-										<div class="owl-carousel" id="uploadDesignsSlider" style="max-width:100%;">
+                              @if(count($carddesigns)<=8)
+                              <div class="template-word-section step-4-right-buttons " style="max-height: 168px;width: max-content;">
+											
+											@foreach($carddesigns as $k=>$v)
+                                 @php
+                                    if($v['type']=='outer'){
+                                       $class="image_t";
+                                    }
+                                    if($v['type']=='inner'){
+                                       $class="image_t2";
+                                    }
+                                    if($v['type']=='both'){
+                                       $class="image_t3";
+                                    }
+                                    @endphp
+											<div class="design-template-thumb"  style="cursor: pointer;">
+                                 <!-- <i class="fa fa-trash delete_image" data-id="{{$v['id']}}" style="position: absolute;right: 4px;top: 4px;"></i> -->
+                                    <i class="fa fa-trash delete_image" data-id="{{$v['id']}}" style="position: absolute;margin-left:45px;z-index: 99;    background: white;    border: 1px solid;    padding: 2px 4px;    border-radius: 15px;color:red;"></i>
+												@if($class=='image_t3')
+                                       <img class="{{$class}}" src="{{asset('storage/'.$v['image_path'])}}" data-path="{{$v['image_path']}}" data-front-src="{{asset('storage/'.$v['front_image_path'])}}" data-back-src="{{asset('storage/'.$v['back_image_path'])}}" data-front="{{$v['front_image_path']}}" data-back="{{$v['back_image_path']}}">
+                                       <img class="{{$class}}" src="{{asset('storage/'.$v['image_path'])}}" data-path="{{$v['image_path']}}" data-front-src="{{asset('storage/'.$v['front_image_path'])}}" data-back-src="{{asset('storage/'.$v['back_image_path'])}}" data-front="{{$v['front_image_path']}}" data-back="{{$v['back_image_path']}}" style="opacity: 1;    top: 0px;    width: 93%;    height: 100%;    border: 1px solid;    border-radius: 11%;    margin-left: -67px;">
+                                    @else
+                                       <img class="{{$class}}" src="{{asset('storage/'.$v['image_path'])}}" data-path="{{$v['image_path']}}" data-front-src="{{asset('storage/'.$v['front_image_path'])}}" data-back-src="{{asset('storage/'.$v['back_image_path'])}}" data-front="{{$v['front_image_path']}}" data-back="{{$v['back_image_path']}}">
+                                    @endif
+                                    
+											</div>
+											@endforeach
+											</div>
+                              @else
+                              <div class="owl-carousel" id="uploadDesignsSlider" style="max-width:100%;">
 											<div class="owl-nav"></div> 
 												@foreach($carddesigns as $k=>$v)
 											<div class="item design-template-thumb" style="cursor: pointer;">
@@ -287,7 +325,9 @@ $class_tooltip="step_5a";
 											</div>
 											@endforeach
 
-										</div>	
+										</div>
+                              @endif
+											
 
 
 
@@ -324,8 +364,8 @@ $class_tooltip="step_5a";
                         <input type="hidden" name="back_design" value="{{@$final_array['back_design']}}">
                         <input type="hidden" name="main_design" value="{{@$final_array['main_design']}}">
                         <input type="hidden" name="inner_design" value="{{@$final_array['inner_design']}}">
-                        <input type="submit" name="next" class="next action-button upload_last_file_and_message action-button2" value="STEP5">
-                        <a href="{{ route("frontend.cards.step3")}}" class="previous action-button action-button-previous" value="PREVIOUS STEP">PREVIOUS</a>
+                        <input type="submit" name="next" class="next action-button upload_last_file_and_message action-button2" value="Review Campaign">
+                        <a href="{{ route("frontend.cards.step3a")}}" class="previous action-button action-button-previous" value="PREVIOUS STEP">PREVIOUS</a>
                      </form>
                      <form class="design_form1" action="{{ route("frontend.cards.cardDesignUpload")}}" method="POST" id="xsl_upload" enctype="multipart/form-data">
                      {{ csrf_field() }}
@@ -428,7 +468,7 @@ $class_tooltip="step_5a";
    $(".delete_image").on( 'click', function () {
       var id = $(this).data('id');
       var d = bootbox.confirm({
-                                message: 'are you sure?',
+                                message: 'Are you sure?',
                                 buttons: {
                                 confirm: {
                                 label: 'Yes',

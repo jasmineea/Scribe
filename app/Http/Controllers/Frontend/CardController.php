@@ -14,6 +14,7 @@ use App\Models\UserPaymentMethod;
 use App\Models\Order;
 use App\Models\Transaction;
 use App\Models\CardDesign;
+use App\Models\Address;
 use Stripe;
 use Session;
 use Response;
@@ -86,13 +87,13 @@ class CardController extends Controller
      */
     public function step2(Request $request)
     {
-
+        $return_address = Address::where('user_id',auth()->user()->id)->latest()->get();
         $final_array=$request->session()->get('final_array');
         // if(empty($final_array['campaign_name'])){
         //     Session::flash('error', 'please complete the step 2 first.');
         //     return redirect()->route('frontend.cards.step2');
         // }
-        return view('frontend.step2', compact('final_array'));
+        return view('frontend.step2', compact('final_array','return_address'));
     }
 
     /**
@@ -102,7 +103,6 @@ class CardController extends Controller
      */
     public function step2a(Request $request)
     {
-        
         $final_array=$request->session()->get('final_array');
         return view('frontend.step2a', compact('final_array'));
     }
@@ -122,6 +122,12 @@ class CardController extends Controller
         return view('frontend.step3', compact('final_array'));
     }
 
+    public function returnaddress(Request $request)
+    {
+        $return_address = Address::where('user_id',auth()->user()->id)->paginate(10);     
+        return view('frontend.returnaddress', compact('return_address'));
+    }
+
     public function step4a(Request $request)
     {
         $default_card_design = CardDesign::whereIn('user_id',[0])->latest()->get();
@@ -130,6 +136,8 @@ class CardController extends Controller
         $final_array=$request->session()->get('final_array');
         $preview_message=final_message(@$final_array['excel_data']['data'][2], $final_array['hwl_custom_msg'], $final_array['system_property_1']);
         $final_array['preview_image'] = generate_Preview_Image($preview_message,$final_array['message_length']);
+        $return_address = Address::find($final_array['return_address_id'])->toArray();        
+        $final_array['enevolope_preview_image'] = enevolopePreview(@$final_array['excel_data']['data'][2],$final_array['system_property_2'],$return_address);
         $final_array['front_preview_image'] = public_path('img/front_design.jpg');
         $final_array['back_preview_image'] = public_path('img/back_design.jpg');
 
@@ -440,6 +448,20 @@ class CardController extends Controller
         if ($request->isMethod('post')) {
             $data=$request->all();
             $final_array=$request->session()->get('final_array');
+            
+            if(!empty($data['return_first_name'])){
+                $address = new Address;
+                $address->user_id = auth()->user()->id;
+                $address->first_name = $data['return_first_name'];
+                $address->last_name = $data['return_last_name'];
+                $address->full_name = $data['return_first_name']." ".$data['return_last_name'];
+                $address->address = $data['return_address'];
+                $address->city = $data['return_city'];
+                $address->state = $data['return_state'];
+                $address->zip = $data['return_pincode'];
+                $address->save();
+                $data['return_address_id']=$address->id;
+            }
             $request->session()->put('final_array',array_merge($final_array,$data));
             return redirect()->route('frontend.cards.step3a');
         }
@@ -661,7 +683,8 @@ class CardController extends Controller
     public function step5Update(Request $request)
     {
         ini_set('max_execution_time', 1000);
-        $type_sort_code=['single'=>'SOL','one-time'=>'OTC','on-going'=>'OGC'];
+        $type_sort_code=['single'=>'SOL','one-time'=>'OTC','on-going'=>'OGC','pending'=>'OTC'];
+        $type_sort_code_1=['single'=>'single','one-time'=>'one-time','on-going'=>'on-going','pending'=>'one-time'];
         if ($request->isMethod('post')) {
             $data=$request->all();
             $final_array=$request->session()->get('final_array');
@@ -712,7 +735,7 @@ class CardController extends Controller
                     $order->campaign_name= $type_sort_code[$order_data['campaign_type']]."_".time();
                 }
                 $order->campaign_type= $order_data['campaign_type']=='on-going'?'on-going':'one-time';
-                $order->campaign_type_2= $order_data['campaign_type'];
+                $order->campaign_type_2= $type_sort_code_1[$order_data['campaign_type']];
                 $order->campaign_message= 'order_'.$order_data['preview_image'];
                 $order->front_design= $order_data['front_design'];
                 $order->back_design= $order_data['back_design'];

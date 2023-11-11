@@ -4,7 +4,7 @@
 
 @section('content')
 
-<section id="hero-section" style="display:none;">
+<section id="hero-section">
 	<div class="container-fluid" style="padding-left: 368px;">
 		<div class="row justify-content-center">
 			<div class="col-12">
@@ -194,10 +194,10 @@ $final_keys=@$final_array['excel_data']['data']?json_encode(array_slice(@$final_
 @endphp
 <script>
 	$(document).ready(function(){
-		$(".action-button2").trigger('click');
-		setTimeout(() => {
-			$("#hero-section").show();
-		}, "1500");
+		// $(".action-button2").trigger('click');
+		// setTimeout(() => {
+		// 	$("#hero-section").show();
+		// }, "1500");
 		var json_data=JSON.parse('<?=$final_keys?>');
 		$(".system_property").on("change",function(){
 			var key = $(this).val();

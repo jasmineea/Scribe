@@ -457,7 +457,7 @@ return [
 
     ],
     'card_written_pricing' => [
-        'title' => 'Scribe Credit Pricing',
+        'title' => 'Price Per Credit',
         'desc' => '',
         'icon' => 'fas fa-money',
 
@@ -466,7 +466,7 @@ return [
                 'type' => 'text', // input fields type
                 'data' => 'text', // data type, string, int, boolean
                 'name' => 'card_written_pricing_less_then_equal_to_100', // unique name for field
-                'label' => 'Enter pricing for less then equal to 100 cards', // you know what label it is
+                'label' => 'Enter pricing for less then equal to 100 credit', // you know what label it is
                 'rules' => '', // validation rule of laravel
                 'class' => '', // any class for input
                 'value' => '3.49', // default value if you want
@@ -475,7 +475,7 @@ return [
                 'type' => 'text', // input fields type
                 'data' => 'text', // data type, string, int, boolean
                 'name' => 'card_written_pricing_101_to_500', // unique name for field
-                'label' => 'Enter pricing for 101 to 500 cards', // you know what label it is
+                'label' => 'Enter pricing for 101 to 500 credit', // you know what label it is
                 'rules' => '', // validation rule of laravel
                 'class' => '', // any class for input
                 'value' => '2.99', // default value if you want
@@ -484,7 +484,7 @@ return [
                 'type' => 'text', // input fields type
                 'data' => 'text', // data type, string, int, boolean
                 'name' => 'card_written_pricing_501_to_1000', // unique name for field
-                'label' => 'Enter pricing for 501 to 1000 cards', // you know what label it is
+                'label' => 'Enter pricing for 501 to 1000 credit', // you know what label it is
                 'rules' => '', // validation rule of laravel
                 'class' => '', // any class for input
                 'value' => '2.49', // default value if you want
@@ -493,7 +493,7 @@ return [
                 'type' => 'text', // input fields type
                 'data' => 'text', // data type, string, int, boolean
                 'name' => 'card_written_pricing_1001_to_2000', // unique name for field
-                'label' => 'Enter pricing for 1001 to 2000 cards', // you know what label it is
+                'label' => 'Enter pricing for 1001 to 2000 credit', // you know what label it is
                 'rules' => '', // validation rule of laravel
                 'class' => '', // any class for input
                 'value' => '2.29', // default value if you want
@@ -502,7 +502,7 @@ return [
                 'type' => 'text', // input fields type
                 'data' => 'text', // data type, string, int, boolean
                 'name' => 'card_written_pricing_greater_2000', // unique name for field
-                'label' => 'Enter pricing for more then 2000 cards', // you know what label it is
+                'label' => 'Enter pricing for more then 2000 credit', // you know what label it is
                 'rules' => '', // validation rule of laravel
                 'class' => '', // any class for input
                 'value' => '1.99', // default value if you want

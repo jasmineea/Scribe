@@ -224,6 +224,16 @@
                             {{ html()->label($field_lable, $field_name)->class('block text-sm font-medium text-gray-700') }} {!! fielf_required($required) !!}
                             {{ html()->select($field_name, $select_options)->placeholder($field_placeholder)->class('mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm')->attributes(["$required"]) }}
                         </div>
+                        <div class="col-span-6">
+                            <?php
+                            $field_name = 'api_access_token';
+                            $field_lable = label_case($field_name);
+                            $field_placeholder = $field_lable;
+                            $required = "";
+                            ?>
+                            {{ html()->label($field_lable, $field_name)->class('block-inline text-sm font-medium text-gray-700') }} {!! fielf_required($required) !!}
+                            {{ html()->textarea($field_name)->value($user->api_access_token)->placeholder($field_placeholder)->class('mt-1 border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-300 rounded border shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent')->attributes(["$required"])->attributes(['disabled'])->attributes(['style'=>'height:260px;resize:none;']) }}
+                        </div>
 
                         <!-- <div class="col-span-6 sm:col-span-3">
                             <label for="country" class="block-inline text-sm font-medium text-gray-700">Country / Region</label>

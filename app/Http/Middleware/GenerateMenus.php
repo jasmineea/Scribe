@@ -141,7 +141,7 @@ class GenerateMenus
                 ]);
 
                 // Submenu: Roles
-                $accessControl->add('<i class="nav-icon fa fa-cog"></i> Scribe Credit Pricing', [
+                $accessControl->add('<i class="nav-icon fa fa-cog"></i> Price Per Credit', [
                     'route' => ['backend.settings', 'type' => 'card_written_pricing'],
                     'class' => 'nav-item',
                 ])

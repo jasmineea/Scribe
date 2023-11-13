@@ -285,7 +285,7 @@ class UserController extends Controller
                 $transaction->wallet_balance = $request->wallet_balance;
                 $transaction->currency_amount = 0;
                 $transaction->status = 1;
-                $transaction->comment = 'Stribe Joining Bonus';
+                $transaction->comment = 'Scribe Joining Bonus';
                 $transaction->payment_method = 'Wallet';
                 $transaction->type = 'Cr';
                 $transaction->transaction_json =json_encode([]);

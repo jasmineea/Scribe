@@ -91,7 +91,7 @@
 </div>
 <div class="design_form3_div" style="display:none;">
    <form class="design_form3" action="{{ route("frontend.cards.saveDesignType")}}" method="POST">
-   <input type="hidden" name="sent_from" class="backend">
+   <input type="hidden" name="sent_from" value="backend">
    {{ csrf_field() }}
    <table class="table">
       <thead>
@@ -109,7 +109,7 @@
                   <option value="">select type</option>
                   <option value="inner">Inner Design</option>
                   <option value="outer">Outer Design</option>
-                  <option value="both">Both Inner and Outer Design</option>
+                  <option value="both" selected>Both Inner and Outer Design</option>
                </select>
             </td>
          </tr>
@@ -121,7 +121,7 @@
 <form class="design_form1" action="{{ route("frontend.cards.cardDesignUpload")}}" method="POST" id="xsl_upload" enctype="multipart/form-data">
     {{ csrf_field() }}
     <input type="file"  accept=".png,.zip" style="opacity:0;" name="design_file" class="uploadDesign1">
-    <input type="hidden" name="sent_from" class="backend">
+    <input type="hidden" name="sent_from" value="backend">
 </form>
 @endsection
 
@@ -138,11 +138,23 @@
 <script type="module">
     $(document).ready(function(){
    	if({{count($carddesignswithouttype)}}!='0'){
-   			var d = bootbox.confirm($(".design_form3_div").html(), function(result) {
-   				if(result){
-   					$('.design_form3').submit();
-   				}
-   		});
+        var d = bootbox.confirm({
+                    message: $(".design_form3_div").html(),
+                    buttons: {
+                    confirm: {
+                    label: 'Save',
+                    //   className: 'btn-success'
+                    },
+                    cancel: {
+                    label: 'Cancel',
+                    //   className: 'btn-danger'
+                    }
+                    },
+                    callback: function (result) {
+                        if(result){
+                            $('.design_form3').submit();
+                        }
+                    }});
    			d.find('.modal-dialog').addClass('modal-dialog-centered');
    	}
    });
@@ -161,6 +173,10 @@
         serverSide: true,
         autoWidth: true,
         responsive: true,
+        dom: 'Bfrtip',
+        buttons: [
+            'copy', 'csv', 'excel', 'pdf', 'print'
+        ],
         ajax: '{{ route("backend.$module_name.index_data",$type) }}',
         columns: [{
                 data: 'id',

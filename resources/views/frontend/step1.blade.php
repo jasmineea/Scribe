@@ -49,6 +49,7 @@
 								
 								
 							</div>
+							<div style="    margin-top: {{$final_array['campaign_type']=='on-going'?'7%':'14%'}};    color: #8c8686;    z-index: 9;">OR</div>
 							<div class="step-2-option">
 								   <div class="cstm-dropdown" style="text-align:center">
 										<select name="listing_id" id="listing_select" class="custom-select sources" placeholder="Source Type"  style="background: #E7934C;border-radius: 22px;color: white;font-weight: bold;">

@@ -104,7 +104,7 @@ class ListingController extends Controller
                         ->addColumn('action', function ($data) {
                             $module_name = $this->module_name;
 
-                            return view('backend.includes.action_column', compact('module_name', 'data'));
+                            return view('backend.includes.action_column_1', compact('module_name', 'data'));
                         })
                         ->editColumn('user_id', function ($data) {
                             $return_string = '<strong>'.$data->user->name.'</strong>';

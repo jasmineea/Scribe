@@ -400,7 +400,7 @@ $class_tooltip="step_5a";
                   <option value="">select type</option>
                   <option value="inner">Inner Design</option>
                   <option value="outer">Outer Design</option>
-                  <option value="both">Both Inner and Outer Design</option>
+                  <option value="both" selected>Both Inner and Outer Design</option>
                </select>
             </td>
          </tr>
@@ -488,7 +488,7 @@ $class_tooltip="step_5a";
                                        $('.delete_image_form').submit();
                                     }
                                 }});
-   });
+      });
    
    
    

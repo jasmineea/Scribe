@@ -684,7 +684,7 @@ class CardController extends Controller
     {
         ini_set('max_execution_time', 1000);
         $type_sort_code=['single'=>'SOL','one-time'=>'OTC','on-going'=>'OGC','pending'=>'OTC'];
-        $type_sort_code_1=['single'=>'single','one-time'=>'one-time','on-going'=>'on-going','pending'=>'one-time'];
+        $type_sort_code_1=['single'=>'Single letter','one-time'=>'One-time','on-going'=>'Ongoing','pending'=>'One-time'];
         if ($request->isMethod('post')) {
             $data=$request->all();
             $final_array=$request->session()->get('final_array');
@@ -811,6 +811,7 @@ class CardController extends Controller
                 }
                 
                 $order->campaign_type= $order_data['campaign_type']=='on-going'?'on-going':'one-time';
+                $order->campaign_type_2= $type_sort_code_1[$order_data['campaign_type']];
                 $order->campaign_message= 'order_'.$order_data['preview_image'];
                 $order->schedule_status= $order_data['publish_type']=='schedule'?1:0;
                 $order->auto_charge= $order_data['auto_charge']?1:0;

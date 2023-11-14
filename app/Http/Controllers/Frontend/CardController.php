@@ -124,7 +124,7 @@ class CardController extends Controller
 
     public function returnaddress(Request $request)
     {
-        $return_address = Address::where('user_id',auth()->user()->id)->paginate(10);     
+        $return_address = Address::where('user_id',auth()->user()->id)->where('status','1')->paginate(10);     
         return view('frontend.returnaddress', compact('return_address'));
     }
 
@@ -588,7 +588,33 @@ class CardController extends Controller
             return redirect()->route('frontend.cards.step4a');  
         }
     }
-
+    
+    public function updateReturnAddress(Request $request){
+        if ($request->isMethod('post')) {
+            $data=$request->all();
+            $card = Address::find($data['id']);
+            $card->first_name = $data['return_first_name'];
+            $card->last_name = $data['return_last_name'];
+            $card->full_name = $data['return_first_name']." ".$data['return_last_name'];
+            $card->address = $data['return_address'];
+            $card->city = $data['return_city'];
+            $card->state = $data['return_state'];
+            $card->zip = $data['return_pincode'];
+            $card->save();
+            Session::flash('success', 'Address updated.');
+            return redirect()->back();
+        }
+    }
+    public function deleteReturnAddress(Request $request){
+        if ($request->isMethod('post')) {
+            $data=$request->all();
+            $card = Address::find($data['id']);
+            $card->status = '2';
+            $card->save();
+            return response(['message'=>'Record deleted.'], 200)
+                  ->header('Content-Type', 'text/plain');
+        }
+    }
     public function cardDesignUpload(Request $request)
     {
         if ($request->isMethod('post')) {
@@ -692,6 +718,12 @@ class CardController extends Controller
 
 
             $order_data=$request->session()->get('final_array');
+
+            if($order_data['message_length']=='long'){
+                $exp=explode( "\r\n", $order_data['hwl_custom_msg']);
+                array_splice($exp, 3, 0,[""]);
+                $order_data['hwl_custom_msg']=implode("\r\n",$exp);
+            }
 
             if ($order_data['campaign_type']=='pending'||$order_data['campaign_type']=='single') {
                 $transaction = new Transaction;

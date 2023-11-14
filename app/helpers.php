@@ -17,7 +17,8 @@ use App\Events\Frontend\WalletRecharge;
 use App\Events\Frontend\OrderPlaced;
 use App\Models\MetaData;
 use App\Models\MasterFileMessage;
-
+use GDText\Box;
+use GDText\Color;
 // use Stripe;
 use Illuminate\Support\Facades\Session;
 
@@ -1613,9 +1614,25 @@ if (! function_exists('enevolopePreview')) {
         $black = imagecolorallocate($img, 0, 0, 255);
         $angle = 0;
         $centerY = 500;
+
+        //===================================
+        $textbox = new Box($img);
+        $textbox->setFontSize(35);
+        $textbox->setFontFace($fontFile);
+        $textbox->setFontColor(new Color(0, 0, 255)); // black
+        $textbox->setBox(
+            0,  // distance from left edge
+            0,  // distance from top edge
+            imagesx($img), // textbox width, equal to image width
+            imagesy($img)  // textbox height, equal to image height
+        );
+        $textbox->setTextAlign('center', 'center');
+        // it accepts multiline text
+        $textbox->draw($txt);
+        //===================================
         
-        imagettftext($img, $fontSize, $angle, $centerX, $centerY, $black, $fontFile, $txt, array("linespacing" => 0.45));
-        imagettftext($img, $fontSize-2, $angle,150,150, $black, $fontFile, $txt1, array("linespacing" => 0.45));
+       // imagettftext($img, $fontSize, $angle, $centerX, $centerY, $black, $fontFile, $txt, array("linespacing" => 0.45));
+        imagettftext($img, $fontSize, $angle,150,150, $black, $fontFile, $txt1, array("linespacing" => 0.45));
         $image_name=auth()->user()->id."_enevolope_".time().rand().".png";
         imagesavealpha($img, true);
         imagepng($img,public_path('img/preview/'.$image_name));//save image

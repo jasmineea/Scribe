@@ -31,7 +31,10 @@
 							<td >{{ $data->state }}</td>
 							<td >{{ $data->zip }}</td>
 							<td>{{ $data->created_at }}</td>
-							<td>-</td>
+							<td>
+							<a href="javascript:void(0);" data-json="{{json_encode($data)}}" class="mr-1 edit_return_address" title="edit return address"><i class="fa fa-pencil"></i></a>
+							<a href="javascript:void(0);" data-id="{{$data->id}}" class="mr-1 delete_address" title="delete return address"><i class="fa fa-trash"></i></a>
+							</td>
 						</tr>
 						@endforeach
 					</tbody>
@@ -44,6 +47,110 @@
 		</div>
 	</div>
 </section>
+<div class="return_address_class" style="display:none;">
+<form action="{{ route("frontend.cards.updateReturnAddress")}}" method="POST" class="xsl_upload" enctype="multipart/form-data">
+	{{ csrf_field() }}
+	
+	<div class="row-field">
+		<div class="form-group field-half">
+			<label>First Name</label>
+			<input type="text" name="return_first_name" class="form-control return_first_name" value="" placeholder="Enter your first name">
+			<input type="hidden" name="id" class="record_id" value="">
+		</div>
+		<div class="form-group field-half">
+			<label>Last Name</label>
+			<input type="text" name="return_last_name" class="form-control return_last_name" value="" placeholder="Enter your last name">
+		</div>
+	</div>
+	<div class="row-field">
+		<div class="form-group field-half">
+			<label>Street Address</label>
+			<input type="text" name="return_address" class="form-control return_address" value="" placeholder="Enter your street address">
+		</div>
+		<div class="form-group field-half">
+			<label>City</label>
+			<input type="text" name="return_city" class="form-control return_city" value="" placeholder="Enter your town / city name">
+		</div>
+	</div>
+	<div class="row-field">
+		
+		<div class="form-group  field-half">
+			<label>State</label>
+			<input type="text" name="return_state" class="form-control return_state" value="" placeholder="Enter your state name">
+		</div>
+		<div class="form-group  field-half">
+			<label>Zip Code</label>
+			<input type="text" name="return_pincode" class="form-control return_pincode" value="" placeholder="Enter your address pin Code">
+		</div>
+
+	</div>
+	
+</form>
+</div>
+<script>
+	$(".delete_address").click(async function(){
+              const body = JSON.stringify({'id':$(this).data('id')});
+			  var me =$(this);
+			  var d = bootbox.confirm({
+                    message: 'Are you sure?',
+                    buttons: {
+                    confirm: {
+                    label: 'Yes',
+                    //   className: 'btn-success'
+                    },
+                    cancel: {
+                    label: 'No',
+                    //   className: 'btn-danger'
+                    }
+                    },
+                    callback: function (result) {
+                        if(result){
+                            const result = fetch("{{route('frontend.cards.deleteReturnAddress')}}", {
+							method: 'POST',
+							headers: {
+							'Content-Type': 'application/json',
+							'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+							},
+							body,
+						});
+						me.closest('tr').remove();
+                        }
+                    }});
+				d.find('.modal-dialog').addClass('modal-dialog-centered');
+              
+          })
+	$("body").on('click','.edit_return_address',function(){
+		var me = $(this);
+		data=me.data('json');
+		var d = bootbox.confirm({
+                    message: $(".return_address_class").html(),
+                    buttons: {
+                    confirm: {
+                    label: 'Save',
+                    //   className: 'btn-success'
+                    },
+                    cancel: {
+                    label: 'Cancel',
+                    //   className: 'btn-danger'
+                    }
+                    },
+                    callback: function (result) {
+                        if(result){
+                            $('.xsl_upload')[1].submit();
+                        }
+                    }});
+		
+		$('body').find(".return_first_name").val(data.first_name);
+		$('body').find(".return_last_name").val(data.last_name);
+		$('body').find(".return_address").val(data.address);
+		$('body').find(".return_city").val(data.city);
+		$('body').find(".return_state").val(data.state);
+		$('body').find(".return_pincode").val(data.zip);
+		$('body').find(".record_id").val(data.id);
+		d.find('.modal-dialog').addClass('modal-dialog-centered');
+		
+    })
+</script>
 
 
 @endsection

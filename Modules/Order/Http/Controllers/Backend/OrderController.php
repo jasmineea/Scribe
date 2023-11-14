@@ -188,10 +188,20 @@ class OrderController extends Controller
         return Datatables::of($$module_name)
 
                         ->addColumn('inner_design', function ($data) {
-                            return  '<a target="_blank" download href="'.asset("storage/".$data->inner_design).'"><img width="100px" class="model_preview" data-url="'.asset("storage/".$data->inner_design).'" src="'.asset("storage/".$data->inner_design).'"></a>';
+                            if($data->inner_design){
+                                return  '<a target="_blank" download href="'.asset("storage/".$data->inner_design).'"><img width="100px" class="model_preview" data-url="'.asset("storage/".$data->inner_design).'" src="'.asset("storage/".$data->inner_design).'"></a><div style="display:none;">'.asset("storage/".$data->inner_design)."</div>";
+                            }else{
+                                return 'No Design File';
+                            }
+                            
                         })
                         ->addColumn('main_design', function ($data) {
-                            return  '<a target="_blank" download href="'.asset("storage/".$data->main_design).'"><img width="100px" class="model_preview" data-url="'.asset("storage/".$data->main_design).'" src="'.asset("storage/".$data->main_design).'"></a>';
+                            if($data->main_design){
+                                return  '<a target="_blank" download href="'.asset("storage/".$data->main_design).'"><img width="100px" class="model_preview" data-url="'.asset("storage/".$data->main_design).'" src="'.asset("storage/".$data->main_design).'"></a><div style="display:none;">'.asset("storage/".$data->main_design)."</div>";
+                            }else{
+                                return 'No Design File';
+                            }
+                            
                         })
                        
                         ->addColumn('downloaded_times', function ($data) {

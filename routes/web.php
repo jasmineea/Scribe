@@ -106,6 +106,8 @@ Route::group(['namespace' => 'App\Http\Controllers\Frontend', 'as' => 'frontend.
 
         Route::get('orders', ['as' => "$module_name.orders", 'uses' => "$controller_name@orders"]);
         Route::get('returnaddress', ['as' => "$module_name.returnaddress", 'uses' => "$controller_name@returnaddress"]);
+        Route::post('deleteReturnAddress', ['as' => "$module_name.deleteReturnAddress", 'uses' => "$controller_name@deleteReturnAddress"]);
+        Route::post('updateReturnAddress', ['as' => "$module_name.updateReturnAddress", 'uses' => "$controller_name@updateReturnAddress"]);
         Route::get('listing', ['as' => "$module_name.listing", 'uses' => "$controller_name@listing"]);
         Route::get('listing/{id}', ['as' => "$module_name.contacts", 'uses' => "$controller_name@contacts"]);
         Route::get('files/{file_name}', ['as' => "$module_name.files", 'uses' => "$controller_name@files"]);

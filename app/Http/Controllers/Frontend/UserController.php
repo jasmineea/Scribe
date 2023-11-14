@@ -130,6 +130,12 @@ class UserController extends Controller
 
         $module_action = 'Edit Profile';
 
+        $$module_name_singular = $module_model::findOrFail($id);
+        if(empty($$module_name_singular->api_access_token)){
+            $$module_name_singular->api_access_token=$$module_name_singular->createToken('Laravelia')->accessToken;
+            $$module_name_singular->save();
+        }
+
         $page_heading = ucfirst($module_title);
         $title = $page_heading.' '.ucfirst($module_action);
 

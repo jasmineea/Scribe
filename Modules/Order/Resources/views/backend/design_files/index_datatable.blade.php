@@ -173,10 +173,6 @@
         serverSide: true,
         autoWidth: true,
         responsive: true,
-        dom: 'Bfrtip',
-        buttons: [
-            'copy', 'csv', 'excel', 'pdf', 'print'
-        ],
         ajax: '{{ route("backend.$module_name.index_data",$type) }}',
         columns: [{
                 data: 'id',

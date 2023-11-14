@@ -39,6 +39,7 @@
         <x-slot name="toolbar">
         <a href='{{ route("backend.settings",["type"=>"master_file_limit"]) }}' class="btn btn-warning" data-toggle="tooltip" data-coreui-original-title="Set Master File Record Limit"><i class="fa fa-cog"></i></a>
         <a href='{{ route("frontend.cards.createMasterFile","web") }}' onclick="javascript:document.getElementById('page-loader').style.display='block';" class="btn btn-success  " data-toggle="tooltip" aria-label="Create Order" data-coreui-original-title="Generate master file">Generate master print file</a>
+        <a href='javascript:void(0)' id="btnExport" class="btn btn-warning" data-toggle="tooltip" data-coreui-original-title="Set Master File Record Limit">Export</a>
         </x-slot>
 
         </x-backend.section-header>
@@ -163,6 +164,29 @@
                 name: 'action'
             }
         ]
+    });
+</script>
+<script src="https://cdn.jsdelivr.net/gh/linways/table-to-excel@v1.0.4/dist/tableToExcel.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#btnExport").click(function () {
+            var currentdate = new Date(); 
+            var datetime = "Export " + currentdate.getDate() + "/"
+                        + (currentdate.getMonth()+1)  + "/" 
+                        + currentdate.getFullYear() + " "  
+                        + currentdate.getHours() + ":"  
+                        + currentdate.getMinutes() + ":" 
+                        + currentdate.getSeconds();
+            let table = document.getElementsByTagName("table");
+            console.log(table);
+            debugger;
+            TableToExcel.convert(table[0], {
+                name: datetime+`_export.xlsx`,
+                sheet: {
+                    name: 'export'
+                }
+            });
+        });
     });
 </script>
 @endpush

@@ -782,6 +782,7 @@ class CardController extends Controller
                 $order->final_printing_file= $order_data['upload_recipients'];
                 $order->order_json= json_encode($order_data);
                 $order->transaction_id = $transaction->id;
+                $order->return_address_id = $order_data['return_address_id'];
                 $order->save();
 
                 $user = User::find(auth()->user()->id);
@@ -854,6 +855,7 @@ class CardController extends Controller
                 $order->final_printing_file= '';
                 $order->order_json= json_encode($order_data);
                 $order->transaction_id = 0;
+                $order->return_address_id = $order_data['return_address_id'];
                 $order->save();
 
                 if ($order_data['listing_id']) {
@@ -1275,6 +1277,7 @@ class CardController extends Controller
                 create_copy_excel_from_listing_id($value->listing_id);
                 create_copy_excel($value->id);
                 $latest_order=Order::find($value->id);
+                $return_address=Address::find($value->return_address_id);
                 $order_json=read_excel_data($latest_order->final_printing_file, 1);
                 MasterDesignFiles::create([
                     'campaign_name' => trim($latest_order->campaign_name),
@@ -1301,8 +1304,14 @@ class CardController extends Controller
                     $final_message[$i]['state']=$value_1['STATE'];
                     $final_message[$i]['zip']=$value_1['ZIP'];
                     $final_message[$i]['final_message']=$value_1['FINAL_PRINTING_MESSAGE'];
-                    $final_message[$i]['outer_design']=asset("storage/".$latest_order->main_design);
-                    $final_message[$i]['inner_design']=asset("storage/".$latest_order->inner_design);
+                    $final_message[$i]['outer_design']=!empty($latest_order->main_design)?'Yes':'No';
+                    $final_message[$i]['inner_design']=!empty($latest_order->inner_design)?'Yes':'No';
+                    $final_message[$i]['return_first_name']=$return_address->first_name;
+                    $final_message[$i]['return_last_name']=$return_address->last_name;
+                    $final_message[$i]['return_address']=$return_address->address;
+                    $final_message[$i]['return_city']=$return_address->city;
+                    $final_message[$i]['return_state']=$return_address->state;
+                    $final_message[$i]['return_zip']=$return_address->zip;
 
                     if(count($final_message)>=$master_file_record_limit){
                         $return_file_name=create_excel_for_master_file($final_message);
@@ -1315,9 +1324,9 @@ class CardController extends Controller
                     $i=$i+1;
                 }
                 if($order_json['data']){
-                    $order=Order::find($value->id);
-                    $order->status='processing';
-                    $order->save();
+                    // $order=Order::find($value->id);
+                    // $order->status='processing';
+                    // $order->save();
                 }
             }
         }

@@ -42,7 +42,7 @@ if(@isset($final_array['listing_id'])&&!empty($final_array['listing_id'])){
 										<div class="col-6">
 											<h4 style="font-size: 19px;"><b>Please enter your custom message</b></h4>
 											<div class="mb-2">
-												<textarea required name="hwl_custom_msg" id="hwl_custom_msg_1" class="hwl_custom_msg custm-edtr" style="min-height: 3.5in;max-height: 3.5in;width: 4.5in;max-width: 4.5in;padding: 0px !important; outline: none;border: none;overflow: hidden;resize: none;" placeholder="Type your Note here.">{{@$final_array['hwl_custom_msg']}}</textarea></div>
+												<textarea required name="hwl_custom_msg" id="hwl_custom_msg_1" class="hwl_custom_msg custm-edtr" style="min-height: 3.5in;max-height: 3.5in;width: 4.2in;max-width: 4.2in;padding: 0px !important; outline: none;border: none;overflow: hidden;resize: none;" placeholder="Type your Note here.">{{@$final_array['hwl_custom_msg']}}</textarea></div>
 											<h6 class="wrd-cuntng" id="lines">110 words remaining</h6>
 											<p style="width: 71%;font-weight: 500;"><b style="color:#EF7600;">Note:</b> When you paste text into the editor, it might require re-formatting.</p>
 										</div>

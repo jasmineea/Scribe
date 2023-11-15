@@ -1481,23 +1481,25 @@ if (! function_exists('create_excel_for_master_file')) {
             $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
             $sheet = $spreadsheet->getActiveSheet();
 
-            $sheet->setCellValue('A1', 'Campaign Date');
-            $sheet->setCellValue('B1', 'Campaign ID');
-            $sheet->setCellValue('C1', 'Campaign Name');
-            $sheet->setCellValue('D1', 'Campaign Order');
-            $sheet->setCellValue('E1', 'Campaign Status');
-            $sheet->setCellValue('F1', 'Recipient First Name');
-            $sheet->setCellValue('G1', 'Recipient Last Name');
-            $sheet->setCellValue('H1', 'Recipient Company');
-            $sheet->setCellValue('I1', 'Recipient Email');
-            $sheet->setCellValue('J1', 'Recipient Phone');
-            $sheet->setCellValue('K1', 'Recipient Address');
-            $sheet->setCellValue('L1', 'Recipient City');
-            $sheet->setCellValue('M1', 'Recipient State');
-            $sheet->setCellValue('N1', 'Recipient Zip');
-            $sheet->setCellValue('O1', 'Custom Message ID');
-            $sheet->setCellValue('P1', 'Outer Design');
-            $sheet->setCellValue('Q1', 'Inner Design');
+            $sheet->setCellValue('A1', 'Campaign Name');
+            $sheet->setCellValue('B1', 'Recipient First Name');
+            $sheet->setCellValue('C1', 'Recipient Last Name');
+            $sheet->setCellValue('D1', 'Recipient Company');
+            $sheet->setCellValue('E1', 'Recipient Email');
+            $sheet->setCellValue('F1', 'Recipient Phone');
+            $sheet->setCellValue('G1', 'Recipient Address');
+            $sheet->setCellValue('H1', 'Recipient City');
+            $sheet->setCellValue('I1', 'Recipient State');
+            $sheet->setCellValue('J1', 'Recipient Zip');
+            $sheet->setCellValue('K1', 'Return First Name');
+            $sheet->setCellValue('L1', 'Return Last Name');
+            $sheet->setCellValue('M1', 'Return Street Address');
+            $sheet->setCellValue('N1', 'Return City');
+            $sheet->setCellValue('O1', 'Return Sate');
+            $sheet->setCellValue('P1', 'Return Zip Code');
+            $sheet->setCellValue('Q1', 'Outer Design');
+            $sheet->setCellValue('R1', 'Inner Design');
+            $sheet->setCellValue('S1', 'Custom Message ID');
 
             $latest_record=MasterFiles::latest()->first();
             $master_id=1;
@@ -1513,26 +1515,26 @@ if (! function_exists('create_excel_for_master_file')) {
                 $list->message = $row['final_message'];
                 $list->master_file_id = $master_id;
                 $list->save();
-
-                $sheet->setCellValue('A'.$i, $row['order_date']);
-                $sheet->setCellValue('B'.$i, $row['order_id']);
-                $sheet->setCellValue('C'.$i, $row['order_name']);
-                $sheet->setCellValue('D'.$i, $row['order_owner']);
-                $sheet->setCellValue('E'.$i, $row['order_status']);
-                $sheet->setCellValue('F'.$i, $row['first_name']);
-                $sheet->setCellValue('G'.$i, $row['last_name']);
-                $sheet->setCellValue('H'.$i, $row['email']);
-                $sheet->setCellValue('I'.$i, $row['company_name']);
-                $sheet->setCellValue('J'.$i, $row['phone']);
-                $sheet->setCellValue('K'.$i, $row['address']);
-                $sheet->setCellValue('L'.$i, $row['city']);
-                $sheet->setCellValue('M'.$i, $row['state']);
-                $sheet->setCellValue('N'.$i, $row['zip']);
-                $sheet->setCellValue('O'.$i, $list->id);
-                $sheet->setCellValue('P'.$i, '=Hyperlink("'.$row['outer_design'].'","View Outer Design")');
-                $sheet->setCellValue('Q'.$i, '=Hyperlink("'.$row['inner_design'].'","View Inner Design")');
-                $sheet->getHyperlink('P'.$i)->setUrl($row['outer_design']);
-                $sheet->getHyperlink('Q'.$i)->setUrl($row['inner_design']);
+               
+                $sheet->setCellValue('A'.$i, $row['order_name']);
+                $sheet->setCellValue('B'.$i, $row['first_name']);
+                $sheet->setCellValue('C'.$i, $row['last_name']);
+                $sheet->setCellValue('D'.$i, $row['email']);
+                $sheet->setCellValue('E'.$i, $row['company_name']);
+                $sheet->setCellValue('F'.$i, $row['phone']);
+                $sheet->setCellValue('G'.$i, $row['address']);
+                $sheet->setCellValue('H'.$i, $row['city']);
+                $sheet->setCellValue('I'.$i, $row['state']);
+                $sheet->setCellValue('J'.$i, $row['zip']);
+                $sheet->setCellValue('K'.$i, $row['return_first_name']);
+                $sheet->setCellValue('L'.$i, $row['return_last_name']);
+                $sheet->setCellValue('M'.$i, $row['return_address']);
+                $sheet->setCellValue('N'.$i, $row['return_city']);
+                $sheet->setCellValue('O'.$i, $row['return_state']);
+                $sheet->setCellValue('P'.$i, $row['return_zip']);
+                $sheet->setCellValue('Q'.$i, $row['outer_design']);
+                $sheet->setCellValue('R'.$i, $row['inner_design']);
+                $sheet->setCellValue('S'.$i, $list->id);
                 $i++;
             }
             
@@ -1617,7 +1619,7 @@ if (! function_exists('enevolopePreview')) {
 
         //===================================
         $textbox = new Box($img);
-        $textbox->setFontSize(35);
+        $textbox->setFontSize(40);
         $textbox->setFontFace($fontFile);
         $textbox->setFontColor(new Color(0, 0, 255)); // black
         $textbox->setBox(
@@ -1908,7 +1910,12 @@ if (! function_exists('generate_Preview_Image')) {
             $sheet = $spreadsheet->getActiveSheet();
             $row_limit    = $sheet->getHighestDataRow();
             $column_limit = $sheet->getHighestDataColumn();
-            $next_column = 'O';
+            $next_column = 'S';
+            foreach(range('A',$column_limit) as $letter) {
+                if($sheet->getCell($letter.'1')->getValue()=='Custom Message ID'){
+                    $next_column=$letter;
+                }
+            }
             $row_range    = range(2, $row_limit);
 
             $sheet->setCellValue($next_column.'1', 'Custom Message');

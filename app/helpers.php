@@ -1474,9 +1474,67 @@ if (! function_exists('export_file_from_list_id')) {
         }
     }
 }
+function convertImageToPdfAndMerge($outer_design_file,$inner_design_file){
+
+    // Create PDF instance
+    $pdf = new TCPDF();
+
+    foreach ($outer_design_file as $key => $value) {
+        if($value){
+                $file_path=public_path("storage/".$value);
+                $file_path_1=str_replace(".png", ".pdf",$file_path);
+              
+                // Add a page
+                $pdf->AddPage();
+
+                // Set image scale factor
+                $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+
+                // Set image
+                $pdf->Image($file_path, 15, 15, 180, 0, '', '', '', false, 300, '', false, false, 0);
+                
+                // Output PDF to browser or save it to a file
+        }else{
+             // Add a page
+             $pdf->AddPage();
+        }
+    }
+    if (ob_get_contents()) ob_end_clean();
+    $outer_file_name=time()."-outer-output.pdf";
+    $pdf->Output(public_path("storage/".$outer_file_name), 'F'); // 'D' sends the file inline to the browser for download
+    // Create PDF instance
+    $pdf = new TCPDF();
+
+    foreach ($inner_design_file as $key => $value) {
+        if($value){
+                $file_path=public_path("storage/".$value);
+                $file_path_1=str_replace(".png", ".pdf",$file_path);
+                
+                // Add a page
+                $pdf->AddPage();
+
+                // Set image scale factor
+                $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+
+                // Set image
+                $pdf->Image($file_path, 15, 15, 180, 0, '', '', '', false, 300, '', false, false, 0);
+                
+                // Output PDF to browser or save it to a file
+        }else{
+            // Add a page
+            $pdf->AddPage();
+       }
+    }
+    if (ob_get_contents()) ob_end_clean();
+    $inner_file_name=time()."-inner-output.pdf";
+    $pdf->Output(public_path("storage/".$inner_file_name), 'F'); // 'D' sends the file inline to the browser for download
+    return ['outer_file_name'=>$outer_file_name,'inner_file_name'=>$inner_file_name];
+}
 if (! function_exists('create_excel_for_master_file')) {
     function create_excel_for_master_file($data)
     {
+        $outer_design_files=[];
+        $inner_design_files=[];
         try {
             $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
             $sheet = $spreadsheet->getActiveSheet();
@@ -1535,13 +1593,15 @@ if (! function_exists('create_excel_for_master_file')) {
                 $sheet->setCellValue('Q'.$i, $row['outer_design']);
                 $sheet->setCellValue('R'.$i, $row['inner_design']);
                 $sheet->setCellValue('S'.$i, $list->id);
+                $outer_design_files[]=$row['outer_design_file'];
+                $inner_design_files[]=$row['inner_design_file'];
                 $i++;
             }
-            
+            $file_path=convertImageToPdfAndMerge($outer_design_files,$inner_design_files);
             $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, "Xlsx");
             $file_name=$master_id.'_'.date("Y-m-d")."_".date("H:i:s")."_".count($data).'.xlsx';
             $writer->save(public_path('storage/'.$file_name));
-            return['file_name'=>$file_name];
+            return array_merge(['file_name'=>$file_name],$file_path);
         } catch (Exception $e) {
         }
     }

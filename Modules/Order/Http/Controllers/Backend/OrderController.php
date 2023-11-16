@@ -114,7 +114,7 @@ class OrderController extends Controller
 
         $type=$request->query('type');
 
-        $$module_name = $module_model::select('id', 'uploaded_recipient_file', 'post_uploaded_recipient_file','downloaded_times','downloaded_at','total_records', 'created_at');
+        $$module_name = $module_model::select('id', 'uploaded_recipient_file','inner_design_file','outer_design_file', 'post_uploaded_recipient_file','downloaded_times','downloaded_at','total_records', 'created_at');
 
         $data = $$module_name;
 
@@ -122,6 +122,12 @@ class OrderController extends Controller
 
                         ->addColumn('uploaded_recipient_file', function ($data) {
                             return  '<a href="'.env('APP_URL').'/admin/orders/downloadAction/'.$data->uploaded_recipient_file.'/'.$data->id.'">'.$data->uploaded_recipient_file.'</a>';
+                        })
+                        ->addColumn('inner_design_file', function ($data) {
+                            return  '<a href="'.env('APP_URL').'/admin/orders/downloadAction/'.$data->inner_design_file.'/'.$data->id.'">'.$data->inner_design_file.'</a>';
+                        })
+                        ->addColumn('outer_design_file', function ($data) {
+                            return  '<a href="'.env('APP_URL').'/admin/orders/downloadAction/'.$data->outer_design_file.'/'.$data->id.'">'.$data->outer_design_file.'</a>';
                         })
                         ->addColumn('post_uploaded_recipient_file', function ($data) {
                             return  '<a href="'.env('APP_URL').'/admin/orders/downloadAction/'.$data->post_uploaded_recipient_file.'/'.$data->id.'">'.$data->post_uploaded_recipient_file.'</a><form enctype="multipart/form-data" method="post" action="'.route('frontend.cards.uploadPreBccFile').'"><input type="file" onchange="form.submit()" name="upload_post_file" ><input type="hidden" name="_token" value="'.csrf_token().'" /><input type="hidden" name="master_id" value="'.$data->id.'"></form>';
@@ -144,7 +150,7 @@ class OrderController extends Controller
                             $master_file_record_limit = setting('master_file_record_limit');
                             return  $master_file_record_limit<$data->total_records?"<a href='/admin/orders/dividefile/".$data->id."'>Divide</a>":"-";
                         })
-                        ->rawColumns(['uploaded_recipient_file','post_uploaded_recipient_file','action'])
+                        ->rawColumns(['uploaded_recipient_file','inner_design_file','outer_design_file','post_uploaded_recipient_file','action'])
                         ->orderColumns(['id'], '-:column $1')
                         ->make(true);
     }

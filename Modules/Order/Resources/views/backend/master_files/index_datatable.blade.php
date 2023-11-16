@@ -58,19 +58,19 @@
                                 Post BCC File
                             </th>
                             <th>
-                                Total Records
+                                Inner Design File
                             </th>
                             <th>
-                                Downloaded
+                                Outer Design File
+                            </th>
+                            <th>
+                                Total Records
                             </th>
                             <th>
                                 Downloaded At
                             </th>
                             <th>
                                 Created At
-                            </th>
-                            <th class="text-end">
-                                Action
                             </th>
                         </tr>
                     </thead>
@@ -129,12 +129,16 @@
                 name: 'post_uploaded_recipient_file'
             },
             {
-                data: 'total_records',
-                name: 'total_records'
+                data: 'inner_design_file',
+                name: 'inner_design_file'
             },
             {
-                data: 'downloaded_times',
-                name: 'downloaded_times'
+                data: 'outer_design_file',
+                name: 'outer_design_file'
+            },
+            {
+                data: 'total_records',
+                name: 'total_records'
             },
             {
                 data: 'downloaded_at',
@@ -143,10 +147,6 @@
             {
                 data: 'created_at',
                 name: 'created_at'
-            },
-            {
-                data: 'action',
-                name: 'action'
             }
         ]
     });

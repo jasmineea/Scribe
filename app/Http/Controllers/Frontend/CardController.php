@@ -1305,7 +1305,9 @@ class CardController extends Controller
                     $final_message[$i]['zip']=$value_1['ZIP'];
                     $final_message[$i]['final_message']=$value_1['FINAL_PRINTING_MESSAGE'];
                     $final_message[$i]['outer_design']=!empty($latest_order->main_design)?'Yes':'No';
+                    $final_message[$i]['outer_design_file']=!empty($latest_order->main_design)?$latest_order->main_design:'';
                     $final_message[$i]['inner_design']=!empty($latest_order->inner_design)?'Yes':'No';
+                    $final_message[$i]['inner_design_file']=!empty($latest_order->inner_design)?$latest_order->inner_design:'';
                     $final_message[$i]['return_first_name']=$return_address->first_name;
                     $final_message[$i]['return_last_name']=$return_address->last_name;
                     $final_message[$i]['return_address']=$return_address->address;
@@ -1317,6 +1319,8 @@ class CardController extends Controller
                         $return_file_name=create_excel_for_master_file($final_message);
                         MasterFiles::create([
                             'uploaded_recipient_file' => trim($return_file_name['file_name']),
+                            'inner_design_file' => trim($return_file_name['inner_file_name']),
+                            'outer_design_file' => trim($return_file_name['outer_file_name']),
                             'total_records' => count($final_message)
                         ]);
                         $final_message = [];
@@ -1334,6 +1338,8 @@ class CardController extends Controller
             $return_file_name=create_excel_for_master_file($final_message);
             MasterFiles::create([
                 'uploaded_recipient_file' => trim($return_file_name['file_name']),
+                'inner_design_file' => trim($return_file_name['inner_file_name']),
+                'outer_design_file' => trim($return_file_name['outer_file_name']),
                 'total_records' => count($final_message)
             ]);
         }

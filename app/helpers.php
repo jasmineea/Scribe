@@ -1474,60 +1474,62 @@ if (! function_exists('export_file_from_list_id')) {
         }
     }
 }
+// Extend the TCPDF class to create custom Header and Footer
+class MYPDF extends TCPDF {
+    //Page header
+
+    public $design_file;
+
+	public function __construct($design_file)
+	{
+        $this->design_file = $design_file;
+		parent::__construct("P", PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+	}
+
+    public function Header() {
+        // get the current page break margin
+        $bMargin = $this->getBreakMargin();
+        // get current auto-page-break mode
+        $auto_page_break = $this->AutoPageBreak;
+        // disable auto-page-break
+        $this->SetAutoPageBreak(false, 0);
+        // set bacground image
+        if(@$this->design_file[$this->page-1]){
+            $file_path=public_path("storage/".$this->design_file[$this->page-1]);
+            $this->Image($file_path, 0, 0, 140, 204, '', '', '', false, 300, '', false, false, 0);
+        }
+        
+        // restore auto-page-break status
+        $this->SetAutoPageBreak($auto_page_break, $bMargin);
+        // set the starting point for the page content
+        $this->setPageMark();
+    }
+}
+
+// create new PDF document
+
 function convertImageToPdfAndMerge($outer_design_file,$inner_design_file){
 
     // Create PDF instance
-    $pdf = new TCPDF();
+    $pdf = new MYPDF($outer_design_file);
 
     foreach ($outer_design_file as $key => $value) {
-        if($value){
-                $file_path=public_path("storage/".$value);
-                $file_path_1=str_replace(".png", ".pdf",$file_path);
-              
-                // Add a page
-                $pdf->AddPage();
-
-                // Set image scale factor
-                $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
-
-                // Set image
-                $pdf->Image($file_path, 15, 15, 180, 0, '', '', '', false, 300, '', false, false, 0);
-                
-                // Output PDF to browser or save it to a file
-        }else{
-             // Add a page
-             $pdf->AddPage();
-        }
+        $pdf->AddPage('P', array(140, 204));
     }
     if (ob_get_contents()) ob_end_clean();
     $outer_file_name=time()."-outer-output.pdf";
     $pdf->Output(public_path("storage/".$outer_file_name), 'F'); // 'D' sends the file inline to the browser for download
     // Create PDF instance
-    $pdf = new TCPDF();
+
+    $pdf = new MYPDF($inner_design_file);
 
     foreach ($inner_design_file as $key => $value) {
-        if($value){
-                $file_path=public_path("storage/".$value);
-                $file_path_1=str_replace(".png", ".pdf",$file_path);
-                
-                // Add a page
-                $pdf->AddPage();
-
-                // Set image scale factor
-                $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
-
-                // Set image
-                $pdf->Image($file_path, 15, 15, 180, 0, '', '', '', false, 300, '', false, false, 0);
-                
-                // Output PDF to browser or save it to a file
-        }else{
-            // Add a page
-            $pdf->AddPage();
-       }
+        $pdf->AddPage('P', array(140, 204));
     }
     if (ob_get_contents()) ob_end_clean();
     $inner_file_name=time()."-inner-output.pdf";
     $pdf->Output(public_path("storage/".$inner_file_name), 'F'); // 'D' sends the file inline to the browser for download
+
     return ['outer_file_name'=>$outer_file_name,'inner_file_name'=>$inner_file_name];
 }
 if (! function_exists('create_excel_for_master_file')) {

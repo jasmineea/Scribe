@@ -1319,8 +1319,6 @@ class CardController extends Controller
                         $return_file_name=create_excel_for_master_file($final_message);
                         MasterFiles::create([
                             'uploaded_recipient_file' => trim($return_file_name['file_name']),
-                            'inner_design_file' => trim($return_file_name['inner_file_name']),
-                            'outer_design_file' => trim($return_file_name['outer_file_name']),
                             'total_records' => count($final_message)
                         ]);
                         $final_message = [];
@@ -1328,9 +1326,9 @@ class CardController extends Controller
                     $i=$i+1;
                 }
                 if($order_json['data']){
-                    $order=Order::find($value->id);
-                    $order->status='processing';
-                    $order->save();
+                    // $order=Order::find($value->id);
+                    // $order->status='processing';
+                    // $order->save();
                 }
             }
         }
@@ -1338,8 +1336,6 @@ class CardController extends Controller
             $return_file_name=create_excel_for_master_file($final_message);
             MasterFiles::create([
                 'uploaded_recipient_file' => trim($return_file_name['file_name']),
-                'inner_design_file' => trim($return_file_name['inner_file_name']),
-                'outer_design_file' => trim($return_file_name['outer_file_name']),
                 'total_records' => count($final_message)
             ]);
         }
@@ -1407,7 +1403,7 @@ class CardController extends Controller
                 $order = MasterFiles::find($request->get('master_id'));
                 $order->post_uploaded_recipient_file = $image_path;
                 $order->save();
-                replace_message_id_with_message($request->get('master_id'));
+                replace_message_id_with_message($request->get('master_id'),"Post_BCC_".$orignal_name);
                 Session::flash('success', 'Post BCC File Generated Successfully.');
                 return redirect()->route('backend.orders.masterfiles');
         }

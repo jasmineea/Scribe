@@ -1328,9 +1328,9 @@ class CardController extends Controller
                     $i=$i+1;
                 }
                 if($order_json['data']){
-                    // $order=Order::find($value->id);
-                    // $order->status='processing';
-                    // $order->save();
+                    $order=Order::find($value->id);
+                    $order->status='processing';
+                    $order->save();
                 }
             }
         }

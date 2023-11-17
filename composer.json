@@ -8,6 +8,7 @@
         "php": "^8.1",
         "alexusmai/laravel-file-manager": "^3.0",
         "arcanedev/log-viewer": "^10.0",
+        "clegginabox/pdf-merger": "dev-master",
         "guzzlehttp/guzzle": "^7.5",
         "hashids/hashids": "^5.0",
         "laracasts/flash": "^3.2",
@@ -29,7 +30,9 @@
         "spatie/laravel-medialibrary": "^10.7",
         "spatie/laravel-permission": "^5.9",
         "square/square": "27.0.0.20230517",
+        "stil/gd-text": "^1.1",
         "stripe/stripe-php": "^10.13",
+        "tecnickcom/tcpdf": "^6.6",
         "yajra/laravel-datatables-oracle": "^10.3"
     },
     "require-dev": {

@@ -1504,12 +1504,18 @@ class MYPDF extends TCPDF {
         // set the starting point for the page content
         $this->setPageMark();
     }
+    public function Footer() 
+    { 
+        $this->SetY(-15); 
+        $this->SetFont('helvetica', 'I', 8); 
+
+    }
 }
 
 // create new PDF document
 
-function convertImageToPdfAndMerge($outer_design_file,$inner_design_file){
-
+function convertImageToPdfAndMerge($outer_design_file,$inner_design_file,$file_name){
+    $file_name = str_replace(".xlsx", "",$file_name);
     // Create PDF instance
     $pdf = new MYPDF($outer_design_file);
 
@@ -1517,7 +1523,7 @@ function convertImageToPdfAndMerge($outer_design_file,$inner_design_file){
         $pdf->AddPage('P', array(140, 204));
     }
     if (ob_get_contents()) ob_end_clean();
-    $outer_file_name=time()."-outer-output.pdf";
+    $outer_file_name="Outer-design-".$file_name.".pdf";
     $pdf->Output(public_path("storage/".$outer_file_name), 'F'); // 'D' sends the file inline to the browser for download
     // Create PDF instance
 
@@ -1527,7 +1533,7 @@ function convertImageToPdfAndMerge($outer_design_file,$inner_design_file){
         $pdf->AddPage('P', array(140, 204));
     }
     if (ob_get_contents()) ob_end_clean();
-    $inner_file_name=time()."-inner-output.pdf";
+    $inner_file_name="Inner-design-".$file_name.".pdf";
     $pdf->Output(public_path("storage/".$inner_file_name), 'F'); // 'D' sends the file inline to the browser for download
 
     return ['outer_file_name'=>$outer_file_name,'inner_file_name'=>$inner_file_name];
@@ -1535,8 +1541,6 @@ function convertImageToPdfAndMerge($outer_design_file,$inner_design_file){
 if (! function_exists('create_excel_for_master_file')) {
     function create_excel_for_master_file($data)
     {
-        $outer_design_files=[];
-        $inner_design_files=[];
         try {
             $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
             $sheet = $spreadsheet->getActiveSheet();
@@ -1573,6 +1577,8 @@ if (! function_exists('create_excel_for_master_file')) {
                 
                 $list = new MasterFileMessage;
                 $list->message = $row['final_message'];
+                $list->inner_design = $row['outer_design_file'];
+                $list->outer_design = $row['inner_design_file'];
                 $list->master_file_id = $master_id;
                 $list->save();
                
@@ -1595,15 +1601,12 @@ if (! function_exists('create_excel_for_master_file')) {
                 $sheet->setCellValue('Q'.$i, $row['outer_design']);
                 $sheet->setCellValue('R'.$i, $row['inner_design']);
                 $sheet->setCellValue('S'.$i, $list->id);
-                $outer_design_files[]=$row['outer_design_file'];
-                $inner_design_files[]=$row['inner_design_file'];
                 $i++;
             }
-            $file_path=convertImageToPdfAndMerge($outer_design_files,$inner_design_files);
             $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, "Xlsx");
             $file_name=$master_id.'_'.date("Y-m-d")."_".date("H:i:s")."_".count($data).'.xlsx';
             $writer->save(public_path('storage/'.$file_name));
-            return array_merge(['file_name'=>$file_name],$file_path);
+            return ['file_name'=>$file_name];
         } catch (Exception $e) {
         }
     }
@@ -1957,14 +1960,24 @@ if (! function_exists('generate_Preview_Image')) {
         return $destination;
     }
     if (! function_exists('replace_message_id_with_message')) {
-    function replace_message_id_with_message($master_id)
+    function replace_message_id_with_message($master_id,$file_name)
     {
+        $outer_design_files=[];
+        $inner_design_files=[];
         try {
             $master_file = MasterFiles::where('id', $master_id)->first();
             $master_message_data = MasterFileMessage::where('master_file_id', $master_id)->pluck(
                 'message', 
                 'id'
               )->all();
+            $outer_design_data = MasterFileMessage::where('master_file_id', $master_id)->pluck(
+            'outer_design', 
+            'id'
+            )->all();
+            $inner_design_data = MasterFileMessage::where('master_file_id', $master_id)->pluck(
+            'inner_design', 
+            'id'
+            )->all();
             $order_json=read_excel_data($master_file->post_uploaded_recipient_file, 1);
             
 
@@ -1987,10 +2000,16 @@ if (! function_exists('generate_Preview_Image')) {
                 if (isset($master_message_data[$message_id])) {
                     $sheet->setCellValue($next_column.$row, $master_message_data[$message_id]);
                 }
+                $outer_design_files[]=isset($outer_design_data[$message_id])?$outer_design_data[$message_id]:'';
+                $inner_design_files[]=isset($inner_design_data[$message_id])?$inner_design_data[$message_id]:'';
             }
             $file_name = $master_file->post_uploaded_recipient_file;
             $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, "Xlsx");
             $writer->save(public_path('storage/'.$file_name));
+            $file_path=convertImageToPdfAndMerge($outer_design_files,$inner_design_files,$file_name);
+            $master_file->inner_design_file=trim($file_path['inner_file_name']);
+            $master_file->outer_design_file=trim($file_path['outer_file_name']);
+            $master_file->save();
         } catch (Exception $e) {
         }
     }

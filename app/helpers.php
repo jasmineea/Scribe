@@ -18,7 +18,6 @@ use App\Events\Frontend\OrderPlaced;
 use App\Models\MetaData;
 use App\Models\MasterFileMessage;
 use GDText\Box;
-use DB;
 use GDText\Color;
 // use Stripe;
 use Illuminate\Support\Facades\Session;

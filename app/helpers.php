@@ -18,6 +18,7 @@ use App\Events\Frontend\OrderPlaced;
 use App\Models\MetaData;
 use App\Models\MasterFileMessage;
 use GDText\Box;
+use DB;
 use GDText\Color;
 // use Stripe;
 use Illuminate\Support\Facades\Session;
@@ -1539,7 +1540,7 @@ function convertImageToPdfAndMerge($outer_design_file,$inner_design_file,$file_n
     return ['outer_file_name'=>$outer_file_name,'inner_file_name'=>$inner_file_name];
 }
 if (! function_exists('create_excel_for_master_file')) {
-    function create_excel_for_master_file($data)
+    function create_excel_for_master_file($data,$master_id)
     {
         try {
             $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
@@ -1565,11 +1566,7 @@ if (! function_exists('create_excel_for_master_file')) {
             $sheet->setCellValue('R1', 'Inner Design');
             $sheet->setCellValue('S1', 'Custom Message ID');
 
-            $latest_record=MasterFiles::latest()->first();
-            $master_id=1;
-            if($latest_record){
-                $master_id=$latest_record->id+1;
-            }
+            $latest_record=MasterFiles::find($master_id);
 
             $i=2;
             $meta_columns=[];
@@ -1577,8 +1574,8 @@ if (! function_exists('create_excel_for_master_file')) {
                 
                 $list = new MasterFileMessage;
                 $list->message = $row['final_message'];
-                $list->inner_design = $row['outer_design_file'];
-                $list->outer_design = $row['inner_design_file'];
+                $list->inner_design = $row['inner_design_file'];
+                $list->outer_design = $row['outer_design_file'];
                 $list->master_file_id = $master_id;
                 $list->save();
                
@@ -1606,6 +1603,8 @@ if (! function_exists('create_excel_for_master_file')) {
             $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, "Xlsx");
             $file_name=$master_id.'_'.date("Y-m-d")."_".date("H:i:s")."_".count($data).'.xlsx';
             $writer->save(public_path('storage/'.$file_name));
+            $latest_record->uploaded_recipient_file = trim($file_name);
+            $latest_record->save();
             return ['file_name'=>$file_name];
         } catch (Exception $e) {
         }

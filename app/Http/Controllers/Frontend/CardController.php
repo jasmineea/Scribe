@@ -1316,28 +1316,27 @@ class CardController extends Controller
                     $final_message[$i]['return_zip']=$return_address->zip;
 
                     if(count($final_message)>=$master_file_record_limit){
-                        $return_file_name=create_excel_for_master_file($final_message);
-                        MasterFiles::create([
-                            'uploaded_recipient_file' => trim($return_file_name['file_name']),
+                        
+                        $master_record = MasterFiles::create([
                             'total_records' => count($final_message)
                         ]);
+                        create_excel_for_master_file($final_message,$master_record->id);
                         $final_message = [];
                     }
                     $i=$i+1;
                 }
                 if($order_json['data']){
-                    // $order=Order::find($value->id);
-                    // $order->status='processing';
-                    // $order->save();
+                    $order=Order::find($value->id);
+                    $order->status='processing';
+                    $order->save();
                 }
             }
         }
         if($final_message){
-            $return_file_name=create_excel_for_master_file($final_message);
-            MasterFiles::create([
-                'uploaded_recipient_file' => trim($return_file_name['file_name']),
+            $master_record = MasterFiles::create([
                 'total_records' => count($final_message)
             ]);
+            create_excel_for_master_file($final_message,$master_record->id);
         }
         if($type){
             Log::info(label_case('master file created from on going order').' | User:'.Auth::user()->name.'(ID:'.Auth::user()->id.')');

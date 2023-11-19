@@ -971,6 +971,11 @@ if (! function_exists('read_excel_data')) {
             $row_limit    = $sheet->getHighestDataRow();
             $column_limit = $sheet->getHighestDataColumn();
             $row_range    = range(2, $row_limit);
+            
+            if($row_limit<=1){
+                $row_range=[];
+            }
+
             for ($i = 'A'; $i !== $column_limit; $i++){
                 $column_range[]=$i;
             }
@@ -1273,7 +1278,6 @@ if (! function_exists('create_order_from_ongoing_order')) {
 
         $order_json=json_decode($ongoing_order['order_json'], 1);
         $order_json['total_recipient']=$card_to_order;
-
         $order = new Order;
         $order->user_id = $ongoing_order['user_id'];
         $order->order_amount= $order_amount;
@@ -1281,6 +1285,11 @@ if (! function_exists('create_order_from_ongoing_order')) {
         $order->campaign_name= $ongoing_order['campaign_name']." B".$batch;
         $order->campaign_type= 'one-time';
         $order->campaign_message= $ongoing_order['campaign_message'];
+        $order->campaign_type_2= 'One-time';
+        $order->front_design= $ongoing_order['front_design'];
+        $order->back_design= $ongoing_order['back_design'];
+        $order->main_design= $ongoing_order['main_design'];
+        $order->inner_design= $ongoing_order['inner_design'];
         $order->schedule_status= 0;
         $order->auto_charge= 0;
         $order->threshold= 0;
@@ -1289,6 +1298,7 @@ if (! function_exists('create_order_from_ongoing_order')) {
         $order->final_printing_file= '';
         $order->order_json= json_encode($order_json);
         $order->transaction_id = $transaction->id;
+        $order->return_address_id = $ongoing_order['return_address_id'];
         $order->save();
 
         $user = User::find(auth()->user()->id);

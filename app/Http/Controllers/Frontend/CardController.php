@@ -846,6 +846,10 @@ class CardController extends Controller
                 $order->campaign_type= $order_data['campaign_type']=='on-going'?'on-going':'one-time';
                 $order->campaign_type_2= $type_sort_code_1[$order_data['campaign_type']];
                 $order->campaign_message= 'order_'.$order_data['preview_image'];
+                $order->front_design= $order_data['front_design'];
+                $order->back_design= $order_data['back_design'];
+                $order->main_design= $order_data['main_design'];
+                $order->inner_design= $order_data['inner_design'];
                 $order->schedule_status= $order_data['publish_type']=='schedule'?1:0;
                 $order->auto_charge= $order_data['auto_charge']?1:0;
                 $order->threshold= $order_data['threshold']?$order_data['threshold']:10;

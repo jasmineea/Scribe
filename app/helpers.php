@@ -1215,12 +1215,24 @@ if (! function_exists('auto_create_order')) {
         $master_file_record_limit = setting('master_file_record_limit');
         $orders = Order::where('campaign_type', 'on-going')->where('status', 'pending')->get();
         foreach ($orders as $key => $value) {
-            $create_order=($value->listing->contacts->count()-$value['threshold_order_created']);
+            $loop=1;
+            $total_pending=$create_order=($value->listing->contacts->count()-$value['threshold_order_created']);
             if($create_order>$master_file_record_limit){
+                $loop=ceil($create_order/$master_file_record_limit);
                 $create_order=$master_file_record_limit;
+                $total_pending=$total_pending-$create_order;
             }
             if ($value['schedule_date']<date("Y-m-d H:i:s")&&$create_order>0) {
-                create_order_from_ongoing_order($value->id, $create_order);
+                for ($x = 1; $x <= $loop; $x+=1) {
+                    create_order_from_ongoing_order($value->id, $create_order);
+                    if($total_pending>$master_file_record_limit){
+                        $create_order=$master_file_record_limit;
+                        $total_pending=$total_pending-$master_file_record_limit;
+                    }else{
+                        $create_order=$total_pending;
+                        $total_pending=0;
+                    }
+                }
             }
         }
     }
@@ -1301,7 +1313,7 @@ if (! function_exists('create_order_from_ongoing_order')) {
         $order->return_address_id = $ongoing_order['return_address_id'];
         $order->save();
 
-        $user = User::find(auth()->user()->id);
+        $user = User::find($ongoing_order['user_id']);
         $user->wallet_balance = $transaction->wallet_balance;
         $user->save();
 

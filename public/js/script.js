@@ -235,7 +235,7 @@ $(".custom-option").on("click", function() {
 });
 
 $(document).ready(function(){
-  $('.owl-carousel').owlCarousel({
+  $('#uploadDesignsSlider').owlCarousel({
     loop:true,
     nav:true,
     autoWidth:true,

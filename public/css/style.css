@@ -976,6 +976,9 @@ header#header {
     color: #fe8300 !important;
     border: 2px solid #fe8300;
     background:white;
+    font-size: 15px !important;
+    padding: 10px 20px;
+    margin-bottom: 5px;
 }
 .design-view-section .nav-tabs button:hover {
     background: #fe8300 !important;
@@ -2036,7 +2039,8 @@ i.fa.fa-angle-down.pull-right {
 .card {
     z-index: 0;
     border: none;
-    position: relative
+    position: relative;
+    padding:10px !important;
 }
 .written_letter_form .Repeater_container .main .single_row2 {
     padding: 10px;
@@ -2215,8 +2219,9 @@ display: none !important;
     background: #E58A40 !important;
     height: 50px;
     display: block;
-    padding: 10px 50px;
+    padding: 10px;
     color: white !important; 
+    max-width: 100%;
 }
 #msform .action-button.create_custom_parameter {
   width: 100%;
@@ -2337,7 +2342,25 @@ div#uploadDesignsSlider {
     top: unset;
     left: unset;
 }
-
+#tns1-ow {
+  max-width: 100%;
+}
+.tns-controls {
+    display: flex;
+    justify-content: space-between;
+}
+.tns-horizontal.tns-subpixel>.tns-item.tns-slide-active:first-child {
+    margin-left: 0 !important;
+}
+.row-field.row {
+    max-width: 100%;
+}
+.pad-0 {
+	padding:0;
+}
+.template-word-section-wrapper {
+    overflow: hidden;
+}
 /* Responsive */
 
 @media  (min-width: 640px) and (max-width: 768px) {

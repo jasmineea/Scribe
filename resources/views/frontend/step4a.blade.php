@@ -269,9 +269,10 @@ $class_tooltip="step_5a";
                               	 </div>
                              
                               <div class="row">
-                              		<div class="col-12">
+                              		<div class="col-12 pad-0">
 										<label><b>Uploaded Designs</b></label>
                               @if(count($carddesigns)<=8)
+                              <div class="template-word-section-wrapper"> 
                               <div class="template-word-section step-4-right-buttons " style="max-height: 168px;width: max-content;">
 											
 											@foreach($carddesigns as $k=>$v)
@@ -298,6 +299,7 @@ $class_tooltip="step_5a";
                                     
 											</div>
 											@endforeach
+                              </div>
 											</div>
                               @else
                               <div class="owl-carousel" id="uploadDesignsSlider" style="max-width:100%;">

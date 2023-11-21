@@ -58,10 +58,7 @@
                                 Post BCC File
                             </th>
                             <th>
-                                Inner Design File
-                            </th>
-                            <th>
-                                Outer Design File
+                                Design File
                             </th>
                             <th>
                                 Total Records
@@ -127,10 +124,6 @@
             {
                 data: 'post_uploaded_recipient_file',
                 name: 'post_uploaded_recipient_file'
-            },
-            {
-                data: 'inner_design_file',
-                name: 'inner_design_file'
             },
             {
                 data: 'outer_design_file',

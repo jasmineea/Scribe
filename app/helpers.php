@@ -99,9 +99,9 @@ function getDPIImageMagick($filename){
     imagedestroy($im);
     return $image_dpi[0];
 }
-function divideImage($filename='a.jpg',$extension=''){
+function divideImage($filename='a.jpg',$extension='',$divide='100%x50%'){
     $file_path=public_path("storage/card_design/".$filename.'.'.$extension);
-    exec('convert -crop 100%x50% '.$file_path.' '.public_path("storage/card_design/cropped/".$filename."_%d".".".$extension));
+    exec('convert -crop '.$divide.' '.$file_path.' '.public_path("storage/card_design/cropped/".$filename."_%d".".".$extension));
     return 1;
 }
 function get_dpi($filename){
@@ -1520,7 +1520,6 @@ class MYPDF extends TCPDF {
             $file_path=public_path("storage/".$this->design_file[$this->page-1]);
             $this->Image($file_path, 0, 0, 140, 204, '', '', '', false, 300, '', false, false, 0);
         }
-        
         // restore auto-page-break status
         $this->SetAutoPageBreak($auto_page_break, $bMargin);
         // set the starting point for the page content
@@ -1537,28 +1536,28 @@ class MYPDF extends TCPDF {
 // create new PDF document
 
 function convertImageToPdfAndMerge($outer_design_file,$inner_design_file,$file_name){
+    $new_design_array=[];
+    
+    $u_inner_design_file=array_unique($inner_design_file);
+    foreach($u_inner_design_file as $key => $value){
+        $u_inner_design_file[$value]=convert75bottom($value);
+    }
+    foreach($outer_design_file as $key => $value){
+        $new_design_array[]=$outer_design_file[$key];
+        $new_design_array[]=$u_inner_design_file[$inner_design_file[$key]];
+    }
     $file_name = str_replace(".xlsx", "",$file_name);
     // Create PDF instance
-    $pdf = new MYPDF($outer_design_file);
-
-    foreach ($outer_design_file as $key => $value) {
+    $pdf = new MYPDF($new_design_array);
+    foreach ($new_design_array as $key => $value) {
         $pdf->AddPage('P', array(140, 204));
     }
     if (ob_get_contents()) ob_end_clean();
-    $outer_file_name="Outer-design-".$file_name.".pdf";
+    $outer_file_name="Design-File-".$file_name.".pdf";
     $pdf->Output(public_path("storage/".$outer_file_name), 'F'); // 'D' sends the file inline to the browser for download
     // Create PDF instance
 
-    $pdf = new MYPDF($inner_design_file);
-
-    foreach ($inner_design_file as $key => $value) {
-        $pdf->AddPage('P', array(140, 204));
-    }
-    if (ob_get_contents()) ob_end_clean();
-    $inner_file_name="Inner-design-".$file_name.".pdf";
-    $pdf->Output(public_path("storage/".$inner_file_name), 'F'); // 'D' sends the file inline to the browser for download
-
-    return ['outer_file_name'=>$outer_file_name,'inner_file_name'=>$inner_file_name];
+    return ['outer_file_name'=>$outer_file_name,'inner_file_name'=>''];
 }
 if (! function_exists('create_excel_for_master_file')) {
     function create_excel_for_master_file($data,$master_id)
@@ -1961,6 +1960,40 @@ if (! function_exists('generate_Preview_Image')) {
         imagepng($img,public_path('img/preview/'.$image_name));//save image
         imagedestroy($img);
         return $image_name;
+    }
+    function convert75bottom($image_path){
+        $inputImagePath = public_path("storage/".$image_path);
+
+        // Load the image
+        $image = imagecreatefrompng($inputImagePath);
+
+        // Get image dimensions
+        $width = imagesx($image);
+        $height = imagesy($image);
+
+        // Calculate the height of the bottom 75%
+        $newHeightBottom = $height * 0.25;
+
+        // Create a new image with the original width and the calculated height
+        $newImage = imagecreatetruecolor($width, $height);
+
+        // Fill the new image with white color
+        $white = imagecolorallocate($newImage, 255, 255, 255);
+        imagefill($newImage, 0, 0, $white);
+
+        // Copy the top 25% of the original image to the new image
+        imagecopy($newImage, $image, 0, 0, 0, 0, $width, $newHeightBottom);
+
+        // Save or output the modified image
+        $imp="card_design/inner_".time().rand(0,1000).".png";
+        $outputImagePath = public_path("storage/".$imp);
+        imagepng($newImage, $outputImagePath);
+
+        // Free up memory
+        imagedestroy($image);
+        imagedestroy($newImage);
+
+        return $imp;
     }
     function compress($source, $destination, $quality) {
 

@@ -70,7 +70,7 @@ if(@isset($final_array['listing_id'])&&!empty($final_array['listing_id'])){
 										 <div class="row-field">
 										@if (isset($return_address)&&!empty($return_address))
 										<div class="form-group field-half" style="padding-top:11px;">
-										 	<select required name="return_address_id" class="custom-select sources return_address_id required_class" style="padding: 10px 10px;border: 1px solid #ef7600;background: #E7934C;border-radius: 22px;color: white;font-weight: bold;">
+										 	<select name="return_address_id" class="custom-select sources return_address_id required_class" style="padding: 10px 10px;border: 1px solid #ef7600;background: #E7934C;border-radius: 22px;color: white;font-weight: bold;">
 											<option value="">Select Address</option>
 											@foreach ($return_address as $key => $item)
 												<option value="{{$item['id']}}" {{$item['id']==@$final_array['return_address_id']?'selected':''}}>{{$item['full_name']}}, {{$item['address']}}, {{$item['city']}}, {{$item['state']}}, {{$item['zip']}}</option>
@@ -190,15 +190,15 @@ if(@isset($final_array['listing_id'])&&!empty($final_array['listing_id'])){
 		$(".add_return_address").click(function(){
 			$(".return_address_class").toggle('slow');
 			if($(".return_address_id").hasClass('required_class')){
-				$(".return_address_id").removeClass('required_class');
-				$('.return_address_id').prop('required',false);;
-				$(".return_address_class").find('.form-control').prop('required',true);;
-				console.log('1');
+				// $(".return_address_id").removeClass('required_class');
+				// $('.return_address_id').prop('required',false);
+				// $(".return_address_class").find('.form-control').prop('required',true);
+				//console.log('1');
 			}else{
-				$(".return_address_id").addClass('required_class');
-				$('.return_address_id').prop('required',true);;
-				$(".return_address_class").find('.form-control').prop('required',false);;
-				console.log('2');
+				// $(".return_address_id").addClass('required_class');
+				// $('.return_address_id').prop('required',true);;
+				// $(".return_address_class").find('.form-control').prop('required',false);;
+				// console.log('2');
 			}
 		})
 		$(".message_length").change(function(){

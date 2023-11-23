@@ -136,7 +136,12 @@ class CardController extends Controller
         $final_array=$request->session()->get('final_array');
         $preview_message=final_message(@$final_array['excel_data']['data'][2], $final_array['hwl_custom_msg'], $final_array['system_property_1']);
         $final_array['preview_image'] = generate_Preview_Image($preview_message,$final_array['message_length']);
-        $return_address = Address::find($final_array['return_address_id'])->toArray();        
+        if($final_array['return_address_id']){
+            $return_address = Address::find($final_array['return_address_id'])->toArray();   
+        }else{
+            $return_address = [];   
+        }
+             
         $final_array['enevolope_preview_image'] = enevolopePreview(@$final_array['excel_data']['data'][2],$final_array['system_property_2'],$return_address);
         $final_array['front_preview_image'] = public_path('img/front_design.jpg');
         $final_array['back_preview_image'] = public_path('img/back_design.jpg');
@@ -782,7 +787,7 @@ class CardController extends Controller
                 $order->final_printing_file= $order_data['upload_recipients'];
                 $order->order_json= json_encode($order_data);
                 $order->transaction_id = $transaction->id;
-                $order->return_address_id = $order_data['return_address_id'];
+                $order->return_address_id = $order_data['return_address_id']?$order_data['return_address_id']:0;
                 $order->save();
 
                 $user = User::find(auth()->user()->id);
@@ -859,7 +864,7 @@ class CardController extends Controller
                 $order->final_printing_file= '';
                 $order->order_json= json_encode($order_data);
                 $order->transaction_id = 0;
-                $order->return_address_id = $order_data['return_address_id'];
+                $order->return_address_id = $order_data['return_address_id']?$order_data['return_address_id']:0;
                 $order->save();
 
                 if ($order_data['listing_id']) {
@@ -1281,7 +1286,12 @@ class CardController extends Controller
                 create_copy_excel_from_listing_id($value->listing_id);
                 create_copy_excel($value->id);
                 $latest_order=Order::find($value->id);
-                $return_address=Address::find($value->return_address_id);
+                if($value->return_address_id){
+                    $return_address=Address::find($value->return_address_id);
+                }else{
+                    $return_address = [];
+                }
+                
                 $order_json=read_excel_data($latest_order->final_printing_file, 1);
                 MasterDesignFiles::create([
                     'campaign_name' => trim($latest_order->campaign_name),
@@ -1312,12 +1322,12 @@ class CardController extends Controller
                     $final_message[$i]['outer_design_file']=!empty($latest_order->main_design)?$latest_order->main_design:'';
                     $final_message[$i]['inner_design']=!empty($latest_order->inner_design)?'Yes':'No';
                     $final_message[$i]['inner_design_file']=!empty($latest_order->inner_design)?$latest_order->inner_design:'';
-                    $final_message[$i]['return_first_name']=$return_address->first_name;
-                    $final_message[$i]['return_last_name']=$return_address->last_name;
-                    $final_message[$i]['return_address']=$return_address->address;
-                    $final_message[$i]['return_city']=$return_address->city;
-                    $final_message[$i]['return_state']=$return_address->state;
-                    $final_message[$i]['return_zip']=$return_address->zip;
+                    $final_message[$i]['return_first_name']=!empty($return_address)?$return_address->first_name:'';
+                    $final_message[$i]['return_last_name']=!empty($return_address)?$return_address->last_name:'';
+                    $final_message[$i]['return_address']=!empty($return_address)?$return_address->address:'';
+                    $final_message[$i]['return_city']=!empty($return_address)?$return_address->city:'';
+                    $final_message[$i]['return_state']=!empty($return_address)?$return_address->state:'';
+                    $final_message[$i]['return_zip']=!empty($return_address)?$return_address->zip:'';
 
                     if(count($final_message)>=$master_file_record_limit){
                         

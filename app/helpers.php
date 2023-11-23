@@ -1310,7 +1310,7 @@ if (! function_exists('create_order_from_ongoing_order')) {
         $order->final_printing_file= '';
         $order->order_json= json_encode($order_json);
         $order->transaction_id = $transaction->id;
-        $order->return_address_id = $ongoing_order['return_address_id'];
+        $order->return_address_id = $ongoing_order['return_address_id']?$ongoing_order['return_address_id']:0;
         $order->save();
 
         $user = User::find($ongoing_order['user_id']);
@@ -1684,7 +1684,12 @@ if (! function_exists('enevolopePreview')) {
         if(empty($final_message)||strlen($final_message)=='12'){
             $final_message="Kiley Caldarera\r\n25 E 75th St #69\r\nLos Angeles, California 90034";
         }
-        $final_message1=$return_address['full_name']."\r\n".$return_address['address']."\r\n".$return_address['city'].", ".$return_address['state']." ".$return_address['zip'];
+        if($return_address){
+            $final_message1=$return_address['full_name']."\r\n".$return_address['address']."\r\n".$return_address['city'].", ".$return_address['state']." ".$return_address['zip'];
+        }else{
+            $final_message1='';
+        }
+        
 
         array_map('unlink', glob(public_path('img/preview/'.auth()->user()->id."_enevolope_*")));
         $img = imagecreatefrompng(public_path('img/1500-with-shadow-final.png'));//replace with your image 
@@ -1962,38 +1967,41 @@ if (! function_exists('generate_Preview_Image')) {
         return $image_name;
     }
     function convert75bottom($image_path){
-        $inputImagePath = public_path("storage/".$image_path);
+        if(!empty($image_path)){
+            $inputImagePath = public_path("storage/".$image_path);
 
-        // Load the image
-        $image = imagecreatefrompng($inputImagePath);
+            // Load the image
+            $image = imagecreatefrompng($inputImagePath);
 
-        // Get image dimensions
-        $width = imagesx($image);
-        $height = imagesy($image);
+            // Get image dimensions
+            $width = imagesx($image);
+            $height = imagesy($image);
 
-        // Calculate the height of the bottom 75%
-        $newHeightBottom = $height * 0.25;
+            // Calculate the height of the bottom 75%
+            $newHeightBottom = $height * 0.25;
 
-        // Create a new image with the original width and the calculated height
-        $newImage = imagecreatetruecolor($width, $height);
+            // Create a new image with the original width and the calculated height
+            $newImage = imagecreatetruecolor($width, $height);
 
-        // Fill the new image with white color
-        $white = imagecolorallocate($newImage, 255, 255, 255);
-        imagefill($newImage, 0, 0, $white);
+            // Fill the new image with white color
+            $white = imagecolorallocate($newImage, 255, 255, 255);
+            imagefill($newImage, 0, 0, $white);
 
-        // Copy the top 25% of the original image to the new image
-        imagecopy($newImage, $image, 0, 0, 0, 0, $width, $newHeightBottom);
+            // Copy the top 25% of the original image to the new image
+            imagecopy($newImage, $image, 0, 0, 0, 0, $width, $newHeightBottom);
 
-        // Save or output the modified image
-        $imp="card_design/inner_".time().rand(0,1000).".png";
-        $outputImagePath = public_path("storage/".$imp);
-        imagepng($newImage, $outputImagePath);
+            // Save or output the modified image
+            $imp="card_design/inner_".time().rand(0,1000).".png";
+            $outputImagePath = public_path("storage/".$imp);
+            imagepng($newImage, $outputImagePath);
 
-        // Free up memory
-        imagedestroy($image);
-        imagedestroy($newImage);
+            // Free up memory
+            imagedestroy($image);
+            imagedestroy($newImage);
 
-        return $imp;
+            return $imp;
+        }
+        return '';
     }
     function compress($source, $destination, $quality) {
 
@@ -2039,7 +2047,13 @@ if (! function_exists('generate_Preview_Image')) {
             $row_limit    = $sheet->getHighestDataRow();
             $column_limit = $sheet->getHighestDataColumn();
             $next_column = 'S';
-            foreach(range('A',$column_limit) as $letter) {
+
+            for ($i = 'A'; $i !== $column_limit; $i++){
+                $column_range[]=$i;
+            }
+            $column_range[]=$column_limit;
+
+            foreach($column_range as $letter) {
                 if($sheet->getCell($letter.'1')->getValue()=='Custom Message ID'){
                     $next_column=$letter;
                 }

@@ -21,6 +21,7 @@ use Spatie\Activitylog\Models\Activity;
 use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Backend\BackendBaseController;
 use Session;
+use App\Models\Order;
 use Illuminate\Support\Facades\Http;
 
 class OrderController extends Controller
@@ -95,9 +96,27 @@ class OrderController extends Controller
 
         Log::info(label_case($module_title.' '.$module_action).' | User:'.Auth::user()->name.'(ID:'.Auth::user()->id.')');
 
+        $one_orders = Order::where('campaign_type', 'one-time')->where('status', 'pending')->pluck('listing_id')->toArray();
+        $ongoing_orders = Order::where('campaign_type', 'on-going')->where('status', 'pending')->get()->toArray();
+        $record_count_to_create_master_file=0;
+
+        if($one_orders){
+            $record_count_to_create_master_file=Contact::whereIn('listing_id',$one_orders)->count();
+        }
+        
+        if($ongoing_orders){
+            foreach ($ongoing_orders as $key => $value) {
+                $contact_record=Contact::where('listing_id',$value['listing_id'])->count();
+                if($contact_record>$value['threshold_order_created']){
+                    $record_count_to_create_master_file+=$contact_record-$value['threshold_order_created'];
+                }
+            }
+            
+        }
+        
         return view(
             "order::backend.$module_name.index_datatable",
-            compact('module_title', 'module_name', "$module_name", 'module_icon', 'module_name_singular', 'module_action')
+            compact('module_title', 'module_name', "$module_name", 'module_icon', 'module_name_singular', 'module_action','record_count_to_create_master_file')
         );
     }
 
@@ -130,7 +149,7 @@ class OrderController extends Controller
                             return  '<a href="'.env('APP_URL').'/admin/orders/downloadAction/'.$data->outer_design_file.'/'.$data->id.'">'.$data->outer_design_file.'</a>';
                         })
                         ->addColumn('post_uploaded_recipient_file', function ($data) {
-                            return  '<a href="'.env('APP_URL').'/admin/orders/downloadAction/'.$data->post_uploaded_recipient_file.'/'.$data->id.'">'.$data->post_uploaded_recipient_file.'</a><form enctype="multipart/form-data" method="post" action="'.route('frontend.cards.uploadPreBccFile').'"><input type="file" onchange="form.submit()" name="upload_post_file" ><input type="hidden" name="_token" value="'.csrf_token().'" /><input type="hidden" name="master_id" value="'.$data->id.'"></form>';
+                            return  '<a href="'.env('APP_URL').'/admin/orders/downloadAction/'.$data->post_uploaded_recipient_file.'/'.$data->id.'">'.$data->post_uploaded_recipient_file.'</a><form enctype="multipart/form-data" method="post" action="'.route('frontend.cards.uploadPreBccFile').'"><input type="file" onchange="form.submit();" class="file_change" name="upload_post_file" ><input type="hidden" name="_token" value="'.csrf_token().'" /><input type="hidden" name="master_id" value="'.$data->id.'"></form>';
                         })
                         ->addColumn('downloaded_times', function ($data) {
                             return  $data->downloaded_times." times";

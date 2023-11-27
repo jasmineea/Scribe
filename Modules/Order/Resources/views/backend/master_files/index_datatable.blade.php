@@ -10,7 +10,7 @@
 
 @section('content')
 <style>
-#page-loader {
+#page-loader , #page-loader2 {
     position: absolute;
     top: 0;
     bottom: 0;
@@ -29,6 +29,11 @@
 <img src="http://css-tricks.com/examples/PageLoadLightBox/loader.gif" alt="loader">
 <p><small>please wait we are creating master files for you.</small></p>
 </div>
+<div id="page-loader2">
+<h3>Loading page...</h3>
+<img src="http://css-tricks.com/examples/PageLoadLightBox/loader.gif" alt="loader">
+<p><small>please wait we are uploading file for you.</small></p>
+</div>
 <div class="card">
     <div class="card-body">
 
@@ -37,6 +42,7 @@
 
 
         <x-slot name="toolbar">
+        <a href='javascript:void(0);' class="btn btn-secondary" data-toggle="tooltip" data-coreui-original-title="{{$record_count_to_create_master_file}} Order(s) In Print Queue">{{$record_count_to_create_master_file}} Order(s) In Print Queue</a>
         <a href='{{ route("backend.settings",["type"=>"master_file_limit"]) }}' class="btn btn-warning" data-toggle="tooltip" data-coreui-original-title="Set Master File Record Limit"><i class="fa fa-cog"></i></a>
         <a href='{{ route("frontend.cards.createMasterFile","web") }}' onclick="javascript:document.getElementById('page-loader').style.display='block';" class="btn btn-success  " data-toggle="tooltip" aria-label="Create Order" data-coreui-original-title="Generate master file">Generate master print file</a>
         </x-slot>
@@ -107,6 +113,10 @@
     $("body").on('click','.divide_file',function(){
         alert($(this).data('id'));
     })
+    $("body").on('change','.file_change',function(){
+        $("#page-loader2").show();
+    })
+    
     $('#datatable').DataTable({
         processing: true,
         serverSide: true,

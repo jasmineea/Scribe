@@ -1405,7 +1405,7 @@ class CardController extends Controller
                 $this->validate(
                     $request,
                     [
-                    'upload_post_file' => 'required|file|mimes:xls,xlsx,csv'
+                    'upload_post_file' => 'required'
                     ],
                     [
                         'upload_post_file.required' => 'Please Choose a Pre BCC File.'

@@ -1,0 +1,54 @@
+@media screen and (max-width: 1440px){
+
+.hero-content h1 {
+    font-size: 60px;
+    line-height: 70px;
+}
+
+.section-heading h2 {
+    font-size: 36px;
+}
+
+.section-heading h2 span {
+    font-size: 35px;
+}
+
+.c-number {
+    font-size: 60px;
+}
+
+.c-title {
+    font-size: 20px;
+}
+
+.c-text {
+    font-size: 16px;
+}
+.hero-images {
+	right: -120px;
+}
+
+}
+
+
+@media screen and (max-width: 1199px){
+
+
+}
+
+@media screen and (max-width: 991px){
+
+
+
+}
+@media screen and (max-width: 767px){
+
+
+}
+
+@media screen and (max-width: 546px){
+
+}
+
+
+

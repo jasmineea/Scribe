@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Text Formatter</title>
+    <style>
+        /* Style for the modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            padding-top: 100px;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0,0,0);
+            background-color: rgba(0,0,0,0.4);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+    <script>
+        function formatText() {
+            const textBox = document.getElementById('text-box');
+            const lines = textBox.value.split('\n');
+            const maxLines = document.getElementById('condition-maxlines').checked ? 15 : lines.length;
+            const maxChars = 43;
+            let formattedLines = [];
+            let lineCounts = [];
+
+            for (let line of lines) {
+                let conditionSpaceLine = document.getElementById('condition-spaceline').checked;
+
+                if (conditionSpaceLine && line === '') {
+                    formattedLines.push(line);
+                    lineCounts.push(0);
+                    continue;
+                }
+
+                while (line.length > 0) {
+                    if (line.length <= maxChars) {
+                        formattedLines.push(line);
+                        lineCounts.push(line.length);
+                        break;
+                    }
+
+                    let cutIndex = maxChars;
+                    if (line[cutIndex] === ' ') {
+                        formattedLines.push(line.substring(0, cutIndex));
+                        lineCounts.push(cutIndex);
+                        line = line.substring(cutIndex).trimStart();
+                    } else if (/[a-zA-Z]/.test(line[cutIndex]) && /[a-zA-Z]/.test(line[cutIndex + 1])) {
+                        let lastSpace = line.lastIndexOf(' ', cutIndex);
+                        if (lastSpace === -1) {
+                            formattedLines.push(line.substring(0, cutIndex));
+                            lineCounts.push(cutIndex);
+                            line = line.substring(cutIndex).trimStart();
+                        } else {
+                            formattedLines.push(line.substring(0, lastSpace));
+                            lineCounts.push(lastSpace);
+                            line = line.substring(lastSpace).trimStart();
+                        }
+                    } else {
+                        formattedLines.push(line.substring(0, cutIndex));
+                        lineCounts.push(cutIndex);
+                        line = line.substring(cutIndex).trimStart();
+                    }
+                }
+            }
+
+            let formattedText = '';
+            for (let i = 0; i < formattedLines.length; i++) {
+                let line = formattedLines[i];
+                let count = lineCounts[i];
+                let redStyle = (i >= maxLines) ? ' style="color: red;"' : '';
+                formattedText += `<span${redStyle}>Line ${i + 1} (${count} chars): ${line}</span><br/>`;
+            }
+
+            document.getElementById('modal-text').innerHTML = formattedText;
+            showModal();
+        }
+
+        function showModal() {
+            document.getElementById('myModal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('myModal').style.display = 'none';
+        }
+
+        function checkAtLeastOneCondition() {
+            let checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            let button = document.getElementById('format-button');
+            button.disabled = !Array.from(checkboxes).some(checkbox => checkbox.checked);
+        }
+    </script>
+</head>
+<body>
+    <textarea id="text-box" rows="20" cols="50"></textarea>
+    <br>
+    <div>
+        <input type="checkbox" id="condition-maxlines" onclick="checkAtLeastOneCondition()"> Accepts a maximum of 15 lines<br>
+        <input type="checkbox" id="condition-maxchars" onclick="checkAtLeastOneCondition()"> Allows each line to contain a maximum of 43 characters<br>
+        <input type="checkbox" id="condition-spacesplit" onclick="checkAtLeastOneCondition()"> If 43rd character is a space, split line<br>
+        <input type="checkbox" id="condition-alphabetsplit" onclick="checkAtLeastOneCondition()"> If 43rd character is an alphabet and 44th too, split at last space<br>
+        <input type="checkbox" id="condition-redoverflow" onclick="checkAtLeastOneCondition()"> Highlight text beyond the 15th line in red<br>
+        <input type="checkbox" id="condition-enterline" onclick="checkAtLeastOneCondition()"> No 43-character limitation on lines created with Enter<br>
+        <input type="checkbox" id="condition-spaceline" onclick="checkAtLeastOneCondition()"> Treat lines with only Enter as a line<br>
+    </div>
+    <button id="format-button" onclick="formatText()" disabled>Check Formatting</button>
+
+    <!-- The Modal -->
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <p id="modal-text"></p>
+        </div>
+    </div>
+</body>
+</html>

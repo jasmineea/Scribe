@@ -234,7 +234,7 @@ $class_tooltip="step_5a";
 													<span class="upload-icon upload-icon-white"></span>
 													<span>Upload</span>
 												</div>
-												<p>Supported format: png, jpg or zip file (containing png.jpg files).</p>
+												<p>Supported format: png or zip file (containing png files).</p>
 											</div>
 											</div>
 										<br>

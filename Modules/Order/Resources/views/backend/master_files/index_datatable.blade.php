@@ -23,17 +23,26 @@
     padding-top: 25px;
     background-color: rgba(255, 255, 255, 0.7);
 }
+.largeWidth {
+    margin: 0 auto;
+    max-width: 35%;
+}
+#datatable1{
+    width: 100% !important;
+}
 </style>
 <div id="page-loader">
 <h3>Loading page...</h3>
 <img src="http://css-tricks.com/examples/PageLoadLightBox/loader.gif" alt="loader">
 <p><small>please wait we are creating master files for you.</small></p>
-</div>
+</div> 
 <div id="page-loader2">
 <h3>Loading page...</h3>
 <img src="http://css-tricks.com/examples/PageLoadLightBox/loader.gif" alt="loader">
 <p><small>please wait we are uploading file for you.</small></p>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js" integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/6.0.0/bootbox.min.js" integrity="sha512-oVbWSv2O4y1UzvExJMHaHcaib4wsBMS5tEP3/YkMP6GmkwRJAa79Jwsv+Y/w7w2Vb/98/Xhvck10LyJweB8Jsw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <div class="card">
     <div class="card-body">
 
@@ -44,6 +53,7 @@
         <x-slot name="toolbar">
         <a href='javascript:void(0);' class="btn btn-secondary" data-toggle="tooltip" data-coreui-original-title="{{$record_count_to_create_master_file}} Order(s) In Print Queue">{{$record_count_to_create_master_file}} Order(s) In Print Queue</a>
         <a href='{{ route("backend.settings",["type"=>"master_file_limit"]) }}' class="btn btn-warning" data-toggle="tooltip" data-coreui-original-title="Set Master File Record Limit"><i class="fa fa-cog"></i></a>
+        <a href='javascript:void(0);' class="btn btn-success custom_master_file" data-toggle="tooltip" aria-label="Create Order" data-coreui-original-title="Generate Custom master file">Generate Custom master print file</a>
         <a href='{{ route("frontend.cards.createMasterFile","web") }}' onclick="javascript:document.getElementById('page-loader').style.display='block';" class="btn btn-success  " data-toggle="tooltip" aria-label="Create Order" data-coreui-original-title="Generate master file">Generate master print file</a>
         </x-slot>
 
@@ -110,6 +120,68 @@
 <script type="module" src="{{ asset('vendor/datatable/datatables.min.js') }}"></script>
 
 <script type="module">
+    $("body").on('click','.custom_master_file',function(){
+        var token =$('meta[name="csrf-token"]').attr('content');
+        var d = bootbox.confirm({
+        message: "<form id='infos' action='{{route('frontend.cards.createMasterFile','web')}}' method='post'>\
+		<input type='hidden' name='_token' value='"+token+"'>\ <table id='datatable1' class='table table-bordered table-hover table-responsive-sm'> <thead> <tr> <th> # </th> <th> User </th> <th> Name </th> <th> Type </th> <th> Total Recipient </th> <th> Status </th> </tr> </thead> </table></form>",
+        buttons: {
+        confirm: {
+        label: 'Generate Custom File',
+        //   className: 'btn-success'
+        },
+        cancel: {
+        label: 'Cancel',
+        //   className: 'btn-danger'
+        }
+        },
+        callback: function (result) {
+            if(result){
+                if(jQuery('#infos input[type=checkbox]:checked').length>0){
+                    $("#page-loader").show();
+                    $('#infos').submit();
+                }else{
+                    Alert.error("Please Select Atleast One Order To Generate Master File",'Error',{displayDuration: 5000, pos: 'top'})
+                }
+                
+            }
+        }});
+		
+		d.find('.modal-dialog').addClass('modal-dialog-centered largeWidth');
+        $('#datatable1').DataTable({
+            processing: true,
+            serverSide: true,
+            autoWidth: true,
+            "pageLength": 25,
+            responsive: true,
+            ajax: '{{ route("backend.orders.index_data2") }}',
+            columns: [{
+                data: 'id',
+                name: 'id'
+            },
+            {
+                data: 'user_id',
+                name: 'users.name'
+            },
+            {
+                data: 'campaign_name',
+                name: 'campaign_name'
+            },
+            {
+                data: 'campaign_type_2',
+                name: 'campaign_type_2'
+            },
+            {
+                data: 'total_recipient',
+                name: 'total_recipient'
+            },
+            {
+                data: 'status',
+                name: 'status'
+            }
+        ]
+    });
+    })
     $("body").on('click','.divide_file',function(){
         alert($(this).data('id'));
     })

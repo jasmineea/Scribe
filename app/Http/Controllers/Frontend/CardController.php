@@ -1271,14 +1271,20 @@ class CardController extends Controller
         }
         return redirect()->back();
     }
-    public function createMasterFile($type=''){
+    public function createMasterFile(Request $request, $type=''){
+        
         ini_set("memory_limit", "-1");
         set_time_limit(0);
         auto_create_order();
 
         $master_file_record_limit = setting('master_file_record_limit');
         $final_message=[];
-        $orders = Order::where('campaign_type', 'one-time')->where('status', 'pending')->get();
+        if ($request->isMethod('post')) {
+            $data=$request->all();
+            $orders = Order::whereIn('id', $data['order_id'])->get();
+        }else{
+            $orders = Order::where('campaign_type', 'one-time')->where('status', 'pending')->get();
+        }
         $i=0;
 
         foreach ($orders as $key => $value) {

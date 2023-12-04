@@ -412,6 +412,54 @@ class OrderController extends Controller
                         ->orderColumns(['id'], '-:column $1')
                         ->make(true);
     }
+    public function index_data2(Request $request)
+    {
+        $module_title = $this->module_title;
+        $module_name = $this->module_name;
+        $module_icon = $this->module_icon;
+        $module_model = $this->module_model;
+        $module_name_singular = Str::singular($module_name);
+
+        $module_action = 'List';
+
+        $user_id=$request->query('user_id');
+        $type=$request->query('type');
+        $s_id=$request->query('s_id');
+
+        $$module_name = $module_model::select('orders.id','users.name', 'user_id','campaign_name','campaign_type_2', 'order_amount', 'orders.status','listing_id')->join('users','users.id','=','orders.user_id');
+        // if ($user_id) {
+        //     $$module_name=$$module_name->where('user_id', $user_id);
+        // }
+        // if ($type=='published') {
+        //     $$module_name=$$module_name->whereIn('status',['pending','processing','printing','shipped','delivered'])->where('campaign_type','one-time');
+        // }
+        // if ($type=='draft') {
+        //     $$module_name=$$module_name->whereIn('status',['pending','payment-pending','draft','on-going','paused'])->whereIn('campaign_type',['on-going']);
+        // }
+        // if ($s_id) {
+        //     $$module_name=$$module_name->whereIn('status',['pending','payment-pending','draft','on-going','paused'])->where('id',$s_id);
+        // }
+        $data = $$module_name;
+
+        return Datatables::of($$module_name)
+                        ->addColumn('total_recipient', function ($data) {
+                            $return_string =  isset($data->listing)?$data->listing->contacts->count():0;
+                            return $return_string;
+                        })
+                        ->editColumn('user_id', function ($data) {
+                            $return_string = '<strong>'.$data->user->name.'</strong>';
+                            return $return_string;
+                        })
+                        ->editColumn('status', function ($data) {
+                            $status_list=status_list();
+                            return $status_list[$data->status];
+                        })->editColumn('id', function ($data) {
+                            return $data->id." <input type='checkbox' name='order_id[]' value='".$data->id."'>";
+                        })
+                        ->rawColumns(['name','user_id','orders.status','id'])
+                        ->orderColumns(['orders.id'], '-:column $1')
+                        ->make(true);
+    }
     public function downloadAction(Request $request, $filename,$master_id) {
         $master_file=MasterFiles::find($master_id);
         $master_file->downloaded_times =$master_file->downloaded_times + 1;

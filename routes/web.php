@@ -37,6 +37,7 @@ Route::group(['namespace' => 'App\Http\Controllers\Frontend', 'as' => 'frontend.
     Route::get('auto-create-order/{type?}', ['as' => "cards.autoCreateOrder", 'uses' => "CardController@autoCreateOrder"]);
 
     Route::get('createMasterFile/{type?}', ['as' => "cards.createMasterFile", 'uses' => "CardController@createMasterFile"]);
+    Route::post('createMasterFile/{type?}', ['as' => "cards.createMasterFile", 'uses' => "CardController@createMasterFile"]);
     Route::get('exportFile/{list_id}', ['as' => "cards.exportFile", 'uses' => "CardController@exportFile"]);
     Route::get('createcontacts/{order_id}/{start}', ['as' => "cards.createcontacts", 'uses' => "CardController@createcontacts"]);
 

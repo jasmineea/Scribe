@@ -443,7 +443,7 @@ if (! function_exists('status_list')) {
      */
     function status_list()
     {
-        $status_list=['pending'=>'Confirmed','processing'=>'Unfulfilled','payment-pending'=>'Payment Pending','printing'=>'Under Printing','shipped'=>'Shipped','delivered'=>'Delivered','pending-pickup'=>'Pending Pickup','picked'=>'Picked','draft'=>'Draft','on-going'=>'On-Going','paused'=>'Paused'];
+        $status_list=['pending'=>'Confirmed','processing'=>'Unfulfilled','payment-pending'=>'Payment Pending','printing'=>'Under Printing','shipped'=>'Shipped','delivered'=>'Delivered','pending-pickup'=>'Pending Pickup','picked'=>'Picked','draft'=>'Draft','on-going'=>'On-Going','paused'=>'Paused','delete'=>'deleted'];
 
         return $status_list;
     }

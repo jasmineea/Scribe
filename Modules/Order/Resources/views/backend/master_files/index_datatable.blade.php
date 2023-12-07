@@ -25,7 +25,7 @@
 }
 .largeWidth {
     margin: 0 auto;
-    max-width: 35%;
+    max-width: 55%;
 }
 #datatable1{
     width: 100% !important;
@@ -124,7 +124,7 @@
         var token =$('meta[name="csrf-token"]').attr('content');
         var d = bootbox.confirm({
         message: "<form id='infos' action='{{route('frontend.cards.createMasterFile','web')}}' method='post'>\
-		<input type='hidden' name='_token' value='"+token+"'>\ <table id='datatable1' class='table table-bordered table-hover table-responsive-sm'> <thead> <tr> <th> # </th> <th> User </th> <th> Name </th> <th> Type </th> <th> Total Recipient </th> <th> Status </th> </tr> </thead> </table></form>",
+		<input type='hidden' name='_token' value='"+token+"'>\ <label><b>Selected Orders</b></label><br><table id='datatable2' class='table table-bordered table-hover table-responsive-sm'> <thead> <tr> <th> # </th> <th> User </th> <th> Name </th> <th> Type </th> <th> Total Recipient </th> <th> Status </th><th> Design </th><th> Action </th> </tr> </thead> </table></form> <table id='datatable1' class='table table-bordered table-hover table-responsive-sm'> <thead> <tr> <th> # </th> <th> User </th> <th> Name </th> <th> Type </th> <th> Total Recipient </th> <th> Status </th><th> Design </th> </tr> </thead> </table>",
         buttons: {
         confirm: {
         label: 'Generate Custom File',
@@ -137,7 +137,7 @@
         },
         callback: function (result) {
             if(result){
-                if(jQuery('#infos input[type=checkbox]:checked').length>0){
+                if(jQuery('#infos .hidden_id').length>0){
                     $("#page-loader").show();
                     $('#infos').submit();
                 }else{
@@ -178,6 +178,10 @@
             {
                 data: 'status',
                 name: 'status'
+            },
+            {
+                data: 'message_overview',
+                name: 'message_overview'
             }
         ]
     });
@@ -188,6 +192,17 @@
     $("body").on('change','.file_change',function(){
         $("#page-loader2").show();
     })
+    $("body").on('click','.checkbox_select',function(){
+        
+            $('body').find("#datatable2").append("<tr>"+$(this).closest('tr').html()+"<td class='ddd'><button class='delete_row btn btn-warning'>Delete</button></td></tr>");
+            $('body').find("#datatable2 .checkbox_select").remove();
+        
+    })
+
+    $("body").on('click','.delete_row',function(){
+        $(this).closest("tr").remove();
+    })
+    
     
     $('#datatable').DataTable({
         processing: true,

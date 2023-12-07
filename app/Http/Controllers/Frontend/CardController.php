@@ -75,7 +75,11 @@ class CardController extends Controller
     {
         
         $final_array=$request->session()->get('final_array');
-        $listings = Listing::where('user_id', auth()->user()->id)->get();
+        if(empty($final_array['campaign_type'])){
+            Session::flash('error', 'please complete the step 1 first.');
+            return redirect()->route('frontend.cards.step1');
+        }
+        $listings = Listing::where('user_id', auth()->user()->id)->where('status','!=', 'deactive')->get();
         return view('frontend.step1', compact('listings','final_array'));
     }
 
@@ -89,10 +93,10 @@ class CardController extends Controller
     {
         $return_address = Address::where('user_id',auth()->user()->id)->latest()->get();
         $final_array=$request->session()->get('final_array');
-        // if(empty($final_array['campaign_name'])){
-        //     Session::flash('error', 'please complete the step 2 first.');
-        //     return redirect()->route('frontend.cards.step2');
-        // }
+        if(empty($final_array['upload_recipients'])){
+            Session::flash('error', 'please complete the step 2 first.');
+            return redirect()->route('frontend.cards.step2');
+        }
         return view('frontend.step2', compact('final_array','return_address'));
     }
 
@@ -130,9 +134,10 @@ class CardController extends Controller
 
     public function step4a(Request $request)
     {
-        $default_card_design = CardDesign::whereIn('user_id',[0])->latest()->get();
+        $type_select=$request->get('type');
+        $default_card_design = CardDesign::whereIn('user_id',[0])->where('status','1')->latest()->get();
         $carddesignswithouttype = CardDesign::whereIn('user_id',[auth()->user()->id])->where('type',null)->latest()->get();
-        $carddesigns = CardDesign::whereIn('user_id',[auth()->user()->id])->whereIn('type',['outer','inner','both'])->where('status',2)->latest()->get();
+        $carddesigns = CardDesign::whereIn('user_id',[auth()->user()->id])->whereIn('type',['outer','inner','both'])->where('status','1')->latest()->get();
         $final_array=$request->session()->get('final_array');
         $preview_message=final_message(@$final_array['excel_data']['data'][2], $final_array['hwl_custom_msg'], $final_array['system_property_1']);
         $final_array['preview_image'] = generate_Preview_Image($preview_message,$final_array['message_length']);
@@ -157,7 +162,7 @@ class CardController extends Controller
         $request->session()->put('final_array', $final_array);
 
         
-        return view('frontend.step4a', compact('final_array','carddesigns','carddesignswithouttype','default_card_design'));
+        return view('frontend.step4a', compact('final_array','carddesigns','carddesignswithouttype','default_card_design','type_select'));
     }
 
     public function step4b(Request $request)
@@ -559,28 +564,34 @@ class CardController extends Controller
             }else{
                 $return_url='frontend.cards.step4a';
             }
+            $final_array=$request->session()->get('final_array');
+            $data1=[];
             foreach ($data['save_type'] as $key => $value) {
                 if($value=='both'){
                     
                     $card = CardDesign::find($key);
                     $card->type = 'both';
                     $card->save();
-
-                    // $carddesign = new CardDesign;
-                    // $carddesign->user_id = auth()->user()->id;
-                    // $carddesign->type = 'outer';
-                    // $carddesign->image_path = $card->image_path;
-                    // $carddesign->front_image_path = $card->front_image_path;
-                    // $carddesign->back_image_path =$card->back_image_path;
-                    // $carddesign->save();
-                    
+                    $data1['front_design']=$card['front_image_path'];
+                    $data1['back_design']=$card['back_image_path'];
+                    $data1['inner_design']=$card['image_path'];
                 }else{
                     $card = CardDesign::find($key);
                     $card->type = $value;
                     $card->save();
+                    if($value=='outer'){
+                        $data1['front_design']=$card['front_image_path'];
+                        $data1['back_design']=$card['back_image_path'];
+                    }
+                    if($value=='inner'){
+                        $data1['inner_design']=$card['image_path'];
+                    }
                 }
             }
-            return redirect()->route($return_url);  
+            if(!empty($final_array)){
+                $request->session()->put('final_array',array_merge($final_array,$data1));
+            }
+            return redirect()->route($return_url,['type'=>'outer']);  
         }
     }
 
@@ -680,17 +691,6 @@ class CardController extends Controller
                     $carddesign->front_image_path = 'card_design/cropped/'.$image_name.'_0.'.$extension;
                     $carddesign->back_image_path = 'card_design/cropped/'.$image_name.'_1.'.$extension;
                     $carddesign->save();
-                    // $final_array=$request->session()->get('final_array');
-                    // if($request->get('type')=='outer'){
-                    //     $final_array['main_design']=$image_path;
-                    //     $final_array['front_design']=$carddesign->front_image_path;
-                    //     $final_array['back_design']=$carddesign->back_image_path;
-                    // }
-                    // if($request->get('type')=='inner'){
-                    //     $final_array['main_design']=$image_path;
-                    //     $final_array['inner_design']=$image_path;
-                    // }
-                    // $request->session()->put('final_array',$final_array);
                 }
             }else{
                 Session::flash('error', 'something went wrong.');
@@ -942,13 +942,13 @@ class CardController extends Controller
     public function orders()
     {
         $paymentMethodCount=UserPaymentMethod::where('user_id', auth()->user()->id)->count();
-        $orders = Order::where('user_id', auth()->user()->id)->orderBy('id', 'DESC')->paginate(10);
+        $orders = Order::where('user_id', auth()->user()->id)->where('status','!=', 'delete')->orderBy('id', 'DESC')->paginate(10);
         return view('frontend.order', compact('orders','paymentMethodCount'));
     }
 
     public function listing()
     {
-        $listings = Listing::where('user_id', auth()->user()->id)->paginate(10);
+        $listings = Listing::where('user_id', auth()->user()->id)->where('status','!=', 'deactive')->paginate(10);
         return view('frontend.listing', compact('listings'));
     }
 
@@ -1281,7 +1281,7 @@ class CardController extends Controller
         $final_message=[];
         if ($request->isMethod('post')) {
             $data=$request->all();
-            $orders = Order::whereIn('id', $data['order_id'])->get();
+            $orders = Order::whereIn('id', $data['order_id'])->where('status','!=', 'delete')->get();
         }else{
             $orders = Order::where('campaign_type', 'one-time')->where('status', 'pending')->get();
         }

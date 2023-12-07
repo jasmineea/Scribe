@@ -24,7 +24,7 @@
 							<h3>Let's get started. What would you like to do?</h3>
 						</div>
 					   <fieldset class="field-active">
-						<form action="{{ route("frontend.cards.step1Update")}}" method="POST">
+						<form action="{{ route("frontend.cards.step1Update")}}" method="POST" id="form_class_1">
 							{{ csrf_field() }}
 							<div class="step-1-options step-0">
 								<div class="step-0-radios">
@@ -80,6 +80,10 @@
 	$(".step-1-option").click(function(){
 		$('.input_radio').prop('checked', false);
 		$(this).find('.input_radio').prop('checked', true);
+		
+		setTimeout(() => {
+			$('body').find("#form_class_1").submit();
+		}, "100");
 	})
 	$('.step-1-option').removeClass('selected');
 	$('.input_radio:checked').closest('.step-0-radios').find('.step-1-option').addClass('selected');

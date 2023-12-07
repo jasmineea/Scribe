@@ -60,6 +60,7 @@ Route::group(['namespace' => '\Modules\Order\Http\Controllers\Backend', 'as' => 
     Route::get("$module_name/changeStatus/{id}/{status}", ['as' => "$module_name.changeStatus", 'uses' => "$controller_name@changeStatus"]);
     Route::get("$module_name/index_list", ['as' => "$module_name.index_list", 'uses' => "$controller_name@index_list"]);
     Route::get("$module_name/index_data", ['as' => "$module_name.index_data", 'uses' => "$controller_name@index_data"]);
+    Route::get("$module_name/delete-campaign/{id}", ['as' => "$module_name.delete_campaign", 'uses' => "$controller_name@delete_campaign"]);
     Route::get("$module_name/index_data2", ['as' => "$module_name.index_data2", 'uses' => "$controller_name@index_data2"]);
     Route::get("master_files/index_data", ['as' => "master_files.index_data", 'uses' => "$controller_name@master_files_data"]);
     Route::get("master_design_files/index_data", ['as' => "master_design_files.index_data", 'uses' => "$controller_name@master_design_files_data"]);

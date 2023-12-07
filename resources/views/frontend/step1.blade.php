@@ -110,5 +110,11 @@ function sub(obj) {
 //   document.getElementById("yourBtn").innerHTML = fileName[fileName.length - 1];
   $('#listing_select').val(0);
 }
+$("#upload_recipients").change(function(){
+	$("#xsl_upload").submit();
+})
+$("#listing_select").change(function(){
+	$("#xsl_upload").submit();
+})
 </script>
 @endsection

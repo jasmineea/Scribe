@@ -190,32 +190,29 @@ $class_tooltip="step_5a";
                                  <div class="design-view-section">
                                     <!-- Design View Section -->
                                     <div class="tab-content" id="myTabContent">
-                                       <div class="tab-pane fade show active" id="envelope" role="tabpanel" aria-labelledby="envelope-tab">
+                                       <div class="tab-pane fade {{empty($type_select)?'show active':''}}" id="envelope" role="tabpanel" aria-labelledby="envelope-tab">
                                           <div class="design-area design-area__envelope">
                                              <img src="{{asset('img/preview/')}}/{{$final_array['enevolope_preview_image']}}"  style="width: 100%;height: inherit;">
-                                             <!-- <img src="{{asset('img/back1.png')}}"> -->
                                           </div>
                                        </div>
-                                       <div class="tab-pane fade" id="home" role="tabpanel" aria-labelledby="home-tab">
+                                       <div class="tab-pane fade {{!empty($type_select)?'show active':''}}"  id="home" role="tabpanel" aria-labelledby="home-tab">
                                           <div class="design-area design-area__front">
                                              <img src="{{asset('img/1500-with-shadow.png')}}" style="width: 100%;height: inherit;">
-                                             <!-- <img src="{{asset('img/front1.png')}}"> -->
                                           </div>
                                        </div>
                                        <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
                                           <div class="design-area design-area__back">
                                              <img src="{{asset('img/1500-with-shadow.png')}}"  style="width: 100%;height: inherit;">
-                                             <!-- <img src="{{asset('img/back1.png')}}"> -->
                                           </div>
                                        </div>
                                       
                                     </div>
                                     <ul class="nav nav-tabs" id="myTab" role="tablist">
                                        <li class="nav-item" role="presentation">
-                                          <button class="nav-link1 theme-btn active" id="envelope-tab" data-bs-toggle="tab" data-bs-target="#envelope" type="button" role="tab" aria-controls="envelope" aria-selected="false">Envelope View</button>
+                                          <button class="nav-link1 theme-btn  {{empty($type_select)?'active':''}}" id="envelope-tab" data-bs-toggle="tab" data-bs-target="#envelope" type="button" role="tab" aria-controls="envelope" aria-selected="false">Envelope View</button>
                                        </li>
                                        <li class="nav-item" role="presentation">
-                                          <button class="nav-link1 theme-btn " id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Front View</button>
+                                          <button class="nav-link1 theme-btn  {{!empty($type_select)?'active':''}}" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Front View</button>
                                        </li>
                                        <li class="nav-item" role="presentation">
                                           <button class="nav-link1 theme-btn" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">Back View</button>
@@ -401,8 +398,8 @@ $class_tooltip="step_5a";
                <select required name="save_type[{{$value['id']}}]">
                   <option value="">select type</option>
                   <option value="inner">Inner Design</option>
-                  <option value="outer">Outer Design</option>
-                  <option value="both" selected>Both Inner and Outer Design</option>
+                  <option value="outer" selected>Outer Design</option>
+                  <option value="both">Both Inner and Outer Design</option>
                </select>
             </td>
          </tr>

@@ -318,7 +318,7 @@ class OrderController extends Controller
                             }
                         })
                         ->addColumn('action', function ($data) {
-                            return  '<a href="'.route('backend.design_files.delete_image',['id'=>$data]).'" class="btn btn-danger btn-sm mt-1" data-toggle="tooltip" title="view customer detail"><i class="fas fa-trash"></i></a>';
+                            return  '<a href="'.route('backend.design_files.delete_image',['id'=>$data]).'" class="btn btn-danger btn-sm mt-1" data-toggle="tooltip" title="Delete Image"><i class="fas fa-trash"></i></a>';
                         })
                         ->rawColumns(['image_path','inner_design','action','user_id'])
                         ->orderColumns(['id'], '-:column $1')
@@ -332,6 +332,15 @@ class OrderController extends Controller
         $card->save();
         return redirect()->route('backend.orders.designfiles');  
     }
+
+    public function delete_campaign(Request $request,$id){
+        $module_model = $this->module_model;
+        $card = $module_model::find($id);
+        $card->status = 'delete';
+        $card->save();
+        return redirect()->back();  
+    }
+    
 
     public function index_data(Request $request)
     {
@@ -348,6 +357,7 @@ class OrderController extends Controller
         $s_id=$request->query('s_id');
 
         $$module_name = $module_model::select('id', 'user_id','campaign_name','inner_design','main_design','campaign_type_2', 'campaign_message', 'order_amount', 'final_printing_file', 'status', 'updated_at','listing_id');
+        $$module_name=$$module_name->where('status','!=', 'delete');
         if ($user_id) {
             $$module_name=$$module_name->where('user_id', $user_id);
         }
@@ -397,6 +407,9 @@ class OrderController extends Controller
                             $select_html.="</select>";
                             return $select_html;
                         })
+                        ->addColumn('action', function ($data) {
+                            return  '<a href="'.route('backend.orders.delete_campaign',['id'=>$data]).'" class="btn btn-danger btn-sm mt-1" data-toggle="tooltip" title="Delete Campaign"><i class="fas fa-trash"></i></a>';
+                        })
                         ->editColumn('updated_at', function ($data) {
                             $module_name = $this->module_name;
 
@@ -426,7 +439,8 @@ class OrderController extends Controller
         $type=$request->query('type');
         $s_id=$request->query('s_id');
 
-        $$module_name = $module_model::select('orders.id','users.name', 'user_id','campaign_name','campaign_type_2', 'order_amount', 'orders.status','listing_id')->join('users','users.id','=','orders.user_id');
+        $$module_name = $module_model::select('orders.id','users.name','orders.campaign_message','orders.inner_design','orders.main_design', 'user_id','campaign_name','campaign_type_2', 'order_amount', 'orders.status','listing_id')->join('users','users.id','=','orders.user_id');
+        $$module_name=$$module_name->where('orders.status','!=', 'delete');
         // if ($user_id) {
         //     $$module_name=$$module_name->where('user_id', $user_id);
         // }
@@ -450,13 +464,20 @@ class OrderController extends Controller
                             $return_string = '<strong>'.$data->user->name.'</strong>';
                             return $return_string;
                         })
+                        ->addColumn('message_overview', function ($data) {
+                            if(@$data->campaign_message&&file_exists(public_path('img/preview/'.@$data->campaign_message))){ $preview_image=asset('img/preview/'.@$data->campaign_message); $r='';if($data->main_design){
+                                $r="&nbsp;<img width='50px' class='model_preview' data-url='".asset("storage/".$data->main_design)."' src='".asset("storage/".$data->main_design)."'>";
+                            } return "<img width='50px' class='model_preview' style='display:inline;background:url(".asset("storage/".$data->inner_design).") #f8f8f8;cursor: zoom-in;background-position:center;background-size:92%;background-repeat:no-repeat;'  data-url='".$preview_image."' src='".$preview_image."'>".$r; }else{
+                                return $data->campaign_message;
+                            }
+                        })
                         ->editColumn('status', function ($data) {
                             $status_list=status_list();
                             return $status_list[$data->status];
                         })->editColumn('id', function ($data) {
-                            return $data->id." <input type='checkbox' name='order_id[]' value='".$data->id."'>";
+                            return $data->id." <input type='hidden' class='hidden_id' name='order_id[]' value='".$data->id."'><div class='checkbox_select btn btn-warning'><i class='fa fa-plus'></i></div>";
                         })
-                        ->rawColumns(['name','user_id','orders.status','id'])
+                        ->rawColumns(['name','user_id','orders.status','id','message_overview'])
                         ->orderColumns(['orders.id'], '-:column $1')
                         ->make(true);
     }

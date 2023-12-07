@@ -117,11 +117,11 @@
 											</div>
 											<div class="accordion-item">
 											   <h2 class="accordion-header" id="headingTwo">
-												  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+												  <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
 												  2. Map Spreadsheet To Envelope Address
 												  </button>
 											   </h2>
-											   <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+											   <div id="collapseTwo" class="accordion-collapse collapse show" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
 												  <div class="accordion-body">
 													 <span class="append_rows_columns">
 														<table border="1"  style="width: 100%;">

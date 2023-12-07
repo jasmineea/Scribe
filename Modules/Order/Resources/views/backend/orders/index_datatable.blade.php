@@ -53,9 +53,9 @@
                             <th>
                                 Updated At
                             </th>
-                            {{-- <th class="text-end">
+                            <th class="text-end">
                                 Action
-                            </th> --}}
+                            </th> 
                         </tr>
                     </thead>
                 </table>
@@ -137,6 +137,10 @@
             {
                 data: 'updated_at',
                 name: 'updated_at'
+            },
+            {
+                data: 'action',
+                name: 'action'
             }
         ]
     });

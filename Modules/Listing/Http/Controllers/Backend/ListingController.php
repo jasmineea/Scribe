@@ -80,6 +80,7 @@ class ListingController extends Controller
 
     public function index_data(Request $request)
     {
+        
         $module_title = $this->module_title;
         $module_name = $this->module_name;
         $module_icon = $this->module_icon;
@@ -92,6 +93,7 @@ class ListingController extends Controller
         $s_id=$request->query('s_id');
 
         $$module_name = $module_model::select('id', 'user_id', 'name', 'status', 'updated_at');
+        $$module_name=$$module_name->where('status','!=', 'deactive');
         if ($user_id) {
             $$module_name=$$module_name->where('user_id', $user_id);
         }
@@ -206,5 +208,13 @@ class ListingController extends Controller
             "listing::backend.$module_name.show",
             compact('module_title', 'module_name', 'module_icon', 'module_name_singular', 'module_action', "$module_name_singular", 'activities', 'contacts')
         );
+    }
+
+    public function delete(Request $request,$id){
+        $module_model = $this->module_model;
+        $card = $module_model::find($id);
+        $card->status = 'deactive';
+        $card->save();
+        return redirect()->back();  
     }
 }

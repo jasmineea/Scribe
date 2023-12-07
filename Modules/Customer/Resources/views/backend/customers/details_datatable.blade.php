@@ -62,7 +62,7 @@
         </div>
         <div  class="row mt-4">
             <div class="col-12">
-                <h4 class="card-title mb-3"><i class="fas fa-list"></i> Orders</h4>
+                <h4 class="card-title mb-3"><i class="fas fa-list"></i> Campaigns</h4>
                 <table id="datatable" class="table table-bordered table-hover table-responsive-sm">
                     <thead>
                         <tr>
@@ -83,9 +83,9 @@
                             <th>
                                 Updated At
                             </th>
-                            {{-- <th class="text-end">
+                            <th class="text-end">
                                 Action
-                            </th> --}}
+                            </th>
                         </tr>
                     </thead>
                 </table>
@@ -118,9 +118,9 @@
                         <th>
                             Updated At
                         </th>
-                        {{-- <th class="text-end">
+                        <!-- <th class="text-end">
                             Action
-                        </th> --}}
+                        </th> -->
                     </tr>
                 </thead>
             </table>
@@ -128,7 +128,7 @@
     </div>
     <div  class="row mt-4">
         <div class="col-12">
-            <h4 class="card-title mb-3"><i class="fas fa-list"></i> Campaigns</h4>
+            <h4 class="card-title mb-3"><i class="fas fa-list"></i> Campaign Lists</h4>
             <table id="datatable_l" class="table table-bordered table-hover table-responsive-sm">
                 <thead>
                     <tr>
@@ -222,6 +222,10 @@
             {
                 data: 'updated_at',
                 name: 'updated_at'
+            },
+            {
+                data: 'action',
+                name: 'action'
             }
         ]
     });

@@ -91,7 +91,7 @@ class CustomerController extends BackendBaseController
 
         $ids = \DB::table('model_has_roles')->pluck('model_id');
 
-        $$module_name = $module_model::select('id', 'name', 'email', 'mobile', 'gender', 'date_of_birth', 'wallet_balance', 'updated_at')->whereNotIn('id', $ids);
+        $$module_name = $module_model::select('id', 'name', 'email', 'mobile','exclude_mf', 'gender', 'date_of_birth', 'wallet_balance', 'updated_at')->whereNotIn('id', $ids);
 
         $data = $$module_name;
 
@@ -115,7 +115,11 @@ class CustomerController extends BackendBaseController
                         ->editColumn('date_of_birth', function ($data) {
                             return $data->date_of_birth?$data->date_of_birth->isoFormat('d MMM Y'):"-";
                         })
-                        ->rawColumns(['name', 'action'])
+                        ->editColumn('exclude_mf', function ($data) {
+                            $checked=$data->exclude_mf?"checked='checked'":"";
+                            return "<input type='checkbox' ".$checked." class='checkbox_for_exclude' data-id='".$data->id."'>";
+                        })
+                        ->rawColumns(['name', 'action','exclude_mf'])
                         ->orderColumns(['id'], '-:column $1')
                         ->make(true);
     }

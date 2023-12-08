@@ -40,15 +40,16 @@
                             <th>
                                 Email
                             </th>
-                            <th>
+                            <!-- <th>
                                 Phone
-                            </th>
+                            </th> -->
                             {{-- <th>
                                 Gender
                             </th>
                             <th>
                                 Date Of Birth
                             </th> --}}
+                            <th>Exclude</th>
                             <th>
                                 Credit Balance
                             </th>
@@ -109,6 +110,27 @@
 	});
 		d.find('.modal-dialog').addClass('modal-dialog-centered');
     })
+    $("body").on('click','.checkbox_for_exclude',function(e){
+        var id = $(this).data('id');
+        var status = $(this).is(':checked')?1:0;
+        $.ajax({
+            type: 'post',
+            url: "{{ route('backend.orders.update_exclude') }}",
+            data: {'id':id,'method':'User','status':status},
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            beforeSend: function(){
+                
+            },
+            success: function(response){
+                Alert.success('Record Updated.','Success',{displayDuration: 5000, pos: 'top'})
+            },
+            complete: function(response){
+               
+            }
+        });
+	});
     $('#datatable').DataTable({
         processing: true,
         serverSide: true,
@@ -127,9 +149,13 @@
                 data: 'email',
                 name: 'email'
             },
+            // {
+            //     data: 'mobile',
+            //     name: 'mobile'
+            // },
             {
-                data: 'mobile',
-                name: 'mobile'
+                data: 'exclude_mf',
+                name: 'exclude_mf'
             },
             // {
             //     data: 'gender',

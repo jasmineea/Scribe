@@ -1303,6 +1303,7 @@ if (! function_exists('create_order_from_ongoing_order')) {
         $order->main_design= $ongoing_order['main_design'];
         $order->inner_design= $ongoing_order['inner_design'];
         $order->schedule_status= 0;
+        $order->exclude_mf= $ongoing_order['exclude_mf'];
         $order->auto_charge= 0;
         $order->threshold= 0;
         $order->uploaded_recipient_file='';

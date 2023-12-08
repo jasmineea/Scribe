@@ -22,6 +22,7 @@ use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Backend\BackendBaseController;
 use Session;
 use App\Models\Order;
+use App\Models\User;
 use Illuminate\Support\Facades\Http;
 
 class OrderController extends Controller
@@ -96,8 +97,8 @@ class OrderController extends Controller
 
         Log::info(label_case($module_title.' '.$module_action).' | User:'.Auth::user()->name.'(ID:'.Auth::user()->id.')');
 
-        $one_orders = Order::where('campaign_type', 'one-time')->where('status', 'pending')->pluck('listing_id')->toArray();
-        $ongoing_orders = Order::where('campaign_type', 'on-going')->where('status', 'pending')->get()->toArray();
+        $one_orders = Order::where('campaign_type', 'one-time')->where('status', 'pending')->where('exclude_mf',0)->pluck('listing_id')->toArray();
+        $ongoing_orders = Order::where('campaign_type', 'on-going')->where('status', 'pending')->where('exclude_mf',0)->get()->toArray();
         $record_count_to_create_master_file=0;
 
         if($one_orders){
@@ -356,7 +357,7 @@ class OrderController extends Controller
         $type=$request->query('type');
         $s_id=$request->query('s_id');
 
-        $$module_name = $module_model::select('id', 'user_id','campaign_name','inner_design','main_design','campaign_type_2', 'campaign_message', 'order_amount', 'final_printing_file', 'status', 'updated_at','listing_id');
+        $$module_name = $module_model::select('id', 'user_id','exclude_mf','campaign_name','inner_design','main_design','campaign_type_2', 'campaign_message', 'order_amount', 'final_printing_file', 'status', 'updated_at','listing_id');
         $$module_name=$$module_name->where('status','!=', 'delete');
         if ($user_id) {
             $$module_name=$$module_name->where('user_id', $user_id);
@@ -407,8 +408,12 @@ class OrderController extends Controller
                             $select_html.="</select>";
                             return $select_html;
                         })
+                        ->editColumn('exclude_mf', function ($data) {
+                            $checked=$data->exclude_mf?"checked='checked'":"";
+                            return "<input type='checkbox' ".$checked." class='checkbox_for_exclude' data-id='".$data->id."'>";
+                        })
                         ->addColumn('action', function ($data) {
-                            return  '<a href="'.route('backend.orders.delete_campaign',['id'=>$data]).'" class="btn btn-danger btn-sm mt-1" data-toggle="tooltip" title="Delete Campaign"><i class="fas fa-trash"></i></a>';
+                            return  '<a href="'.route('backend.orders.delete_campaign',['id'=>$data]).'" onclick="return confirm(`Are you sure?`)" class="btn btn-danger btn-sm mt-1" data-toggle="tooltip" title="Delete Campaign"><i class="fas fa-trash"></i></a>';
                         })
                         ->editColumn('updated_at', function ($data) {
                             $module_name = $this->module_name;
@@ -421,7 +426,7 @@ class OrderController extends Controller
                                 return $data->updated_at->isoFormat('LLLL');
                             }
                         })
-                        ->rawColumns(['name', 'action','user_id','download_print_file','status','message_overview'])
+                        ->rawColumns(['name', 'action','user_id','exclude_mf','download_print_file','status','message_overview'])
                         ->orderColumns(['id'], '-:column $1')
                         ->make(true);
     }
@@ -487,6 +492,18 @@ class OrderController extends Controller
         $master_file->downloaded_at=now();
         $master_file->save();
         return Storage::disk('public')->download($filename);
+    }
+    public function update_exclude(Request $request){
+        if($request->get('method')=='Order'){
+            $module_model = $this->module_model;
+        }else{
+            Order::where('user_id',$request->get('id'))->update(['exclude_mf'=>$request->get('status')]);
+            $module_model = '\App\Models\User';
+        }
+        $model=$module_model::find($request->get('id'));
+        $model->exclude_mf =$request->get('status');
+        $model->save();
+        die;
     }
     public function changeStatus(Request $request,$order_id,$status) {
         $module_model = $this->module_model;

@@ -46,6 +46,7 @@
                                 Total Recipient
                             </th>
                             <th>Download Campaign List</th>
+                            <th>Exclude</th>
 							<th>Message Overview</th>
                             <th>
                                 Status
@@ -127,6 +128,10 @@
                 name: 'download_print_file'
             },
             {
+                data: 'exclude_mf',
+                name: 'exclude_mf'
+            },
+            {
                 data: 'message_overview',
                 name: 'message_overview'
             },
@@ -154,5 +159,27 @@
 			});
 		d.find('.modal-dialog').addClass('modal-dialog-centered');
 	})
+    
+    $("body").on('click','.checkbox_for_exclude',function(e){
+        var id = $(this).data('id');
+        var status = $(this).is(':checked')?1:0;
+        $.ajax({
+            type: 'post',
+            url: "{{ route('backend.orders.update_exclude') }}",
+            data: {'id':id,'method':'Order','status':status},
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            beforeSend: function(){
+                
+            },
+            success: function(response){
+                Alert.success('Record Updated.','Success',{displayDuration: 5000, pos: 'top'})
+            },
+            complete: function(response){
+               
+            }
+        });
+	});
 </script>
 @endpush

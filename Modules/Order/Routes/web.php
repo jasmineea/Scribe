@@ -63,6 +63,7 @@ Route::group(['namespace' => '\Modules\Order\Http\Controllers\Backend', 'as' => 
     Route::get("$module_name/delete-campaign/{id}", ['as' => "$module_name.delete_campaign", 'uses' => "$controller_name@delete_campaign"]);
     Route::get("$module_name/index_data2", ['as' => "$module_name.index_data2", 'uses' => "$controller_name@index_data2"]);
     Route::get("master_files/index_data", ['as' => "master_files.index_data", 'uses' => "$controller_name@master_files_data"]);
+    Route::post("$module_name/update_exclude", ['as' => "$module_name.update_exclude", 'uses' => "$controller_name@update_exclude"]);
     Route::get("master_design_files/index_data", ['as' => "master_design_files.index_data", 'uses' => "$controller_name@master_design_files_data"]);
     Route::get("design_files/index_data/{type?}", ['as' => "design_files.index_data", 'uses' => "$controller_name@design_files_data"]);
     Route::get("design_files/delete_image/{id}", ['as' => "design_files.delete_image", 'uses' => "$controller_name@delete_image"]);

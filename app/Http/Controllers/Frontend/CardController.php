@@ -572,16 +572,16 @@ class CardController extends Controller
                     $card = CardDesign::find($key);
                     $card->type = 'both';
                     $card->save();
-                    $data1['front_design']=$card['front_image_path'];
-                    $data1['back_design']=$card['back_image_path'];
+                    $data1['front_design']=$card['back_image_path'];
+                    $data1['back_design']=$card['front_image_path'];
                     $data1['inner_design']=$card['image_path'];
                 }else{
                     $card = CardDesign::find($key);
                     $card->type = $value;
                     $card->save();
                     if($value=='outer'){
-                        $data1['front_design']=$card['front_image_path'];
-                        $data1['back_design']=$card['back_image_path'];
+                        $data1['front_design']=$card['back_image_path'];
+                        $data1['back_design']=$card['front_image_path'];
                     }
                     if($value=='inner'){
                         $data1['inner_design']=$card['image_path'];
@@ -1281,9 +1281,9 @@ class CardController extends Controller
         $final_message=[];
         if ($request->isMethod('post')) {
             $data=$request->all();
-            $orders = Order::whereIn('id', $data['order_id'])->where('status','!=', 'delete')->get();
+            $orders = Order::whereIn('id', $data['order_id'])->where('status','!=', 'delete')->where('exclude_mf',0)->get();
         }else{
-            $orders = Order::where('campaign_type', 'one-time')->where('status', 'pending')->get();
+            $orders = Order::where('campaign_type', 'one-time')->where('status', 'pending')->where('exclude_mf',0)->get();
         }
         $i=0;
 

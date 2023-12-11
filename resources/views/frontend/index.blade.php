@@ -53,35 +53,35 @@
 				<div class="campaign-boxes">
 					<div class="c-number">01</div>
 					<div class="c-title">Name your campaign and compose your message.</div>
-					<div class="c-text">Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.</div>
+					//<div class="c-text">Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.</div>
 				</div>
 			</div>
 			<div class="col-12 col-sm-4">
 				<div class="campaign-boxes">
 					<div class="c-number">02</div>
 					<div class="c-title">Upload your contact list via CSV</div>
-					<div class="c-text">Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.</div>
+					//<div class="c-text">Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.</div>
 				</div>
 			</div>
 			<div class="col-12 col-sm-4">
 				<div class="campaign-boxes">
 					<div class="c-number">03</div>
 					<div class="c-title">Map your contact list fields</div>
-					<div class="c-text">Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.</div>
+					//<div class="c-text">Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.</div>
 				</div>
 			</div>
 			<div class="col-12 col-sm-4">
 				<div class="campaign-boxes">
 					<div class="c-number">04</div>
 					<div class="c-title">Choose your handwritten font</div>
-					<div class="c-text">Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.</div>
+					//<div class="c-text">Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.</div>
 				</div>
 			</div>
 			<div class="col-12 col-sm-4">
 				<div class="campaign-boxes">
 					<div class="c-number">05</div>
 					<div class="c-title">Review & approve design proof</div>
-					<div class="c-text">Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.</div>
+					//<div class="c-text">Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.</div>
 				</div>
 			</div>
 		</div>

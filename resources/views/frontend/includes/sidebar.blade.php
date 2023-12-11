@@ -48,15 +48,15 @@
 		<hr>
 		<label>Resources</label>
 		<ul class="sidebar-parent-menu">
-			<li><span class="theme-icon ico-api"></span><a href="javascript:void(0)" data-id="2">API &amp; Integrations  <span class="badge bg-danger badge_bg_color">Coming Soon</span><i class="fa fa-angle-down pull-right"></i></a>
+			<li><span class="theme-icon ico-api"></span><a href="javascript:void(0)" data-id="2">API &amp; Integrations  /*<span class="badge bg-danger badge_bg_color">Coming Soon</span>*/<i class="fa fa-angle-down pull-right"></i></a>
 				<ul class="sidebar-child-menu  {{in_array(request()->route()->getName(),['frontend.cards.zapierImport','frontend.cards.makeImport'])? "show" :"" }}" " data-content-id="2">
 					<li><a  href="{{ route("frontend.cards.zapierImport")}}">Import Recipients using Zapier<span>Import Recipients</span></a></li>
-					<li><a  href="{{ route("frontend.cards.makeImport")}}">Import Recipients using Make.com<span>Import Recipients</span></a></li>
-					<li><a  href="#">Steps to be folllowed for Integrations<span>step by step guidance</span></a></li>
+					//<li><a  href="{{ route("frontend.cards.makeImport")}}">Import Recipients using Make.com<span>Import Recipients</span></a></li>
+					//<li><a  href="#">Steps to be folllowed for Integrations<span>step by step guidance</span></a></li>
 				</ul>
 
 			</li>
-			<li><span class="theme-icon ico-marketing"></span><a href="javascript:void(0)" data-id="3">Marketing Tools <span class="badge bg-danger badge_bg_color">Coming Soon</span> <i class="fa fa-angle-down pull-right"></i></a>
+			<li><span class="theme-icon ico-marketing"></span><a href="javascript:void(0)" data-id="3">Marketing Tools /*<span class="badge bg-danger badge_bg_color">Coming Soon</span>*/ <i class="fa fa-angle-down pull-right"></i></a>
 				<ul class="sidebar-child-menu" data-content-id="3">
 					<li><a href="#">Scribe AI Copy Writer </a></li>
 					<li><a href="#">Scribe AI List Builder</a></li>
@@ -65,7 +65,7 @@
 				</ul>
 
 			</li>
-			<li><span class="theme-icon ico-glove"></span><a href="javascript:void(0)" data-id="4">White Glove Agency <span class="badge bg-danger badge_bg_color">Coming Soon</span> <i class="fa fa-angle-down pull-right"></i></a>
+			<li><span class="theme-icon ico-glove"></span><a href="javascript:void(0)" data-id="4">White Glove Agency /*<span class="badge bg-danger badge_bg_color">Coming Soon</span>*/ <i class="fa fa-angle-down pull-right"></i></a>
 				<ul class="sidebar-child-menu" data-content-id="4">
 					<li><a href="#">Data List Building And Forming</a></li>
 					<li><a href="#">Custom Expert Copy Writing</a></li>
@@ -85,7 +85,7 @@
 		<hr>
 		@auth
 		<ul class="sidebar-parent-menu">
-			<li><span class="theme-icon ico-account"></span><a href="javascript:void(0)" data-id="7">My Account</a> <i class="fa fa-angle-down pull-right"></i></li>
+			<li><span class="theme-icon ico-account"></span><a href="javascript:void(0)" data-id="7">My Account <i class="fa fa-angle-down pull-right"></i></a>
 				<ul class="sidebar-child-menu {{in_array(request()->route()->getName(),['frontend.users.profile','frontend.cards.returnaddress','frontend.cards.wallet','frontend.cards.orders','frontend.cards.listing','frontend.cards.contacts','frontend.users.profileEdit','frontend.cards.orderDetail'])? "show" :"" }}" data-content-id="7">
 					<!-- <li><a href="{{ route('frontend.users.profile', encode_id(auth()->user()->id)) }}">My Profile</a></li> -->
 					<li><a href="{{ route("frontend.cards.wallet") }}">My Wallet</a></li>

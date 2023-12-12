@@ -1,0 +1,17 @@
+name: Deployment
+
+concurrency:
+  group: development
+  cancel-in-progress: true
+
+on:
+  push:
+    branches:
+      - develop-v2
+
+jobs:
+  deployment:
+    runs-on: ubuntu-latest
+    environment: development
+    steps:
+      - name: deploy

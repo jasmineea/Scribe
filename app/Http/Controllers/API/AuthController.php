@@ -33,9 +33,12 @@ class AuthController extends Controller
         ]);
         if (auth()->attempt($credentials)) {
             $user = Auth::user();
-            $user['token'] = $user->createToken('Laravelia')->accessToken;
+            $module_name_singular = User::findOrFail($user['id']);
+            $module_name_singular->api_access_token=$user->createToken('Laravelia')->accessToken;
+            $module_name_singular->save();
+            
             return response()->json([
-                'user' => $user
+                'user' => $module_name_singular
             ], 200);
         }
         return response()->json([

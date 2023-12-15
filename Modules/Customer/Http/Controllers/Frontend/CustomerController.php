@@ -17,7 +17,7 @@ use Spatie\Activitylog\Models\Activity;
 use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Backend\BackendBaseController;
 
-class ListingController extends BackendBaseController
+class CustomerController extends BackendBaseController
 {
     use Authorizable;
 

@@ -13,7 +13,7 @@
         "hashids/hashids": "^5.0",
         "laracasts/flash": "^3.2",
         "laravel/framework": "^10.0",
-        "laravel/passport": "^11.8",
+        "laravel/passport": "^11.10",
         "laravel/sanctum": "^3.2",
         "laravel/slack-notification-channel": "^2.5",
         "laravel/socialite": "^5.6",

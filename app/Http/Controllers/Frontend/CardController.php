@@ -134,6 +134,11 @@ class CardController extends Controller
 
     public function step4a(Request $request)
     {
+        $final_array=$request->session()->get('final_array');
+        if(empty($final_array['hwl_custom_msg'])){
+            Session::flash('error', 'please complete the step 3 first.');
+            return redirect()->route('frontend.cards.step3');
+        }
         $type_select=$request->get('type');
         $default_card_design = CardDesign::whereIn('user_id',[0])->where('status','1')->latest()->get();
         $carddesignswithouttype = CardDesign::whereIn('user_id',[auth()->user()->id])->where('type',null)->latest()->get();
@@ -1418,6 +1423,7 @@ class CardController extends Controller
                     ]
                 );
                 $orignal_name = $request->upload_post_file->getClientOriginalName();
+                $orignal_name = preg_replace("/[^a-z0-9\_\-\.]/i", '', basename($orignal_name));
                 $image_path = $request->file('upload_post_file')->storeAs('', "Post_BCC_".$orignal_name, 'public');
                 $order = MasterFiles::find($request->get('master_id'));
                 $order->post_uploaded_recipient_file = $image_path;

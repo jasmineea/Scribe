@@ -1724,7 +1724,11 @@ if (! function_exists('enevolopePreview')) {
         //===================================
         
        // imagettftext($img, $fontSize, $angle, $centerX, $centerY, $black, $fontFile, $txt, array("linespacing" => 0.45));
-        imagettftext($img, $fontSize, $angle,150,150, $black, $fontFile, $txt1, array("linespacing" => 0.45));
+        if(env('APP_URL')=='https://scribenurture.com'){
+            imagettftext($img, $fontSize, $angle,150,150, $black, $fontFile, $txt1, array("linespacing" => 0.45));
+        }else{
+            imagettftext($img, $fontSize, $angle,150,150, $black, $fontFile, $txt1, array("linespacing" => 1));
+        }
         $image_name=auth()->user()->id."_enevolope_".time().rand().".png";
         imagesavealpha($img, true);
         imagepng($img,public_path('img/preview/'.$image_name));//save image
@@ -1960,7 +1964,11 @@ if (! function_exists('generate_Preview_Image')) {
             $centerY=$centerY+$font_weight;
             //imagettftext($img,$fontSize,$angle, $centerX,$centerY-450, $black, $fontFile,$text1, array("linespacing" => 0.45));
         }
-        imagettftext($img, $fontSize, $angle, $centerX, $centerY, $black, $fontFile, $txt, array("linespacing" => 0.45));
+        if(env('APP_URL')=='https://scribenurture.com'){
+            imagettftext($img, $fontSize, $angle, $centerX, $centerY, $black, $fontFile, $txt, array("linespacing" => 0.45));
+        }else{
+            imagettftext($img, $fontSize, $angle, $centerX, $centerY, $black, $fontFile, $txt, array("linespacing" => 1));
+        }
         $image_name=auth()->user()->id."_".time().rand().".png";
         imagesavealpha($img, true);
         imagepng($img,public_path('img/preview/'.$image_name));//save image

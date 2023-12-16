@@ -40,7 +40,7 @@
 				<div class="hero-content" style="padding-top: 10px !important;"   id="step_6_tooltip" data-value="{{setting('step_6_tooltip_message')}}"  data-pos="right"  data-title="{{setting('step_6_tooltip_title')}}" data-element="step_6_tooltip" data-video_link="{{setting('step_6_video_link')}}">
 					{{-- <h1><span>wallet</span></h1> --}}
 
-					<p><b>Scribe Credit Balance </b>: round({{auth()->user()->wallet_balance}})</p>
+					<p><b>Scribe Credit Balance </b>: {{round(auth()->user()->wallet_balance)}}</p>
 					<ul class="recharge_block">
 						<li><button class="theme-btn">100</button></li>
 						<li><button class="theme-btn">500</button></li>
@@ -56,7 +56,7 @@
 						<div class='col-xs-12 col-md-10 form-group required'>
 							<label class='control-label'>Enter Credit Amount</label> <input
 								class='form-control' id="recharge_amount_input"  size='4'
-								type='number' name="amount" value="{{ app('request')->input('amount')}}"  placeholder="Enter Credit Amount" required>
+								type="text"  oninput="this.value=this.value.replace(/[^0-9]/g,'');" name="amount" value="{{ app('request')->input('amount')}}"  placeholder="Enter Credit Amount" required>
 								<input type="hidden" id="recharge_amount" value="">
 						</div>
 					</div>
@@ -125,8 +125,8 @@
 							<tr>
 								<th scope="row">{{ $data->id }}</th>
 								<td>{{ $data->type }}</td>
-								<td>round({{ $data->amount }})</td>
-								<td>round({{ $data->wallet_balance }})</td>
+								<td>{{ round($data->amount) }}</td>
+								<td>{{ round($data->wallet_balance) }}</td>
 								<td>{{ $data->payment_method }}</td>
 								<td>{{ $data->currency_amount }}</td>
 								<td>{{ $data->online_transaction_id }}</td>

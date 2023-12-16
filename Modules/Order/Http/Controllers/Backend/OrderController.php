@@ -402,8 +402,10 @@ class OrderController extends Controller
                             $status_list=status_list();
                             $select_html="<select class='change_status' data-id='".$data->id."'>";
                             foreach ($status_list as $key => $value) {
-                                $selected=$data->status==$key?'selected':'';
-                                $select_html.="<option value='".$key."' ".$selected.">".$value."</option>";
+                                if($value){
+                                    $selected=$data->status==$key?'selected':'';
+                                    $select_html.="<option value='".$key."' ".$selected.">".$value."</option>";
+                                }
                             }
                             $select_html.="</select>";
                             return $select_html;

@@ -16,6 +16,7 @@ use Modules\Listing\Entities\Contact;
 use Modules\Order\Entities\MasterFiles;
 use App\Events\Frontend\OrderPlaced;
 use App\Models\Order;
+use App\Models\Address;
 use App\Models\MetaData;
 
 class AuthController extends Controller
@@ -139,6 +140,19 @@ class AuthController extends Controller
             'message' => isset($request->message)?trim($request->message):'',
             'listing_id' => $list->id
         ]);
+
+        Address::firstOrCreate(
+            ['user_id' => auth()->user()->id,'first_name'=>isset($request->r_first_name)?trim($request->r_first_name):''],
+            ['last_name' => isset($request->r_last_name)?trim($request->r_last_name):'',
+            'full_name' => isset($request->r_first_name)||isset($request->r_last_name)?trim($request->r_first_name)." ".trim($request->r_last_name):'',
+            'email' => isset($request->r_contact_email)?trim($request->r_contact_email):'',
+            'address' => isset($request->r_address)?trim($request->r_address):'',
+            'city' => isset($request->r_city)?trim($request->r_city):'',
+            'state' => isset($request->r_state)?trim($request->r_state):'',
+            'zip' => isset($request->r_zip)?trim($request->r_zip):'',
+            'user_id' => auth()->user()->id
+            ]
+        );
 
         foreach ($request->all() as $key => $value) {
             if (!in_array($key, ['first_name','last_name','company_name','contact_email','phone','address','city','state','zip','listing_id','email','password','list_name','message'])) {

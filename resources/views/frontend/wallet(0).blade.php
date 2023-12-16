@@ -40,7 +40,7 @@
 				<div class="hero-content" style="padding-top: 10px !important;"   id="step_6_tooltip" data-value="{{setting('step_6_tooltip_message')}}"  data-pos="right"  data-title="{{setting('step_6_tooltip_title')}}" data-element="step_6_tooltip" data-video_link="{{setting('step_6_video_link')}}">
 					{{-- <h1><span>wallet</span></h1> --}}
 
-					<p><b>Scribe Credit Balance </b>: round({{auth()->user()->wallet_balance}})</p>
+					<p><b>Scribe Credit Balance </b>: {{auth()->user()->wallet_balance}}</p>
 					<ul class="recharge_block">
 						<li><button class="theme-btn">100</button></li>
 						<li><button class="theme-btn">500</button></li>
@@ -74,7 +74,7 @@
 				<table class="table">
 					<thead>
 						<tr>
-						<th scope="col">Handwritten Card</th>
+						<th scope="col">Hadwritten Card</th>
 						<th scope="col">Price($)</th>
 						</tr>
 					</thead>
@@ -97,7 +97,7 @@
 						<td>{{setting('card_written_pricing_1001_to_2000')}}</td>
 						</tr>
 						<tr>
-						<th scope="row">Greater than 2000</th>
+						<th scope="row">Greater then 2000</th>
 						<td>{{setting('card_written_pricing_greater_2000')}}</td>
 						</tr>
 						
@@ -125,8 +125,8 @@
 							<tr>
 								<th scope="row">{{ $data->id }}</th>
 								<td>{{ $data->type }}</td>
-								<td>round({{ $data->amount }})</td>
-								<td>round({{ $data->wallet_balance }})</td>
+								<td>{{ $data->amount }}</td>
+								<td>{{ $data->wallet_balance }}</td>
 								<td>{{ $data->payment_method }}</td>
 								<td>{{ $data->currency_amount }}</td>
 								<td>{{ $data->online_transaction_id }}</td>

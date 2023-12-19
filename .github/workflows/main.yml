@@ -15,11 +15,10 @@ jobs:
       with:
       #ssh:
         host: 208.109.35.119
-        username: superadmin
+        username: root
         password: oQ%lj8Z43Dyk
         timeout: 3s
         script: |
-         sudo -i
          cd /home/saasroot/public_html
          git stash
          git pull origin main

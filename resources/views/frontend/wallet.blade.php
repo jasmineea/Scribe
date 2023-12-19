@@ -82,23 +82,23 @@
 					<tbody>
 						<tr>
 						<th scope="row">1 to 100</th>
-						<td>{{setting('card_written_pricing_less_then_equal_to_100')}}</td>
+						<td>{{per_credit_price(50)}}</td>
 						</tr>
 						<tr>
 						<th scope="row">101 to 500</th>
-						<td>{{setting('card_written_pricing_101_to_500')}}</td>
+						<td>{{per_credit_price(250)}}</td>
 						</tr>
 						<tr>
 						<th scope="row">501 to 1000</th>
-						<td>{{setting('card_written_pricing_501_to_1000')}}</td>
+						<td>{{per_credit_price(750)}}</td>
 						</tr>
 						<tr>
 						<th scope="row">1001 to 2000</th>
-						<td>{{setting('card_written_pricing_1001_to_2000')}}</td>
+						<td>{{per_credit_price(1500)}}</td>
 						</tr>
 						<tr>
 						<th scope="row">Greater than 2000</th>
-						<td>{{setting('card_written_pricing_greater_2000')}}</td>
+						<td>{{per_credit_price(2200)}}</td>
 						</tr>
 						
 						

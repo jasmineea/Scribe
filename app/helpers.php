@@ -1027,19 +1027,39 @@ if (! function_exists('per_credit_price')) {
     {
         switch ($row_count) {
             case $row_count <= 100:
-                $price=setting('card_written_pricing_less_then_equal_to_100');
+                if(is_null(Auth::user()->card_written_pricing_less_than_equal_to_100)) {
+                    $price=setting('card_written_pricing_less_then_equal_to_100');
+                } else {
+                    $price=Auth::user()->card_written_pricing_less_than_equal_to_100;
+                }
                 break;
             case $row_count > 100 && 500 >= $row_count:
-                $price=setting('card_written_pricing_101_to_500');
+                if(is_null(Auth::user()->card_written_pricing_101_to_500)) {
+                    $price=setting('card_written_pricing_101_to_500');
+                } else {
+                    $price=Auth::user()->card_written_pricing_101_to_500;
+                }
                 break;
             case $row_count > 500 && 1000 >= $row_count:
-                $price=setting('card_written_pricing_501_to_1000');
+                if(is_null(Auth::user()->card_written_pricing_501_to_1000)) {
+                    $price=setting('card_written_pricing_501_to_1000');
+                } else {
+                    $price=Auth::user()->card_written_pricing_501_to_1000;
+                }
                 break;
             case $row_count > 1000 && 2000 >= $row_count:
-                $price=setting('card_written_pricing_1001_to_2000');
+                if(is_null(Auth::user()->card_written_pricing_1001_to_2000)) {
+                    $price=setting('card_written_pricing_1001_to_2000');
+                } else {
+                    $price=Auth::user()->card_written_pricing_1001_to_2000;
+                }
                 break;
             case $row_count > 2000:
-                $price=setting('card_written_pricing_greater_2000');
+                if(is_null(Auth::user()->card_written_pricing_greater_2000)) {
+                    $price=setting('card_written_pricing_greater_2000');
+                } else {
+                    $price=Auth::user()->card_written_pricing_greater_2000;
+                }
                 break;
             default:
                 $price=setting('card_written_pricing_less_then_equal_to_100');

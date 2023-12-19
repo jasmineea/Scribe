@@ -1,17 +1,28 @@
-name: Deployment
-
-concurrency:
-  group: development
-  cancel-in-progress: true
-
+name: Live Server
 on:
   push:
     branches:
-      - develop-v2
-
+      - main
 jobs:
-  deployment:
+ build:
+    name: Deploy Latest Code
     runs-on: ubuntu-latest
-    environment: development
     steps:
-      - name: deploy
+    - name: checkout
+      uses: actions/checkout@v1
+    - name: Deploy Code to Prod Env.
+      uses: appleboy/ssh-action@master
+      with:
+      #ssh:
+        host: 208.109.35.119
+        username: superadmin
+        password: oQ%lj8Z43Dyk
+        timeout: 3s
+        script: |
+         sudo -i
+         cd /home/saasroot/public_html
+         git stash
+         git pull origin main
+         git stash apply
+         composer update
+         sudo chmod -R 777 public/ app/ resources/ storage/

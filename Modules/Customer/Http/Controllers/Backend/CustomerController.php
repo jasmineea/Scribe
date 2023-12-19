@@ -129,6 +129,7 @@ class CustomerController extends BackendBaseController
      *
      * @return Response
      */
+
     public function details($id)
     {
         $module_title = $this->module_title;
@@ -153,6 +154,25 @@ class CustomerController extends BackendBaseController
             compact('module_title', 'module_name', 'module_icon', 'module_name_singular', 'module_action', "$module_name_singular", 'id')
         );
     }
+    public function refresh_token($id)
+    {
+        $module_title = $this->module_title;
+        $module_name = $this->module_name;
+        $module_icon = $this->module_icon;
+        $module_model = $this->module_model;
+        $module_name_singular = Str::singular($module_name);
+
+        $module_action = 'refresh_token';
+
+        $$module_name_singular = $module_model::findOrFail($id);
+        $$module_name_singular->api_access_token=$$module_name_singular->createToken('Laravelia')->accessToken;
+        $$module_name_singular->save();
+
+        Log::info(label_case($module_title.' '.$module_action).$$module_name_singular->name.' ('.$$module_name_singular->id.') | User:'.Auth::user()->name.'(ID:'.Auth::user()->id.')');
+        
+        return redirect()->back();
+    }
+
     public function wallet_recharge(Request $request){
         if($request->action_type=='dr'){
             $user = User::find($request->user_id);

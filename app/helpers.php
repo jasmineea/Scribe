@@ -443,7 +443,7 @@ if (! function_exists('status_list')) {
      */
     function status_list()
     {
-        $status_list=['pending'=>'In Production: Will send in 24-48 hours','processing'=>'Approved & Submitted','payment-pending'=>'Payment Pending','printing'=>'','shipped'=>'','delivered'=>'Complete: Sent Via USPS','pending-pickup'=>'','picked'=>'','draft'=>'Draft','on-going'=>'','paused'=>'Paused','delete'=>''];
+        $status_list=['pending'=>'Approved & Submitted','processing'=>'Approved & Submitted','payment-pending'=>'Payment Pending','printing'=>'In Production: Will send in 24-48 hours','shipped'=>'','delivered'=>'Complete: Sent Via USPS','pending-pickup'=>'','picked'=>'','draft'=>'Draft','on-going'=>'','paused'=>'Paused','delete'=>''];
 
         return $status_list;
     }

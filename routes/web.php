@@ -40,6 +40,7 @@ Route::group(['namespace' => 'App\Http\Controllers\Frontend', 'as' => 'frontend.
     Route::post('createMasterFile/{type?}', ['as' => "cards.createMasterFile", 'uses' => "CardController@createMasterFile"]);
     Route::get('exportFile/{list_id}', ['as' => "cards.exportFile", 'uses' => "CardController@exportFile"]);
     Route::get('createcontacts/{order_id}/{start}', ['as' => "cards.createcontacts", 'uses' => "CardController@createcontacts"]);
+    Route::get('updateStatusToDeliver', ['as' => "cards.updateStatusToDeliver", 'uses' => "CardController@updateStatusToDeliver"]);
 
     Route::group(['middleware' => ['auth']], function () {
         /*
@@ -133,6 +134,7 @@ Route::group(['namespace' => 'App\Http\Controllers\Frontend', 'as' => 'frontend.
         Route::get('duplicate-drder/{id}', ['as' => "$module_name.duplicateOrder", 'uses' => "$controller_name@duplicateOrder"]);
         Route::post('uploadFile', ['as' => "$module_name.uploadFile", 'uses' => "$controller_name@uploadFile"]);
         Route::get('generateFiles/{id}/{type?}', ['as' => "$module_name.generateFiles", 'uses' => "$controller_name@generateFiles"]);
+        Route::get("refresh-token/{id}", ['as' => "$module_name.refresh_token", 'uses' => "$controller_name@refresh_token"]);
         Route::post('uploadPreBccFile', ['as' => "$module_name.uploadPreBccFile", 'uses' => "$controller_name@uploadPreBccFile"]);
 
     });

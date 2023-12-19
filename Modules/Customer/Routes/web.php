@@ -62,5 +62,6 @@ Route::group(['namespace' => '\Modules\Customer\Http\Controllers\Backend', 'as' 
     Route::get("$module_name/details/{id}", ['as' => "$module_name.details", 'uses' => "$controller_name@details"]);
     Route::get("$module_name/trashed", ['as' => "$module_name.trashed", 'uses' => "$controller_name@trashed"]);
     Route::patch("$module_name/trashed/{id}", ['as' => "$module_name.restore", 'uses' => "$controller_name@restore"]);
+    Route::get("$module_name/refresh-token/{id}", ['as' => "$module_name.refresh_token", 'uses' => "$controller_name@refresh_token"]);
     Route::resource("$module_name", "$controller_name");
 });

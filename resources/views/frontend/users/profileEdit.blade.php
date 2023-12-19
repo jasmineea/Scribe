@@ -231,7 +231,7 @@
                             $field_placeholder = $field_lable;
                             $required = "";
                             ?>
-                            {{ html()->label('API Access Token', $field_name)->class('block-inline text-sm font-medium text-gray-700') }} {!! fielf_required($required) !!}
+                            {{ html()->label('API Access Token', $field_name)->class('block-inline text-sm font-medium text-gray-700') }} {!! fielf_required($required) !!}<a href="{{route('frontend.cards.refresh_token',[$user->id])}}"><i class="fa fa-refresh"></i></a>
                             {{ html()->textarea($field_name)->value($user->api_access_token)->placeholder($field_placeholder)->class('mt-1 border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-300 rounded border shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent')->attributes(["$required"])->attributes(['disabled'])->attributes(['style'=>'height:260px;resize:none;']) }}
                         </div>
 

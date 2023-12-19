@@ -48,6 +48,9 @@
                         <td>
                             <strong>
                                 {{ __(label_case($column->Field)) }}
+                                @if($column->Field=='api_access_token')
+                                    <a href="{{route('backend.customers.refresh_token',[$$module_name_singular->id])}}"><i class="fa fa-refresh"></i></a>
+                                @endif
                             </strong>
                         </td>
                         <td style="max-width: 500px;">

@@ -82,15 +82,15 @@
         var per_credit_price={{setting('card_written_pricing_less_then_equal_to_100')}};
         
         if(amount <= 100){
-            per_credit_price={{setting('card_written_pricing_less_then_equal_to_100')}};
+            per_credit_price={{ (Auth::user()) ? (Auth::user()->card_written_pricing_less_than_equal_to_100) ? Auth::user()->card_written_pricing_less_than_equal_to_100 : 3.49 : 3.49}};
         } else if (500 >= amount && amount > 100){
-            per_credit_price={{setting('card_written_pricing_101_to_500')}};
+            per_credit_price={{ (Auth::user()) ? (Auth::user()->card_written_pricing_101_to_500) ? Auth::user()->card_written_pricing_101_to_500 : 2.99 : 2.99}};
         } else if (1000 >= amount && amount > 500){
-            per_credit_price={{setting('card_written_pricing_501_to_1000')}};
+            per_credit_price={{ (Auth::user()) ? (Auth::user()->card_written_pricing_501_to_1000) ? Auth::user()->card_written_pricing_501_to_1000 : 2.49 : 2.49}};
         } else if (2000 >= amount && amount > 1000){
-            per_credit_price={{setting('card_written_pricing_1001_to_2000')}};
+            per_credit_price={{ (Auth::user()) ? (Auth::user()->card_written_pricing_1001_to_2000) ? Auth::user()->card_written_pricing_1001_to_2000 : 2.29 : 2.29}};
         } else if (amount > 2000){
-            per_credit_price={{setting('card_written_pricing_greater_2000')}};
+            per_credit_price={{ (Auth::user()) ? (Auth::user()->card_written_pricing_greater_2000) ? Auth::user()->card_written_pricing_greater_2000 : 1.99 : 1.99}};
         }else{   
             per_credit_price={{setting('card_written_pricing_less_then_equal_to_100')}};
         }

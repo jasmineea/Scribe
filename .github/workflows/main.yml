@@ -25,6 +25,7 @@ jobs:
          git stash apply
          composer update
          sudo chmod -R 777 public/ app/ resources/ storage/
+         
 name: Development Server
 on:
   push:

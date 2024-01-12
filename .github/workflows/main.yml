@@ -24,8 +24,8 @@ jobs:
          git pull origin main
          git stash apply
          composer update
-         sudo chmod -R 777 public/ app/ resources/ storage/
-         
+         sudo chmod -R 777 public/ app/ resources/ storage/       
+# development server
 name: Development Server
 on:
   push:

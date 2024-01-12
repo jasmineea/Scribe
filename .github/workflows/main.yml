@@ -24,32 +24,4 @@ jobs:
          git pull origin main
          git stash apply
          composer update
-         sudo chmod -R 777 public/ app/ resources/ storage/       
-# development server
-name: Development Server
-on:
-  push:
-    branches:
-      - develop-scribenurture
-jobs:
- build:
-    name: Deploy Latest Code
-    runs-on: ubuntu-latest
-    steps:
-    - name: checkout
-      uses: actions/checkout@v1
-    - name: Deploy Code to Develop Env.
-      uses: appleboy/ssh-action@master
-      with:
-      #ssh:
-        host: 208.109.35.119
-        username: root
-        password: oQ%lj8Z43Dyk
-        timeout: 3s
-        script: |
-         cd /home/saasroot/public_html/development
-         git stash
-         git pull origin develop-scribenurture
-         git stash apply
-         composer update
          sudo chmod -R 777 public/ app/ resources/ storage/

@@ -7,6 +7,7 @@ use PhpOffice\PhpSpreadsheet\Reader\Exception;
 use PhpOffice\PhpSpreadsheet\Writer\Xls;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use App\Models\User;
+use App\Models\Userprofile;
 use App\Models\Order;
 use Modules\Listing\Entities\Listing;
 use Modules\Listing\Entities\Contact;
@@ -21,6 +22,7 @@ use GDText\Box;
 use GDText\Color;
 // use Stripe;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Http;
 
 /*
  * Global helpers file with misc functions.
@@ -1790,7 +1792,22 @@ if (! function_exists('generate_design_Image')) {
     }
 }
 
-
+function updateOrderStatus($order_id,$status){
+    $order=Order::find($order_id);
+    $order->status =$status;
+    $order->save();
+    $userprofile = Userprofile::where('user_id',$order->user_id)->first();
+    $list = Listing::where('id',$order->listing_id)->first();
+    $post_data = Contact::where('listing_id',$order->listing_id)->select(['email','phone'])->get()->toArray();
+    foreach($post_data as $k=>$v){
+        $post_data[$k]['list_name']=$list->name;
+        $post_data[$k]['card_status']=$order->status;
+    }
+    if(!empty($userprofile->url_website)){
+        $response = Http::post($userprofile->url_website,$post_data);
+    }
+    return 1;
+}
 if (! function_exists('generate_Preview_Image')) {
 
     function generate_Preview_Image($text,$message_length=''){

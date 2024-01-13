@@ -9,6 +9,11 @@
 @endsection
 
 @section('content')
+<style>
+    select.change_status {
+    max-width: 210px !important;
+}
+</style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/6.0.0/bootbox.min.js" integrity="sha512-oVbWSv2O4y1UzvExJMHaHcaib4wsBMS5tEP3/YkMP6GmkwRJAa79Jwsv+Y/w7w2Vb/98/Xhvck10LyJweB8Jsw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <div class="card">
     <div class="card-body">
@@ -95,7 +100,7 @@
     $('body').on('change','.change_status',function(){
         var id=$(this).data('id');
         var status=$(this).val();
-        window.location.href = "/admin/orders/changeStatus/"+id+"/"+status;
+        window.location.href = "{{env('APP_URL')}}/admin/orders/changeStatus/"+id+"/"+status;
     })
     $('#datatable').DataTable({
         processing: true,

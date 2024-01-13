@@ -22,6 +22,5 @@ jobs:
          cd /home/saasroot/public_html/development
          git stash
          git pull origin develop-scribenurture
-         git stash apply
          composer update
          sudo chmod -R 777 public/ app/ resources/ storage/

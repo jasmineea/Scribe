@@ -1440,12 +1440,12 @@ class CardController extends Controller
                 );
                 $orignal_name = $request->upload_post_file->getClientOriginalName();
                 $orignal_name = preg_replace("/[^a-z0-9\_\-\.]/i", '', basename($orignal_name));
-                $image_path = $request->file('upload_post_file')->storeAs('', "Post_BCC_".$orignal_name, 'public');
+                $image_path = $request->file('upload_post_file')->storeAs('', "Post-BCC-".$orignal_name, 'public');
                 $order = MasterFiles::find($request->get('master_id'));
                 $order->post_uploaded_recipient_file = $image_path;
                 $order->save();
                 Order::where('master_id',$request->get('master_id'))->update(['status' =>'printing']);
-                replace_message_id_with_message($request->get('master_id'),"Post_BCC_".$orignal_name);
+                replace_message_id_with_message($request->get('master_id'),"Post-BCC-".$orignal_name);
                 Session::flash('success', 'Post BCC File Generated Successfully.');
                 return redirect()->route('backend.orders.masterfiles');
         }

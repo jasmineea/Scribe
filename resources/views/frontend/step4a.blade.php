@@ -419,6 +419,16 @@ $class_tooltip="step_5a";
 @if(@$final_array['inner_design'])
 <input id="inner_design" type="hidden" value="{{asset('storage/'.$final_array['inner_design'])}}">
 @endif
+@if ($message = Session::get('message'))
+      <script>
+         $(document).ready(function(){
+          bootbox.alert({
+            title: '<p style="color:red"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> oops! It there was an issue with your file…</p>',
+				message: '{!!$message!!}'
+			});
+			});
+      </script>
+@endif
 <script>
    $(document).ready(function(){
    	if({{count($carddesignswithouttype)}}!='0'){

@@ -1281,6 +1281,22 @@ section#hero-section:before {
     line-height: 86px;
     color: #426A8D;
 }
+.thank-you1 {
+    text-align: center;
+    width: auto !important;
+    margin: 0 0 0.81575em !important;
+}
+.thank-youimg {
+    max-width: fit-content;
+    margin: auto;
+}
+.hero-content h2 {
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 35px;
+    color: #426A8D;
+}
 a.icon-right-arrow {
     position: relative;
 }

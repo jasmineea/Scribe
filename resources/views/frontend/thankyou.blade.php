@@ -16,7 +16,7 @@
 					<p class='thank-you1'>Need to Integrate Your CRM? Email <a href = "mailto: graham@scribehandwritten.com">graham@scribehandwritten.com</a> to integrate you account.</p>
 					<p class='thank-you1'> Have questions on your marketing strategy, pricing, or need to reorder, or anything else?</p>
 					<p class='thank-you1'> Email your client success specialist Stacey Miller, at <a href = "mailto: stacey@scribehandwritten.com">stacey@scribehandwritten.com</a></p>
-
+					<p></p>
 					<h2>  What Should I Expect Next? Watch the Video Below Now!</h2>
 					<img class="thank-youimg" src="{{ asset('img/video-player-placeholder-very-large.png') }}">
 					<!-- <a class="theme-btn" href="{{route('frontend.cards.orders')}}" style="margin: auto;">View Orders</a> -->

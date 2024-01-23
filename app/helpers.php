@@ -999,6 +999,17 @@ if (! function_exists('read_excel_data')) {
                 }
                 $startcount++;
             }
+            foreach ($data as $key => $value) {
+                $empty_key=1;
+                foreach ($value as $key1 => $value1) {
+                    if(!empty($value1)){
+                        $empty_key=0;
+                    }
+                }
+                if($empty_key){
+                    unset($data[$key]);
+                }
+            }
             $error_code=0;
         } catch (Exception $e) {
             $error_code = $e->errorInfo[1];

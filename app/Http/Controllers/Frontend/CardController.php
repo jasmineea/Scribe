@@ -1281,6 +1281,7 @@ class CardController extends Controller
         ini_set("memory_limit", "-1");
         set_time_limit(0);
         auto_create_order();
+        $order_ids=[0];
 
         $master_file_record_limit = setting('master_file_record_limit');
         $final_message=[];
@@ -1312,7 +1313,8 @@ class CardController extends Controller
                     'total_records' => count($order_json['data'])
                 ]);
 
-
+                $order_ids[]=$value->id;
+                
                 foreach ($order_json['data'] as $key_1 => $value_1) {
                     $final_message[$i]['order_date']=date('Y-m-d H:i:s',strtotime($value->created_at));
                     $final_message[$i]['order_id']=$value->id;
@@ -1346,7 +1348,10 @@ class CardController extends Controller
                             'total_records' => count($final_message)
                         ]);
                         create_excel_for_master_file($final_message,$master_record->id);
+                        Order::whereIn('id',$order_ids)->update(['master_id' => $master_record->id]);
                         $final_message = [];
+                        unset($order_ids);
+                        $order_ids=[0];
                     }
                     $i=$i+1;
                 }
@@ -1354,6 +1359,7 @@ class CardController extends Controller
                     $order=Order::find($value->id);
                     $order->status='processing';
                     $order->save();
+                    $order_ids[]=$value->id;
                 }
             }
         }
@@ -1362,6 +1368,8 @@ class CardController extends Controller
                 'total_records' => count($final_message)
             ]);
             create_excel_for_master_file($final_message,$master_record->id);
+            Order::whereIn('id',$order_ids)
+                  ->update(['master_id' => $master_record->id]);
         }
         if($type){
             Log::info(label_case('master file created from on going order').' | User:'.Auth::user()->name.'(ID:'.Auth::user()->id.')');
@@ -1411,6 +1419,14 @@ class CardController extends Controller
         }
         die;
     }
+    public function refresh_token($id)
+    {
+        $module_name_singular = User::findOrFail($id);
+        $module_name_singular->api_access_token=$module_name_singular->createToken('Laravelia')->accessToken;
+        $module_name_singular->save();
+        
+        return redirect()->back();
+    }
     public function uploadPreBccFile(Request $request){
         if ($request->isMethod('post')) {
                 $this->validate(
@@ -1424,13 +1440,33 @@ class CardController extends Controller
                 );
                 $orignal_name = $request->upload_post_file->getClientOriginalName();
                 $orignal_name = preg_replace("/[^a-z0-9\_\-\.]/i", '', basename($orignal_name));
-                $image_path = $request->file('upload_post_file')->storeAs('', "Post_BCC_".$orignal_name, 'public');
+                $image_path = $request->file('upload_post_file')->storeAs('', "Post-BCC-".$orignal_name, 'public');
                 $order = MasterFiles::find($request->get('master_id'));
                 $order->post_uploaded_recipient_file = $image_path;
                 $order->save();
-                replace_message_id_with_message($request->get('master_id'),"Post_BCC_".$orignal_name);
+                Order::where('master_id',$request->get('master_id'))->update(['status' =>'printing']);
+                replace_message_id_with_message($request->get('master_id'),"Post-BCC-".$orignal_name);
                 Session::flash('success', 'Post BCC File Generated Successfully.');
                 return redirect()->route('backend.orders.masterfiles');
         }
     }
+    public function updateStatusToDeliver()
+    {
+        $orders = Order::where('campaign_type', 'one-time')->where('status', 'printing')->get()->toArray();
+        foreach ($orders as $key => $value) {
+            $day = date('l',strtotime($value['updated_at']));
+            $hourdiff = round((strtotime(now()) - strtotime($value['updated_at']))/3600, 1);
+            if($day=='Friday'){
+                if($hourdiff>72){
+                    Order::where('id',$value['id'])->update(['status' =>'delivered']);
+                }
+            }else{
+                if($hourdiff>24){
+                    Order::where('id',$value['id'])->update(['status' =>'delivered']);
+                }
+            }
+        }
+        die;
+    }
+    
 }

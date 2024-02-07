@@ -57,7 +57,7 @@ Route::group(['namespace' => '\Modules\Order\Http\Controllers\Backend', 'as' => 
     Route::get("$module_name/masterdesignfiles", ['as' => "$module_name.masterdesignfiles", 'uses' => "$controller_name@masterdesignfiles"]);
     Route::get("$module_name/designfiles/{type?}", ['as' => "$module_name.designfiles", 'uses' => "$controller_name@designfiles"]);
     Route::get("$module_name/dividefile/{id}", ['as' => "$module_name.dividefile", 'uses' => "$controller_name@dividefile"]);
-    Route::get("$module_name/changeStatus/{id}/{status}", ['as' => "$module_name.changeStatus", 'uses' => "$controller_name@changeStatus"]);
+    Route::get("$module_name/changeStatus/{id}/{status}/{type?}", ['as' => "$module_name.changeStatus", 'uses' => "$controller_name@changeStatus"]);
     Route::get("$module_name/index_list", ['as' => "$module_name.index_list", 'uses' => "$controller_name@index_list"]);
     Route::get("$module_name/index_data", ['as' => "$module_name.index_data", 'uses' => "$controller_name@index_data"]);
     Route::get("$module_name/delete-campaign/{id}", ['as' => "$module_name.delete_campaign", 'uses' => "$controller_name@delete_campaign"]);

@@ -31,6 +31,9 @@ return new class extends Migration
         Schema::table('contacts', function (Blueprint $table) {
             $table->enum('status', ['0','1','2'])->default(0);
         });
+        Schema::table('orders', function (Blueprint $table) {
+            $table->integer('master_id')->unsigned()->nullable();
+        });
     }
 
     /**

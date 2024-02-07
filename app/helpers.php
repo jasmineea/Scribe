@@ -7,6 +7,7 @@ use PhpOffice\PhpSpreadsheet\Reader\Exception;
 use PhpOffice\PhpSpreadsheet\Writer\Xls;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use App\Models\User;
+use App\Models\Userprofile;
 use App\Models\Order;
 use Modules\Listing\Entities\Listing;
 use Modules\Listing\Entities\Contact;
@@ -21,6 +22,7 @@ use GDText\Box;
 use GDText\Color;
 // use Stripe;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Http;
 
 /*
  * Global helpers file with misc functions.
@@ -443,7 +445,7 @@ if (! function_exists('status_list')) {
      */
     function status_list()
     {
-        $status_list=['pending'=>'In Production: Will send in 24-48 hours','processing'=>'Approved & Submitted','payment-pending'=>'Payment Pending','printing'=>'','shipped'=>'','delivered'=>'Complete: Sent Via USPS','pending-pickup'=>'','picked'=>'','draft'=>'Draft','on-going'=>'','paused'=>'Paused','delete'=>''];
+        $status_list=['pending'=>'Approved & Submitted','processing'=>'Approved & Submitted','payment-pending'=>'Payment Pending','printing'=>'In Production: Will send in 2-4 business days','shipped'=>'','delivered'=>'Complete: Sent Via USPS','pending-pickup'=>'','picked'=>'','draft'=>'Draft','on-going'=>'','paused'=>'Paused','delete'=>''];
 
         return $status_list;
     }
@@ -996,6 +998,17 @@ if (! function_exists('read_excel_data')) {
                     }
                 }
                 $startcount++;
+            }
+            foreach ($data as $key => $value) {
+                $empty_key=1;
+                foreach ($value as $key1 => $value1) {
+                    if(!empty($value1)){
+                        $empty_key=0;
+                    }
+                }
+                if($empty_key){
+                    unset($data[$key]);
+                }
             }
             $error_code=0;
         } catch (Exception $e) {
@@ -1744,7 +1757,11 @@ if (! function_exists('enevolopePreview')) {
         //===================================
         
        // imagettftext($img, $fontSize, $angle, $centerX, $centerY, $black, $fontFile, $txt, array("linespacing" => 0.45));
-        imagettftext($img, $fontSize, $angle,150,150, $black, $fontFile, $txt1, array("linespacing" => 0.45));
+        if(env('APP_URL')=='https://scribenurture.com'){
+            imagettftext($img, $fontSize, $angle,150,150, $black, $fontFile, $txt1, array("linespacing" => 0.45));
+        }else{
+            imagettftext($img, $fontSize, $angle,150,150, $black, $fontFile, $txt1, array("linespacing" => 1));
+        }
         $image_name=auth()->user()->id."_enevolope_".time().rand().".png";
         imagesavealpha($img, true);
         imagepng($img,public_path('img/preview/'.$image_name));//save image
@@ -1806,7 +1823,22 @@ if (! function_exists('generate_design_Image')) {
     }
 }
 
-
+function updateOrderStatus($order_id,$status){
+    $order=Order::find($order_id);
+    $order->status =$status;
+    $order->save();
+    $userprofile = Userprofile::where('user_id',$order->user_id)->first();
+    $list = Listing::where('id',$order->listing_id)->first();
+    $post_data = Contact::where('listing_id',$order->listing_id)->select(['email','phone'])->get()->toArray();
+    foreach($post_data as $k=>$v){
+        $post_data[$k]['list_name']=$list->name;
+        $post_data[$k]['card_status']=$order->status;
+    }
+    if(!empty($userprofile->url_website)){
+        $response = Http::post($userprofile->url_website,$post_data);
+    }
+    return 1;
+}
 if (! function_exists('generate_Preview_Image')) {
 
     function generate_Preview_Image($text,$message_length=''){
@@ -1980,7 +2012,11 @@ if (! function_exists('generate_Preview_Image')) {
             $centerY=$centerY+$font_weight;
             //imagettftext($img,$fontSize,$angle, $centerX,$centerY-450, $black, $fontFile,$text1, array("linespacing" => 0.45));
         }
-        imagettftext($img, $fontSize, $angle, $centerX, $centerY, $black, $fontFile, $txt, array("linespacing" => 0.45));
+        if(env('APP_URL')=='https://scribenurture.com'){
+            imagettftext($img, $fontSize, $angle, $centerX, $centerY, $black, $fontFile, $txt, array("linespacing" => 0.45));
+        }else{
+            imagettftext($img, $fontSize, $angle, $centerX, $centerY, $black, $fontFile, $txt, array("linespacing" => 1));
+        }
         $image_name=auth()->user()->id."_".time().rand().".png";
         imagesavealpha($img, true);
         imagepng($img,public_path('img/preview/'.$image_name));//save image

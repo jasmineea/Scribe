@@ -10,6 +10,9 @@
 
 @section('content')
 <style>
+select.change_status {
+    max-width: 210px !important;
+}
 #page-loader , #page-loader2 {
     position: absolute;
     top: 0;
@@ -80,7 +83,7 @@
                                 Total Records
                             </th>
                             <th>
-                                Downloaded At
+                                Status
                             </th>
                             <th>
                                 Created At
@@ -120,6 +123,11 @@
 <script type="module" src="{{ asset('vendor/datatable/datatables.min.js') }}"></script>
 
 <script type="module">
+    $('body').on('change','.change_status',function(){
+        var id=$(this).data('id');
+        var status=$(this).val();
+        window.location.href = "{{env('APP_URL')}}/admin/orders/changeStatus/"+id+"/"+status+'/master';
+    })
     $("body").on('click','.custom_master_file',function(){
         var token =$('meta[name="csrf-token"]').attr('content');
         var d = bootbox.confirm({
@@ -231,8 +239,8 @@
                 name: 'total_records'
             },
             {
-                data: 'downloaded_at',
-                name: 'downloaded_at'
+                data: 'status',
+                name: 'status'
             },
             {
                 data: 'created_at',

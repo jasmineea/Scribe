@@ -134,7 +134,7 @@ class OrderController extends Controller
 
         $type=$request->query('type');
 
-        $$module_name = $module_model::select('id', 'uploaded_recipient_file','inner_design_file','outer_design_file', 'post_uploaded_recipient_file','downloaded_times','downloaded_at','total_records', 'created_at');
+        $$module_name = $module_model::select('id', 'uploaded_recipient_file','inner_design_file','outer_design_file', 'post_uploaded_recipient_file','downloaded_times','downloaded_at','total_records', 'created_at','status');
 
         $data = $$module_name;
 
@@ -155,6 +155,18 @@ class OrderController extends Controller
                         ->addColumn('downloaded_times', function ($data) {
                             return  $data->downloaded_times." times";
                         })
+                        ->addColumn('status', function ($data) {
+                            $status_list=status_list();
+                            $select_html="<select class='change_status' data-id='".$data->id."'>";
+                            foreach ($status_list as $key => $value) {
+                                if($value){
+                                    $selected=$data->status==$key?'selected':'';
+                                    $select_html.="<option value='".$key."' ".$selected.">".$value."</option>";
+                                }
+                            }
+                            $select_html.="</select>";
+                            return $select_html;
+                        })
                         ->editColumn('created_at', function ($data) {
                             $module_name = $this->module_name;
 
@@ -170,7 +182,7 @@ class OrderController extends Controller
                             $master_file_record_limit = setting('master_file_record_limit');
                             return  $master_file_record_limit<$data->total_records?"<a href='/admin/orders/dividefile/".$data->id."'>Divide</a>":"-";
                         })
-                        ->rawColumns(['uploaded_recipient_file','inner_design_file','outer_design_file','post_uploaded_recipient_file','action'])
+                        ->rawColumns(['uploaded_recipient_file','status','inner_design_file','outer_design_file','post_uploaded_recipient_file','action'])
                         ->orderColumns(['id'], '-:column $1')
                         ->make(true);
     }
@@ -300,7 +312,8 @@ class OrderController extends Controller
                             return  '<a target="_blank" download href="'.asset("storage/".$data->image_path).'"><img width="100px" class="model_preview" data-url="'.asset("storage/".$data->image_path).'" src="'.asset("storage/".$data->image_path).'"></a>';
                         })
                         ->editColumn('user_id', function ($data) {
-                            $return_string = !empty($data->user)?'<strong>'.$data->user->name.'</strong>':'<strong>Default</strong>';
+                            $name=$data->user->name??"Default";
+                            $return_string = '<strong>'.$name.'</strong>';
                             return $return_string;
                         })
                         ->editColumn('type', function ($data) {
@@ -395,7 +408,8 @@ class OrderController extends Controller
                             return  $return;
                         })
                         ->editColumn('user_id', function ($data) {
-                            $return_string = '<strong>'.$data->user->name.'</strong>';
+                            $name=$data->user->name??"";
+                            $return_string = '<strong>'.$name.'</strong>';
                             return $return_string;
                         })
                         ->editColumn('status', function ($data) {
@@ -447,7 +461,7 @@ class OrderController extends Controller
         $s_id=$request->query('s_id');
 
         $$module_name = $module_model::select('orders.id','users.name','orders.campaign_message','orders.inner_design','orders.main_design', 'user_id','campaign_name','campaign_type_2', 'order_amount', 'orders.status','listing_id')->join('users','users.id','=','orders.user_id');
-        $$module_name=$$module_name->where('orders.status','!=', 'delete');
+        $$module_name=$$module_name->where('orders.status','!=', 'delete')->orderBy('orders.id', 'desc');
         // if ($user_id) {
         //     $$module_name=$$module_name->where('user_id', $user_id);
         // }
@@ -468,7 +482,8 @@ class OrderController extends Controller
                             return $return_string;
                         })
                         ->editColumn('user_id', function ($data) {
-                            $return_string = '<strong>'.$data->user->name.'</strong>';
+                            $name=$data->user->name??"";
+                            $return_string = '<strong>'.$name.'</strong>';
                             return $return_string;
                         })
                         ->addColumn('message_overview', function ($data) {
@@ -507,23 +522,22 @@ class OrderController extends Controller
         $model->save();
         die;
     }
-    public function changeStatus(Request $request,$order_id,$status) {
-        $module_model = $this->module_model;
-        $order=$module_model::find($order_id);
-        $order->status =$status;
-        $order->save();
-        $userprofile = Userprofile::where('user_id',$order->user_id)->first();
-        $list = Listing::where('id',$order->listing_id)->first();
-        $post_data = Contact::where('listing_id',$order->listing_id)->select(['email','phone'])->get()->toArray();
-        foreach($post_data as $k=>$v){
-            $post_data[$k]['list_name']=$list->name;
-            $post_data[$k]['card_status']=$order->status;
+    public function changeStatus(Request $request,$order_id,$status,$type='') {
+        if($type=='master'){
+            $orders = Order::where('master_id',$order_id)->select(['id'])->get()->toArray();
+            foreach ($orders as $key => $value) {
+                updateOrderStatus($value['id'],$status);
+            }
+            $order=MasterFiles::find($order_id);
+            $order->status =$status;
+            $order->save();
+            Session::flash('success', 'Status changed successfully.');
+            return redirect()->route('backend.orders.masterfiles',['type'=>'published']);
+        }else{
+            updateOrderStatus($order_id,$status);
+            Session::flash('success', 'Status changed successfully.');
+            return redirect()->route('backend.orders.index',['type'=>'published']);
         }
-        if(!empty($userprofile->url_website)){
-            $response = Http::post($userprofile->url_website,$post_data);
-        }
-        Session::flash('success', 'Status changed successfully.');
-        return redirect()->route('backend.orders.index',['type'=>'published']);
     }
     public function dividefile(Request $request,$id) {
         $master_file=MasterFiles::find($id);

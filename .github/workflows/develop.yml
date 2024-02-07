@@ -1,8 +1,8 @@
-name: Live Server
+name: Development Server
 on:
   push:
     branches:
-      - main
+      - develop-scribenurture
 jobs:
  build:
     name: Deploy Latest Code
@@ -10,7 +10,7 @@ jobs:
     steps:
     - name: checkout
       uses: actions/checkout@v1
-    - name: Deploy Code to Prod Env.
+    - name: Deploy Code to Develop Env.
       uses: appleboy/ssh-action@master
       with:
       #ssh:
@@ -19,9 +19,8 @@ jobs:
         password: oQ%lj8Z43Dyk
         timeout: 3s
         script: |
-         cd /home/saasroot/public_html
+         cd /home/saasroot/public_html/development
          git stash
-         git pull origin main
-         git stash apply
+         git pull origin develop-scribenurture
          composer update
          sudo chmod -R 777 public/ app/ resources/ storage/
